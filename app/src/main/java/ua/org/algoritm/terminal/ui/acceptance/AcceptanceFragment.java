@@ -6,11 +6,16 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,17 +23,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.ksoap2.SoapFault;
-import org.ksoap2.serialization.SoapObject;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 
 import ua.org.algoritm.terminal.Adapters.RecyclerReceptionAdapter;
 import ua.org.algoritm.terminal.ConnectTo1c.SOAP_Dispatcher;
 import ua.org.algoritm.terminal.ConnectTo1c.UIManager;
-import ua.org.algoritm.terminal.ConnectTo1c.UIManagerNew;
 import ua.org.algoritm.terminal.DataBase.SharedData;
-import ua.org.algoritm.terminal.Objects.CarData;
+
 import ua.org.algoritm.terminal.Objects.Reception;
 import ua.org.algoritm.terminal.R;
 
@@ -51,6 +53,8 @@ public class AcceptanceFragment extends Fragment {
 
         View root = inflater.inflate(R.layout.fragment_acceptance, container, false);
 
+        setHasOptionsMenu(true);
+
         recyclerView = root.findViewById(R.id.listReception);
         updateLists();
 
@@ -64,6 +68,46 @@ public class AcceptanceFragment extends Fragment {
         return root;
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_search, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.menu_item_search);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                Snackbar.make(getView(), newText, Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+//                adapter.getFilter().filter(newText);
+//                mListView.invalidateViews();
+                return false;
+            }
+        });
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+//        // handle item selection
+//        switch (item.getItemId()) {
+//            case R.id.menu_item_search:
+//
+//                //       onCall();   //your logic
+//
+//                return true;
+//            default:
+//                return super.onOptionsItemSelected(item);
+//        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private void viewReception(Reception reception) {
 //        Intent intent = new Intent(DetailReception.this, CarActivity.class);
 //        intent.putExtra("CarData", carData);
@@ -73,6 +117,11 @@ public class AcceptanceFragment extends Fragment {
                 .setAction("Action", null).show();
 
 
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void getUpdateReceptionList() {
@@ -138,7 +187,6 @@ public class AcceptanceFragment extends Fragment {
         }
         return errorMessage;
     }
-
 
     public void checkReceptionListResult() {
         try {

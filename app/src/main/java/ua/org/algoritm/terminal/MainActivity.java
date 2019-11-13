@@ -1,5 +1,6 @@
 package ua.org.algoritm.terminal;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -8,8 +9,13 @@ import com.google.android.material.snackbar.Snackbar;
 
 import android.os.Handler;
 import android.os.Message;
+import android.view.MenuItem;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.view.GravityCompat;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -24,6 +30,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.view.Menu;
 import android.widget.ProgressBar;
+import android.widget.SearchView;
 
 import org.ksoap2.SoapFault;
 import org.ksoap2.serialization.SoapObject;
@@ -36,7 +43,7 @@ import ua.org.algoritm.terminal.DataBase.SharedData;
 
 public class MainActivity extends AppCompatActivity {
     public static final int ACTION_SECTORS_LIST = 13;
-//    public static final int ACTION_RECEPTION_LIST = 12;
+    //    public static final int ACTION_RECEPTION_LIST = 12;
 //    public static final int REQUEST_CODE_UPDATE_RECEPTION = 15;
     public static final int ACTION_ConnectionError = 0;
 
@@ -50,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
     public static Handler soapHandler;
 
     private AppBarConfiguration mAppBarConfiguration;
+    private DrawerLayout drawer;
+    private NavController navController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,15 +76,16 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        });
 
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_acceptance, R.id.nav_moving, R.id.nav_issue)
                 .setDrawerLayout(drawer)
                 .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+//        NavigationUI.setupActionBarWithNavController(this, navController, drawer);
 
         SharedData.app = this;
         uiManager = new UIManager(this);
@@ -107,6 +117,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+//            case android.R.id.home:
+//                drawer.openDrawer(GravityCompat.START);
+//                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
@@ -134,6 +155,11 @@ public class MainActivity extends AppCompatActivity {
 //                    break;
             }
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private String getSoapErrorMessage() {
