@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_acceptance">
+
+    <fragment
+        android:id="@+id/nav_acceptance"
+        android:name="ua.org.algoritm.terminal.ui.acceptance.AcceptanceFragment"
+        android:label="@string/menu_acceptance"
+        tools:layout="@layout/fragment_acceptance" />
+
+    <fragment
+        android:id="@+id/nav_moving"
+        android:name="ua.org.algoritm.terminal.ui.moving.MovingFragment"
+        android:label="@string/menu_moving"
+        tools:layout="@layout/fragment_moving" />
+
+    <fragment
+        android:id="@+id/nav_issue"
+        android:name="ua.org.algoritm.terminal.ui.issue.IssueFragment"
+        android:label="@string/menu_issue"
+        tools:layout="@layout/fragment_issue" />
+
+<!--    <fragment-->
+<!--        android:id="@+id/nav_tools"-->
+<!--        android:name="ua.org.algoritm.terminal.ui.tools.ToolsFragment"-->
+<!--        android:label="@string/menu_tools"-->
+<!--        tools:layout="@layout/fragment_tools" />-->
+
+<!--    <fragment-->
+<!--        android:id="@+id/nav_share"-->
+<!--        android:name="ua.org.algoritm.terminal.ui.share.ShareFragment"-->
+<!--        android:label="@string/menu_share"-->
+<!--        tools:layout="@layout/fragment_share" />-->
+
+<!--    <fragment-->
+<!--        android:id="@+id/nav_send"-->
+<!--        android:name="ua.org.algoritm.terminal.ui.send.SendFragment"-->
+<!--        android:label="@string/menu_send"-->
+<!--        tools:layout="@layout/fragment_send" />-->
+</navigation>

@@ -1,0 +1,46 @@
+<resources>
+    <string name="app_name">Terminal</string>
+    <string name="nav_header_title">Terminal</string>
+    <string name="nav_header_subtitle"></string>
+    <string name="navigation_drawer_open">Открыть меню</string>
+    <string name="navigation_drawer_close">Закрыть меню</string>
+    <string name="nav_header_desc">Заголовок</string>
+    <string name="action_settings">Настройки</string>
+
+    <string name="menu_acceptance">Приемка</string>
+    <string name="menu_moving">Перемещение</string>
+    <string name="menu_issue">Выдача</string>
+<!--    <string name="menu_tools">Tools</string>-->
+<!--    <string name="menu_share">Share</string>-->
+<!--    <string name="menu_send">Send</string>-->
+
+    <string name="password_form_header">Ваш логин/пароль...</string>
+    <string name="login">логин</string>
+    <string name="password">пароль</string>
+    <string name="butt_OK">OK</string>
+    <string name="success">Все ОК</string>
+    <string name="error">Доступ запрещен!</string>
+    <string name="textNoInternet">Что-то с интернет доступом!</string>
+    <string name="unknownError">Неизвестная ошибка!</string>
+    <string name="errorConnection">"Ошибка: "</string>
+    <string name="error_login">Не заполнен логин</string>
+    <string name="error_password">Не заполнен пароль</string>
+    <string name="passwordIncorrect">"Доброе время суток! "</string>
+    <string name="passwordNotIncorrect">Неверно введен пароль!</string>
+    <string name="search">Поиск</string>
+    <string name="clear_search">Очистить поиск</string>
+    <string name="textDate">Дата производства:</string>
+    <string name="textSector">Сектор:</string>
+    <string name="textRow">Номер ряда:</string>
+    <string name="edit">Данные по авто..</string>
+    <string name="saveCB">Записать ЦБ</string>
+    <string name="searchBarCode">Найти по штрихкоду</string>
+    <string name="camera_to_the_barcode">Наведите камеру на штрихкод</string>
+    <string name="turn_off_flashlight">Выключить фонарик</string>
+    <string name="turn_on_flashlight">Включить фонарик</string>
+    <string name="no_car_by_barcode">По штрихкоду %s нет машины в этом списке</string>
+    <string name="cancelled_scan">Ошибка поиска</string>
+    <string name="cancel">Отмена</string>
+    <string name="scan_more">Отсканировать еще раз</string>
+
+</resources>
