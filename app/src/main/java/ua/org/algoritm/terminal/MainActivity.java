@@ -42,13 +42,14 @@ import ua.org.algoritm.terminal.ConnectTo1c.UIManager;
 import ua.org.algoritm.terminal.DataBase.SharedData;
 
 public class MainActivity extends AppCompatActivity {
+
+    private long backPressedTime;
+
     public static final int ACTION_SECTORS_LIST = 13;
     //    public static final int ACTION_RECEPTION_LIST = 12;
-//    public static final int REQUEST_CODE_UPDATE_RECEPTION = 15;
+    //    public static final int REQUEST_CODE_UPDATE_RECEPTION = 15;
     public static final int ACTION_ConnectionError = 0;
 
-    private String login;
-    private String password;
 
     public static UIManager uiManager;
     public static SoapFault responseFault;
@@ -85,15 +86,15 @@ public class MainActivity extends AppCompatActivity {
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
-//        NavigationUI.setupActionBarWithNavController(this, navController, drawer);
+        NavigationUI.setupActionBarWithNavController(this, navController, drawer);
 
         SharedData.app = this;
         uiManager = new UIManager(this);
         soapHandler = new incomingHandler(this);
 
-        SharedPreferences preferences = getSharedPreferences("MyPref", MODE_PRIVATE);
-        login = preferences.getString("Login", "");
-        password = preferences.getString("Password", "");
+//        SharedPreferences preferences = getSharedPreferences("MyPref", MODE_PRIVATE);
+//        login = preferences.getString("Login", "");
+//        password = preferences.getString("Password", "");
 
         getUpdateSectorsList();
         getUpdateReceptionList();
@@ -119,12 +120,25 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-//            case android.R.id.home:
-//                drawer.openDrawer(GravityCompat.START);
-//                return true;
+            case android.R.id.home:
+                drawer.openDrawer(GravityCompat.START);
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (backPressedTime + 2000 > System.currentTimeMillis()) {
+            super.onBackPressed();
+            return;
+        } else {
+            Snackbar.make(drawer, getText(R.string.exit), Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+
+        }
+        backPressedTime = System.currentTimeMillis();
     }
 
     @Override

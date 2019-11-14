@@ -5,21 +5,30 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.ArrayList;
+
+import ua.org.algoritm.terminal.DataBase.SharedData;
 import ua.org.algoritm.terminal.Objects.Reception;
 import ua.org.algoritm.terminal.R;
-import ua.org.algoritm.terminal.ui.acceptance.AcceptanceFragment;
 
 public class RecyclerReceptionAdapter extends RecyclerView.Adapter<RecyclerReceptionAdapter.ReceptionViewHolder> {
     private int mResourse;
     private ArrayList<Reception> mReceptions = new ArrayList<>();
     private LayoutInflater mInflater;
 
-    public RecyclerReceptionAdapter(Context context, int resourse, ArrayList<Reception> receptions) {
+    public RecyclerReceptionAdapter(Context context, int resourse) {
         mResourse = resourse;
-        mReceptions = receptions;
+        mReceptions.addAll(SharedData.RECEPTION);
         mInflater = LayoutInflater.from(context);
+    }
+
+    public void setReceptions() {
+        mReceptions.clear();
+        mReceptions.addAll(SharedData.RECEPTION);
+        notifyDataSetChanged();
     }
 
     public interface ActionListener {
@@ -56,6 +65,29 @@ public class RecyclerReceptionAdapter extends RecyclerView.Adapter<RecyclerRecep
     @Override
     public int getItemCount() {
         return mReceptions.size();
+    }
+
+    public void setFilter(String newText) {
+        String query = newText.toLowerCase();
+
+        final ArrayList<Reception> filterModeList = new ArrayList<>();
+
+        for (Reception model : SharedData.RECEPTION) {
+
+            final String textDescription = model.getDescription().toLowerCase();
+            final String textAutoNumber = model.getAutoNumber().toLowerCase();
+            final String textDriver = model.getDriver().toLowerCase();
+            if (textDescription.contains(query)
+                    | textAutoNumber.contains(query)
+                    | textDriver.contains(query)) {
+
+                filterModeList.add(model);
+            }
+        }
+
+        mReceptions.clear();
+        mReceptions.addAll(filterModeList);
+        notifyDataSetChanged();
     }
 
     public class ReceptionViewHolder extends RecyclerView.ViewHolder {

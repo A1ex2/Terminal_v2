@@ -42,5 +42,6 @@
     <string name="cancelled_scan">Ошибка поиска</string>
     <string name="cancel">Отмена</string>
     <string name="scan_more">Отсканировать еще раз</string>
+    <string name="exit">Нажмите еще раз чтобы выйти</string>
 
 </resources>

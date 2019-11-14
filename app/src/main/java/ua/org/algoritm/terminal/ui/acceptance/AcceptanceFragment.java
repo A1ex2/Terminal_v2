@@ -56,6 +56,7 @@ public class AcceptanceFragment extends Fragment {
         setHasOptionsMenu(true);
 
         recyclerView = root.findViewById(R.id.listReception);
+        recyclerView.setVisibility(RecyclerView.INVISIBLE);
         updateLists();
 
         progressBar = root.findViewById(R.id.progressBar);
@@ -69,25 +70,39 @@ public class AcceptanceFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        adapter.setReceptions();
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_search, menu);
 
-        MenuItem searchItem = menu.findItem(R.id.menu_item_search);
-        SearchView searchView = (SearchView) searchItem.getActionView();
+        final MenuItem searchItem = menu.findItem(R.id.menu_item_search);
+        final SearchView searchView = (SearchView) searchItem.getActionView();
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                if (!searchView.isIconified()) {
+                    searchView.setIconified(true);
+                }
+                searchItem.collapseActionView();
+
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                Snackbar.make(getView(), newText, Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-//                adapter.getFilter().filter(newText);
-//                mListView.invalidateViews();
-                return false;
+
+//                Snackbar.make(getView(), newText, Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+
+                adapter.setFilter(newText);
+
+                return true;
             }
         });
 
@@ -125,6 +140,7 @@ public class AcceptanceFragment extends Fragment {
     }
 
     private void getUpdateReceptionList() {
+        recyclerView.setVisibility(RecyclerView.INVISIBLE);
         progressBar.setVisibility(ProgressBar.VISIBLE);
 
         SOAP_Dispatcher dispatcher = new SOAP_Dispatcher(ACTION_RECEPTION_LIST, SharedData.LOGIN, SharedData.PASSWORD);
@@ -133,9 +149,11 @@ public class AcceptanceFragment extends Fragment {
 
     private void updateLists() {
         if (adapter == null) {
+
             LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
             recyclerView.setLayoutManager(layoutManager);
-            adapter = new RecyclerReceptionAdapter(getContext(), R.layout.item_reception, SharedData.RECEPTION);
+            adapter = new RecyclerReceptionAdapter(getContext(), R.layout.item_reception_new);
+//            adapter = new RecyclerReceptionAdapter(getContext(), R.layout.item_reception, SharedData.RECEPTION);
             recyclerView.setAdapter(adapter);
             adapter.setActionListener(new RecyclerReceptionAdapter.ActionListener() {
                 @Override
@@ -143,8 +161,15 @@ public class AcceptanceFragment extends Fragment {
                     viewReception(reception);
                 }
             });
+
         } else {
-            adapter.notifyDataSetChanged();
+
+            recyclerView.setVisibility(RecyclerView.VISIBLE);
+            progressBar.setVisibility(ProgressBar.INVISIBLE);
+
+            adapter.setReceptions();
+            recyclerView.setAdapter(adapter);
+
         }
     }
 
@@ -190,9 +215,9 @@ public class AcceptanceFragment extends Fragment {
 
     public void checkReceptionListResult() {
         try {
-            progressBar.setVisibility(ProgressBar.INVISIBLE);
             updateLists();
         } catch (Exception e) {
+            uiManager.showToast(getString(R.string.errorConnection));
             e.printStackTrace();
         }
     }
