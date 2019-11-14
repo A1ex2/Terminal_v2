@@ -34,7 +34,7 @@ public class RecyclerAdapterCarData extends RecyclerView.Adapter<RecyclerAdapter
 
     @Override
     public CarDataViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View view = mInflater.inflate(mResourse, null);
+        View view = mInflater.inflate(mResourse, viewGroup, false);
         return new CarDataViewHolder(view);
     }
 

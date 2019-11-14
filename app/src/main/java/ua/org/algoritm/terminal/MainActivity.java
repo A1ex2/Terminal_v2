@@ -132,6 +132,7 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (backPressedTime + 2000 > System.currentTimeMillis()) {
             super.onBackPressed();
+            finishAffinity();
             return;
         } else {
             Snackbar.make(drawer, getText(R.string.exit), Snackbar.LENGTH_LONG)

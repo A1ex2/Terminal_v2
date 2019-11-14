@@ -1,7 +1,10 @@
 package ua.org.algoritm.terminal.Activity;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -12,7 +15,9 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import org.ksoap2.SoapFault;
 import org.ksoap2.serialization.SoapObject;
@@ -81,12 +86,17 @@ public class Password extends AppCompatActivity {
             }
         });
 
-        SOAP_Dispatcher dispatcher = new SOAP_Dispatcher(ACTION_LOGIN_LIST);
-        dispatcher.start();
-
         preferences = getSharedPreferences("MyPref", MODE_PRIVATE);
 
         login.setText(preferences.getString("Login", ""));
+
+        SOAP_Dispatcher dispatcher = new SOAP_Dispatcher(ACTION_LOGIN_LIST);
+        dispatcher.start();
+
+        if (hasPermission(Manifest.permission.GET_ACCOUNTS)) {
+        } else {
+            requestPermissions();
+        }
     }
 
     private boolean validateLogin(String mLogin) {
@@ -127,6 +137,27 @@ public class Password extends AppCompatActivity {
 
     }
 
+    private boolean hasPermission(String permission) {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED;
+        }
+
+        return true;
+    }
+
+    private void requestPermissions() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            String[] permissions = {
+//                    Manifest.permission.GET_ACCOUNTS,
+//                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.CAMERA
+            };
+            requestPermissions(permissions, 0);
+        }
+    }
+
     class incomingHandler extends Handler {
         private final WeakReference<Password> mTarget;
 
@@ -157,6 +188,7 @@ public class Password extends AppCompatActivity {
                 break;
             }
         }
+
     }
 
     private String getSoapErrorMessage() {

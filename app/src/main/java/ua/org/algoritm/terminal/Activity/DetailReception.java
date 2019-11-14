@@ -82,7 +82,7 @@ public class DetailReception extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new RecyclerAdapterCarData(this, R.layout.item_activity_detail, reception.getCarData());
+        adapter = new RecyclerAdapterCarData(this, R.layout.item_reception_detail, reception.getCarData());
         recyclerView.setAdapter(adapter);
         adapter.setActionListener(new RecyclerAdapterCarData.ActionListener() {
             @Override

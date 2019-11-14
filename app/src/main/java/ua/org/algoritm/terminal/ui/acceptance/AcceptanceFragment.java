@@ -26,6 +26,7 @@ import org.ksoap2.SoapFault;
 
 import java.lang.ref.WeakReference;
 
+import ua.org.algoritm.terminal.Activity.DetailReception;
 import ua.org.algoritm.terminal.Adapters.RecyclerReceptionAdapter;
 import ua.org.algoritm.terminal.ConnectTo1c.SOAP_Dispatcher;
 import ua.org.algoritm.terminal.ConnectTo1c.UIManager;
@@ -124,12 +125,12 @@ public class AcceptanceFragment extends Fragment {
     }
 
     private void viewReception(Reception reception) {
-//        Intent intent = new Intent(DetailReception.this, CarActivity.class);
-//        intent.putExtra("CarData", carData);
-//        startActivityForResult(intent, REQUEST_CODE);
+        Intent intent = new Intent(getActivity(), DetailReception.class);
+        intent.putExtra("Reception", reception.getID());
+        startActivityForResult(intent, REQUEST_CODE_UPDATE_RECEPTION);
 
-        Snackbar.make(getView(), reception.getDescription(), Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show();
+//        Snackbar.make(getView(), reception.getDescription(), Snackbar.LENGTH_LONG)
+//                .setAction("Action", null).show();
 
 
     }
@@ -137,6 +138,9 @@ public class AcceptanceFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_UPDATE_RECEPTION) {
+            getUpdateReceptionList();
+        }
     }
 
     private void getUpdateReceptionList() {

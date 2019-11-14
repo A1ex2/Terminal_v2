@@ -43,7 +43,7 @@ public class RecyclerReceptionAdapter extends RecyclerView.Adapter<RecyclerRecep
 
     @Override
     public ReceptionViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View view = mInflater.inflate(mResourse, null);
+        View view = mInflater.inflate(mResourse, viewGroup, false);
         return new ReceptionViewHolder(view);
     }
 
