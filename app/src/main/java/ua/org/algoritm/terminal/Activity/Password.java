@@ -279,27 +279,31 @@ public class Password extends AppCompatActivity {
 
     public void checkUpdate() {
         try {
-            String lastAppVersion = soapParam_Response_Update.getPropertyAsString("Description");
-            final String apkUrl = soapParam_Response_Update.getPropertyAsString("URL");
 
-            String message = new Formatter().format(getString(R.string.update_new_version), lastAppVersion).toString();
+            Boolean isLoginSuccess = Boolean.parseBoolean(soapParam_Response_Update.getPropertyAsString("Result"));
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(Password.this);
-            builder.setMessage(message)
-                    .setCancelable(true)
-                    .setPositiveButton(getString(R.string.butt_Yes), new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
+            if (isLoginSuccess) {
+                String lastAppVersion = soapParam_Response_Update.getPropertyAsString("Description");
+                final String apkUrl = soapParam_Response_Update.getPropertyAsString("URL");
 
-                            try {
+                String message = new Formatter().format(getString(R.string.update_new_version), lastAppVersion).toString();
 
-                                Intent intent = new Intent(Intent.ACTION_VIEW);
-                                intent.setData(Uri.parse(apkUrl));
-                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(intent);
+                AlertDialog.Builder builder = new AlertDialog.Builder(Password.this);
+                builder.setMessage(message)
+                        .setCancelable(true)
+                        .setPositiveButton(getString(R.string.butt_Yes), new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
 
-                            } catch (Exception e){
-                                e.printStackTrace();
-                            }
+                                try {
+
+                                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                                    intent.setData(Uri.parse(apkUrl));
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    startActivity(intent);
+
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
 
 //                            SOAP_Dispatcher dispatcher = new SOAP_Dispatcher(ACTION_UPDATE_NEW_VERSION);
 //                            dispatcher.start();
@@ -311,15 +315,16 @@ public class Password extends AppCompatActivity {
 //                            mDialog.setCancelable(false);
 //                            mDialog.show();
 
-                        }
-                    })
-                    .setNegativeButton(getString(R.string.butt_Not), new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.cancel();
-                        }
-                    });
-            AlertDialog alert = builder.create();
-            alert.show();
+                            }
+                        })
+                        .setNegativeButton(getString(R.string.butt_Not), new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+                AlertDialog alert = builder.create();
+                alert.show();
+            }
         } catch (Exception e) {
 
             e.printStackTrace();

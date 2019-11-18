@@ -37,7 +37,8 @@
     <string name="turn_off_flashlight">Выключить фонарик</string>
     <string name="turn_on_flashlight">Включить фонарик</string>
     <string name="no_car_by_barcode">По штрихкоду %s нет машины в этом списке</string>
-    <string name="update_new_version">Доступно обновление приложения Terminal до версии %s - желаете обновиться?  </string>
+    <string name="update_new_version">Доступно обновление приложения Terminal до версии %s - желаете обновиться?
+        Если вы согласны - вы будете перенаправлены к скачиванию APK файла, который затем нужно будет открыть.</string>
     <string name="cancelled_scan">Ошибка поиска</string>
     <string name="cancel">Отмена</string>
     <string name="scan_more">Отсканировать еще раз</string>
