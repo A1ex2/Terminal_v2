@@ -27,9 +27,10 @@
     <string name="passwordNotIncorrect">Неверно введен пароль!</string>
     <string name="search">Поиск</string>
     <string name="clear_search">Очистить поиск</string>
-    <string name="textDate">Дата производства:</string>
+    <string name="textDate">Дата:</string>
     <string name="textSector">Сектор:</string>
     <string name="textRow">Номер ряда:</string>
+    <string name="textBarcode">Штрих код:</string>
     <string name="edit">Данные по авто..</string>
     <string name="saveCB">Записать ЦБ</string>
     <string name="searchBarCode">Найти по штрихкоду</string>

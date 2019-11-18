@@ -1,13 +1,20 @@
 package ua.org.algoritm.terminal.Adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.ArrayList;
+
+import ua.org.algoritm.terminal.DataBase.SharedData;
 import ua.org.algoritm.terminal.Objects.CarData;
 import ua.org.algoritm.terminal.R;
 
@@ -30,6 +37,12 @@ public class RecyclerAdapterCarData extends RecyclerView.Adapter<RecyclerAdapter
 
     public void setActionListener(ActionListener listener) {
         mListener = listener;
+    }
+
+    public void setCarData(ArrayList<CarData> carData) {
+        mCarData.clear();
+        mCarData.addAll(carData);
+        notifyDataSetChanged();
     }
 
     @Override
@@ -64,6 +77,7 @@ public class RecyclerAdapterCarData extends RecyclerView.Adapter<RecyclerAdapter
         private TextView itemProductionDate;
         private TextView itemSector;
         private TextView itemRow;
+        private ConstraintLayout mConstraintLayout;
 
         public CarDataViewHolder(View itemView) {
             super(itemView);
@@ -73,6 +87,7 @@ public class RecyclerAdapterCarData extends RecyclerView.Adapter<RecyclerAdapter
             itemProductionDate = itemView.findViewById(R.id.itemProductionDate);
             itemSector = itemView.findViewById(R.id.itemSector);
             itemRow = itemView.findViewById(R.id.itemRow);
+            mConstraintLayout = itemView.findViewById(R.id.constraintLayout);
         }
 
         public void set(CarData carData) {
@@ -81,6 +96,10 @@ public class RecyclerAdapterCarData extends RecyclerView.Adapter<RecyclerAdapter
             itemProductionDate.setText(carData.getProductionDateString());
             itemSector.setText(carData.getSector());
             itemRow.setText(carData.getRow());
+
+            if (carData.saveCB) {
+                //mConstraintLayout.setBackgroundColor(Color.parseColor("#BDECB8"));
+            }
         }
     }
 }

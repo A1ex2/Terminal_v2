@@ -16,7 +16,7 @@ public class SharedData {
     public static MainActivity app;
     public static String LOGIN;
     public static String PASSWORD;
-    public static String VERSION = "1.1.1";
+    public static String VERSION = "1.1.2";
 
     public static void updateReception(CarData carData) {
         boolean mFinish = false;
@@ -27,6 +27,7 @@ public class SharedData {
                 for (int j = 0; j < carDataArrayList.size(); j++) {
                     CarData mCarData = carDataArrayList.get(j);
                     if (mCarData.getCarID().equals(carData.getCarID())) {
+                        mCarData.setBarCode(carData.getBarCode());
                         mCarData.setProductionDate(carData.getProductionDate());
                         mCarData.setSector(carData.getSector());
                         mCarData.setSectorID(carData.getSectorID());
@@ -67,6 +68,7 @@ public class SharedData {
                 for (int j = 0; j < carDataArrayList.size(); j++) {
                     CarData mCarData = carDataArrayList.get(j);
                     if (mCarData.getCarID().equals(carData.getCarID())) {
+                        mCarData.setBarCode(carData.getBarCode());
                         mCarData.setProductionDate(carData.getProductionDate());
                         mCarData.setSector(getSector(carData.getSectorID()).getName());
                         mCarData.setSectorID(carData.getSectorID());

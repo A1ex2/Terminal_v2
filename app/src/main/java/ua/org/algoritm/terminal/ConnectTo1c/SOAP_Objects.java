@@ -36,6 +36,10 @@ public class SOAP_Objects {
                 CarData carData = carDataArrayList.get(i);
                 JSONCarData jsonCarData = new JSONCarData(carData);
                 mJSONCarData.add(jsonCarData);
+
+                if (!carData.getRow().equals("") | !carData.getSector().equals("")){
+                    carData.saveCB = true;
+                }
             }
         }
 
@@ -45,6 +49,9 @@ public class SOAP_Objects {
 
             @SerializedName("carID")
             String carID;
+
+            @SerializedName("barCode")
+            String barCode;
 
             @SerializedName("sectorID")
             String sectorID;
@@ -57,6 +64,7 @@ public class SOAP_Objects {
 
             JSONCarData(CarData carData) {
                 ReceptionID = carData.getReceptionID();
+                barCode = carData.getBarCode();
                 carID = carData.getCarID();
                 sectorID = carData.getSectorID();
                 row = carData.getRow();

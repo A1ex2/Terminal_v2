@@ -9,6 +9,8 @@ import org.ksoap2.transport.HttpTransportSE;
 import java.text.ParseException;
 import java.util.ArrayList;
 
+import ua.org.algoritm.terminal.Activity.CarDataList;
+import ua.org.algoritm.terminal.Activity.DetailReception;
 import ua.org.algoritm.terminal.Activity.Password;
 import ua.org.algoritm.terminal.DataBase.SharedData;
 import ua.org.algoritm.terminal.MainActivity;
@@ -71,6 +73,10 @@ public class SOAP_Dispatcher extends Thread {
                 getReceptionList();
                 break;
 
+            case DetailReception.ACTION_UPDATE_RECEPTION:
+                getReceptionList();
+                break;
+
             case MainActivity.ACTION_SECTORS_LIST:
                 getSectors();
                 break;
@@ -83,10 +89,13 @@ public class SOAP_Dispatcher extends Thread {
                 getApplication();
                 break;
 
-//
-//            case DetailReception.ACTION_SET_RECEPTION:
-//                setCB();
-//                break;
+            case DetailReception.ACTION_SET_RECEPTION:
+                setCB();
+                break;
+
+            case CarDataList.ACTION_CAR_LIST:
+                getCarList();
+                break;
         }
 
         if (ACTION == Password.ACTION_VERIFY | ACTION == Password.ACTION_LOGIN_LIST
@@ -115,21 +124,42 @@ public class SOAP_Dispatcher extends Thread {
             } else {
                 MainActivity.soapHandler.sendEmptyMessage(MainActivity.ACTION_ConnectionError);
             }
+
         } else if (ACTION == AcceptanceFragment.ACTION_RECEPTION_LIST) {
             if (soap_Response != null) {
                 AcceptanceFragment.soapHandler.sendEmptyMessage(ACTION);
             } else {
                 AcceptanceFragment.soapHandler.sendEmptyMessage(MainActivity.ACTION_ConnectionError);
             }
+
+        } else if (ACTION == DetailReception.ACTION_SET_RECEPTION | ACTION == DetailReception.ACTION_SET_RECEPTION |
+                ACTION == DetailReception.ACTION_UPDATE_RECEPTION) {
+
+            if (soap_Response != null & ACTION == DetailReception.ACTION_SET_RECEPTION) {
+                DetailReception.soapParam_Response = soap_Response;
+                DetailReception.soapHandler.sendEmptyMessage(ACTION);
+            } else if (soap_Response != null & ACTION == DetailReception.ACTION_UPDATE_RECEPTION) {
+                DetailReception.soapHandler.sendEmptyMessage(ACTION);
+            } else {
+                DetailReception.soapHandler.sendEmptyMessage(DetailReception.ACTION_ConnectionError);
+            }
+
+        } else if (ACTION == CarDataList.ACTION_CAR_LIST) {
+            if (soap_Response != null) {
+                CarDataList.soapParam_Response = soap_Response;
+                CarDataList.soapHandler.sendEmptyMessage(ACTION);
+            } else {
+                CarDataList.soapHandler.sendEmptyMessage(DetailReception.ACTION_ConnectionError);
+            }
+
         }
-//        }else if (ACTION == DetailReception.ACTION_SET_RECEPTION){
-//            if (soap_Response != null) {
-//                DetailReception.soapParam_Response = soap_Response;
-//                DetailReception.soapHandler.sendEmptyMessage(ACTION);
-//            } else {
-//                DetailReception.soapHandler.sendEmptyMessage(DetailReception.ACTION_ConnectionError);
-//            }
-//        }
+    }
+
+    private void getCarList() {
+        String method = "GetCarList";
+        String action = NAMESPACE + "#GetCarList:" + method;
+        SoapObject request = new SoapObject(NAMESPACE, method);
+        soap_Response = callWebService(request, action);
     }
 
     private void setCB() {

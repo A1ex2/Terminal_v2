@@ -18,9 +18,10 @@ public class CarData implements Parcelable {
     private String row;
     private Date productionDate;
 
+    public boolean saveCB = false;
+
     public CarData() {
     }
-
 
     public String getCarID() {
         return carID;
@@ -132,6 +133,7 @@ public class CarData implements Parcelable {
         dest.writeString(this.sector);
         dest.writeString(this.row);
         dest.writeLong(this.productionDate != null ? this.productionDate.getTime() : -1);
+        dest.writeByte(this.saveCB ? (byte) 1 : (byte) 0);
     }
 
     protected CarData(Parcel in) {
@@ -144,6 +146,7 @@ public class CarData implements Parcelable {
         this.row = in.readString();
         long tmpProductionDate = in.readLong();
         this.productionDate = tmpProductionDate == -1 ? null : new Date(tmpProductionDate);
+        this.saveCB = in.readByte() != 0;
     }
 
     public static final Creator<CarData> CREATOR = new Creator<CarData>() {
