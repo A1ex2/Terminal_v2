@@ -1,13 +1,17 @@
 package ua.org.algoritm.terminal.Activity;
 
 import android.Manifest;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -16,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
@@ -24,6 +29,7 @@ import org.ksoap2.serialization.SoapObject;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Formatter;
 
 import ua.org.algoritm.terminal.ConnectTo1c.SOAP_Dispatcher;
 import ua.org.algoritm.terminal.ConnectTo1c.UIManager;
@@ -39,25 +45,32 @@ public class Password extends AppCompatActivity {
     private ArrayList<String> loginList = new ArrayList<>();
     private SharedPreferences preferences;
 
+    private ProgressDialog mDialog;
+
     public static String mLogin;
     public static String mPassword;
 
     public static final int ACTION_VERIFY = 10;
     public static final int ACTION_LOGIN_LIST = 11;
+    public static final int ACTION_UPDATE = 14;
+    public static final int ACTION_UPDATE_NEW_VERSION = 15;
 
     public static final int ACTION_ConnectionError = 0;
     public static UIManager uiManager;
     public static SoapFault responseFault;
 
     public static SoapObject soapParam_Response;
+    public static SoapObject soapParam_Response_Update;
     public static Handler soapHandler;
     public static String wsParam_PassHash;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_password);
+
+        SOAP_Dispatcher dispatcherUpdate = new SOAP_Dispatcher(ACTION_UPDATE);
+        dispatcherUpdate.start();
 
         uiManager = new UIManager(this);
         soapHandler = new incomingHandler(this);
@@ -186,6 +199,16 @@ public class Password extends AppCompatActivity {
                     target.checkLoginListResult();
                 }
                 break;
+
+                case ACTION_UPDATE: {
+                    checkUpdate();
+                }
+                break;
+
+                case ACTION_UPDATE_NEW_VERSION: {
+                    update();
+                }
+                break;
             }
         }
 
@@ -246,6 +269,72 @@ public class Password extends AppCompatActivity {
             AutoCompleteTextView acTextView = (AutoCompleteTextView) login;
             acTextView.setThreshold(1);
             acTextView.setAdapter(adapter);
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        }
+    }
+
+    public void checkUpdate() {
+        try {
+            String lastAppVersion = soapParam_Response_Update.getPropertyAsString("Description");
+            final String apkUrl = soapParam_Response_Update.getPropertyAsString("URL");
+
+            String message = new Formatter().format(getString(R.string.update_new_version), lastAppVersion).toString();
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(Password.this);
+            builder.setMessage(message)
+                    .setCancelable(true)
+                    .setPositiveButton(getString(R.string.butt_Yes), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+
+                            try {
+
+                                Intent intent = new Intent(Intent.ACTION_VIEW);
+                                intent.setData(Uri.parse(apkUrl));
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
+
+                            } catch (Exception e){
+                                e.printStackTrace();
+                            }
+
+//                            SOAP_Dispatcher dispatcher = new SOAP_Dispatcher(ACTION_UPDATE_NEW_VERSION);
+//                            dispatcher.start();
+//
+//                            dialog.dismiss();
+//
+//                            mDialog = new ProgressDialog(Password.this);
+//                            mDialog.setMessage(getString(R.string.wait_update));
+//                            mDialog.setCancelable(false);
+//                            mDialog.show();
+
+                        }
+                    })
+                    .setNegativeButton(getString(R.string.butt_Not), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    });
+            AlertDialog alert = builder.create();
+            alert.show();
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        }
+    }
+
+    private void update() {
+        try {
+//            if (mDialog != null && mDialog.isShowing()) {
+//                mDialog.dismiss();
+//            }
+//
+//            String app = soapParam_Response_Update.getPropertyAsString("App");
+
 
         } catch (Exception e) {
 

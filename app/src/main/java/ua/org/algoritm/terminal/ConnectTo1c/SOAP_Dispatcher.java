@@ -24,8 +24,8 @@ public class SOAP_Dispatcher extends Thread {
     public static final Integer soapParam_timeout = 100;
     public static String soapParam_pass = "31415926";
     public static String soapParam_user = "Администратор";
-    public static String soapParam_URL = "http://gate.algoritm.org.ua:8778/blg_log_test/ws/terminal.1cws";
-    //    public static String soapParam_URL = "http://192.168.1.4:8090/blg_log/ws/terminal.1cws";
+    //    public static String soapParam_URL = "http://gate.algoritm.org.ua:8778/blg_log_test/ws/terminal.1cws";
+    public static String soapParam_URL = "http://192.168.1.4:8090/blg_log/ws/terminal.1cws";
     public String string_Inquiry;
 
     int timeout;
@@ -74,21 +74,40 @@ public class SOAP_Dispatcher extends Thread {
             case MainActivity.ACTION_SECTORS_LIST:
                 getSectors();
                 break;
+
+            case Password.ACTION_UPDATE:
+                checkUpdate();
+                break;
+
+            case Password.ACTION_UPDATE_NEW_VERSION:
+                getApplication();
+                break;
+
 //
 //            case DetailReception.ACTION_SET_RECEPTION:
 //                setCB();
 //                break;
         }
 
-        if (ACTION == Password.ACTION_VERIFY | ACTION == Password.ACTION_LOGIN_LIST) {
+        if (ACTION == Password.ACTION_VERIFY | ACTION == Password.ACTION_LOGIN_LIST
+                | ACTION == Password.ACTION_UPDATE | ACTION == Password.ACTION_UPDATE_NEW_VERSION) {
+
             if (soap_Response != null & ACTION == Password.ACTION_VERIFY) {
                 Password.soapParam_Response = soap_Response;
                 Password.soapHandler.sendEmptyMessage(ACTION);
+
             } else if (soap_Response != null & ACTION == Password.ACTION_LOGIN_LIST) {
                 Password.soapHandler.sendEmptyMessage(ACTION);
+
+            } else if (soap_Response != null & ACTION == Password.ACTION_UPDATE
+                    | ACTION == Password.ACTION_UPDATE_NEW_VERSION) {
+                Password.soapParam_Response_Update = soap_Response;
+                Password.soapHandler.sendEmptyMessage(ACTION);
+
             } else {
                 Password.soapHandler.sendEmptyMessage(Password.ACTION_ConnectionError);
             }
+
         } else if (ACTION == MainActivity.ACTION_SECTORS_LIST) {
             if (soap_Response != null) {
                 MainActivity.soapParam_Response = soap_Response;
@@ -119,6 +138,25 @@ public class SOAP_Dispatcher extends Thread {
         String action = NAMESPACE + "#setReception:" + method;
         SoapObject request = new SoapObject(NAMESPACE, method);
         request.addProperty("Reception", string_Inquiry);
+        soap_Response = callWebService(request, action);
+
+    }
+
+    private void checkUpdate() {
+
+        String method = "checkUpdate";
+        String action = NAMESPACE + "#checkUpdate:" + method;
+        SoapObject request = new SoapObject(NAMESPACE, method);
+        request.addProperty("Version", SharedData.VERSION);
+        soap_Response = callWebService(request, action);
+
+    }
+
+    private void getApplication() {
+
+        String method = "getApplication";
+        String action = NAMESPACE + "#getApplication:" + method;
+        SoapObject request = new SoapObject(NAMESPACE, method);
         soap_Response = callWebService(request, action);
 
     }
@@ -256,7 +294,7 @@ public class SOAP_Dispatcher extends Thread {
         envelope.dotNet = true;
         envelope.implicitTypes = true;
         HttpTransportSE androidHttpTransport = new HttpTransportBasicAuthSE(URL, user, pass);
-        androidHttpTransport.debug = true;
+        androidHttpTransport.debug = false;
 
         try {
             androidHttpTransport.call(action, envelope);
