@@ -1,4 +1,4 @@
-package ua.org.algoritm.terminal.ui.issue;
+package ua.org.algoritm.terminal.ui.issuance;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
