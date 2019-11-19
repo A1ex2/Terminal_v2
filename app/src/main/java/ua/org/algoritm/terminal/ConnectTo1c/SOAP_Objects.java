@@ -13,12 +13,17 @@ public class SOAP_Objects {
 
     public static String getReception(Reception reception) {
         JSONReception jsonReception = new JSONReception(reception);
-
         Gson gson = new GsonBuilder().create();
-
         String stringReception = gson.toJson(jsonReception);
-
         return stringReception;
+    }
+
+    public static String getCarData(CarData carData) {
+        JSONCarData jsonCarData = new JSONCarData(carData);
+        Gson gson = new GsonBuilder().create();
+        String stringCarData = gson.toJson(jsonCarData);
+        return stringCarData;
+
     }
 
     private static class JSONReception {
@@ -42,35 +47,34 @@ public class SOAP_Objects {
                 }
             }
         }
+    }
 
-        private static class JSONCarData {
-            @SerializedName("ReceptionID")
-            String ReceptionID;
+    private static class JSONCarData {
+        @SerializedName("ReceptionID")
+        String ReceptionID;
 
-            @SerializedName("carID")
-            String carID;
+        @SerializedName("carID")
+        String carID;
 
-            @SerializedName("barCode")
-            String barCode;
+        @SerializedName("barCode")
+        String barCode;
 
-            @SerializedName("sectorID")
-            String sectorID;
+        @SerializedName("sectorID")
+        String sectorID;
 
-            @SerializedName("row")
-            String row;
+        @SerializedName("row")
+        String row;
 
-            @SerializedName("productionDate")
-            String productionDate;
+        @SerializedName("productionDate")
+        String productionDate;
 
-            JSONCarData(CarData carData) {
-                ReceptionID = carData.getReceptionID();
-                barCode = carData.getBarCode();
-                carID = carData.getCarID();
-                sectorID = carData.getSectorID();
-                row = carData.getRow();
-                productionDate = carData.getProductionDateString();
-
-            }
+        JSONCarData(CarData carData) {
+            ReceptionID = carData.getReceptionID();
+            barCode = carData.getBarCode();
+            carID = carData.getCarID();
+            sectorID = carData.getSectorID();
+            row = carData.getRow();
+            productionDate = carData.getProductionDateString();
         }
     }
 }

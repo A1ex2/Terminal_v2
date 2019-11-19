@@ -15,6 +15,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,6 +35,7 @@ import java.util.Date;
 import ua.org.algoritm.terminal.DataBase.SharedData;
 import ua.org.algoritm.terminal.Objects.CarData;
 import ua.org.algoritm.terminal.Objects.Sector;
+import ua.org.algoritm.terminal.Objects.TypeDoc;
 import ua.org.algoritm.terminal.R;
 import ua.org.algoritm.terminal.Service.IntentServiceDataBase;
 
@@ -54,7 +56,6 @@ public class CarActivity extends AppCompatActivity {
 
     private ArrayList<Sector> mSectors = SharedData.SECTORS;
     private static final int REQUEST_CODE_SCAN = 0x0000c0de;
-
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -87,6 +88,7 @@ public class CarActivity extends AppCompatActivity {
                 carData.setSector(mSector.getName());
                 carData.setRow(editRow.getText().toString());
                 carData.setBarCode(barCode.getText().toString());
+
                 SharedData.updateReception(carData);
 
                 Toast.makeText(v.getContext(), "Запись данных...", Toast.LENGTH_LONG).show();
@@ -103,6 +105,7 @@ public class CarActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         carData = intent.getParcelableExtra("CarData");
+
         car.setText(carData.getCar());
         barCode.setText(carData.getBarCode());
 
@@ -175,8 +178,8 @@ public class CarActivity extends AppCompatActivity {
             } else {
                 super.onActivityResult(requestCode, resultCode, data);
             }
-        } else if (requestCode == IntentServiceDataBase.REQUEST_CODE_CAR_DATA){
-            if (resultCode == Activity.RESULT_OK){
+        } else if (requestCode == IntentServiceDataBase.REQUEST_CODE_CAR_DATA) {
+            if (resultCode == Activity.RESULT_OK) {
                 setResult(Activity.RESULT_OK);
                 finish();
             }

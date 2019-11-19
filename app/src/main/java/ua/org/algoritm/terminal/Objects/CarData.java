@@ -109,13 +109,11 @@ public class CarData implements Parcelable {
 
     @Override
     public String toString() {
-        return "CarData{" +
-                "car='" + car + '\'' +
-                ", barCode='" + barCode + '\'' +
-                ", sector='" + sector + '\'' +
-                ", row='" + row + '\'' +
-                ", productionDate=" + productionDate +
-                '}';
+        return "" + car + " "
+                + barCode + " "
+                + sector + " "
+                + row + " "
+                + getProductionDateString();
     }
 
     @Override

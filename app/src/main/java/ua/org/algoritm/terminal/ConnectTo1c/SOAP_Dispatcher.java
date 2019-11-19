@@ -9,6 +9,7 @@ import org.ksoap2.transport.HttpTransportSE;
 import java.text.ParseException;
 import java.util.ArrayList;
 
+import ua.org.algoritm.terminal.Activity.CarActivityMoving;
 import ua.org.algoritm.terminal.Activity.CarDataList;
 import ua.org.algoritm.terminal.Activity.DetailReception;
 import ua.org.algoritm.terminal.Activity.Password;
@@ -96,6 +97,10 @@ public class SOAP_Dispatcher extends Thread {
             case CarDataList.ACTION_CAR_LIST:
                 getCarList();
                 break;
+
+                case CarActivityMoving.ACTION_SET_MOVING_CAR:
+                    setMovingCB();
+                break;
         }
 
         if (ACTION == Password.ACTION_VERIFY | ACTION == Password.ACTION_LOGIN_LIST
@@ -152,7 +157,22 @@ public class SOAP_Dispatcher extends Thread {
                 CarDataList.soapHandler.sendEmptyMessage(DetailReception.ACTION_ConnectionError);
             }
 
+        }else if (ACTION == CarActivityMoving.ACTION_SET_MOVING_CAR) {
+            if (soap_Response != null) {
+                CarActivityMoving.soapParam_Response = soap_Response;
+                CarActivityMoving.soapHandler.sendEmptyMessage(ACTION);
+            } else {
+                CarActivityMoving.soapHandler.sendEmptyMessage(DetailReception.ACTION_ConnectionError);
+            }
         }
+    }
+
+    private void setMovingCB() {
+        String method = "setMoving";
+        String action = NAMESPACE + "#setMoving:" + method;
+        SoapObject request = new SoapObject(NAMESPACE, method);
+        request.addProperty("CarData", string_Inquiry);
+        soap_Response = callWebService(request, action);
     }
 
     private void getCarList() {
@@ -163,13 +183,11 @@ public class SOAP_Dispatcher extends Thread {
     }
 
     private void setCB() {
-
         String method = "setReception";
         String action = NAMESPACE + "#setReception:" + method;
         SoapObject request = new SoapObject(NAMESPACE, method);
         request.addProperty("Reception", string_Inquiry);
         soap_Response = callWebService(request, action);
-
     }
 
     private void checkUpdate() {

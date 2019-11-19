@@ -28,6 +28,7 @@ import ua.org.algoritm.terminal.ConnectTo1c.UIManager;
 import ua.org.algoritm.terminal.DataBase.SharedData;
 import ua.org.algoritm.terminal.Objects.CarData;
 import ua.org.algoritm.terminal.Objects.Reception;
+import ua.org.algoritm.terminal.Objects.TypeDoc;
 import ua.org.algoritm.terminal.R;
 
 public class DetailReception extends AppCompatActivity {
@@ -123,7 +124,6 @@ public class DetailReception extends AppCompatActivity {
                 //updateLists();
             }
         }
-
     }
 
 //    private CarData getCarDataByBarCode(String barCode) {

@@ -61,6 +61,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/barcodeGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
@@ -86,7 +87,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:inputType="number"
-            tools:text="2000000588964"/>
+            tools:text="2000000588964" />
 
         <ImageButton
             android:id="@+id/scanBarCode"
@@ -97,6 +98,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/dateGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
@@ -134,6 +136,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/sectorGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
@@ -156,8 +159,8 @@
             android:id="@+id/editSector"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:layout_weight="1"
             android:layout_gravity="center_vertical"
+            android:layout_weight="1"
             android:inputType="text"
             android:spinnerMode="dialog"
             android:textSize="40sp" />
@@ -165,6 +168,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/rowGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"

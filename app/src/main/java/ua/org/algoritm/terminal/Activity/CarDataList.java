@@ -4,10 +4,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.widget.SearchView;
 
 import org.ksoap2.SoapFault;
 import org.ksoap2.serialization.PropertyInfo;
@@ -58,6 +64,34 @@ public class CarDataList extends AppCompatActivity {
         mDialog.show();
 
         getList();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_search, menu);
+
+        final MenuItem searchItem = menu.findItem(R.id.menu_item_search);
+        final SearchView searchView = (SearchView) searchItem.getActionView();
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if (!searchView.isIconified()) {
+                    searchView.setIconified(true);
+                }
+                searchItem.collapseActionView();
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                adapter.setFilter(newText, carData);
+                return true;
+            }
+        });
+
+        return true;
     }
 
     private void getList() {
@@ -140,7 +174,10 @@ public class CarDataList extends AppCompatActivity {
             adapter.setActionListener(new RecyclerAdapterCarData.ActionListener() {
                 @Override
                 public void onClick(CarData carData) {
-
+                    Intent intent = getIntent();
+                    intent.putExtra("CarData", carData);
+                    setResult(Activity.RESULT_OK, intent);
+                    finish();
                 }
             });
 

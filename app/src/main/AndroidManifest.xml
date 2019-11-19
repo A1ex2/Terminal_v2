@@ -33,6 +33,10 @@
             android:name=".Activity.CarActivity"
             android:theme="@style/NoBar" />
         <activity
+            android:name=".Activity.CarActivityMoving"
+            android:theme="@style/NoBar" />
+        <activity
+
             android:name=".Activity.DetailReception"
             android:theme="@style/NoBar" />
         <activity
