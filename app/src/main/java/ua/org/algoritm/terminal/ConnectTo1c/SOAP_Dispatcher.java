@@ -9,6 +9,7 @@ import org.ksoap2.transport.HttpTransportSE;
 import java.text.ParseException;
 import java.util.ArrayList;
 
+import ua.org.algoritm.terminal.Activity.CarActivityIssuance;
 import ua.org.algoritm.terminal.Activity.CarActivityMoving;
 import ua.org.algoritm.terminal.Activity.CarDataList;
 import ua.org.algoritm.terminal.Activity.DetailReception;
@@ -20,6 +21,7 @@ import ua.org.algoritm.terminal.Objects.Reception;
 import ua.org.algoritm.terminal.Objects.Sector;
 import ua.org.algoritm.terminal.Objects.User;
 import ua.org.algoritm.terminal.ui.acceptance.AcceptanceFragment;
+import ua.org.algoritm.terminal.ui.issuance.IssuanceFragment;
 
 
 public class SOAP_Dispatcher extends Thread {
@@ -98,8 +100,16 @@ public class SOAP_Dispatcher extends Thread {
                 getCarList();
                 break;
 
-                case CarActivityMoving.ACTION_SET_MOVING_CAR:
-                    setMovingCB();
+            case CarActivityMoving.ACTION_SET_MOVING_CAR:
+                setMovingCB();
+                break;
+
+            case IssuanceFragment.ACTION_LIST:
+                getIssuanceList();
+                break;
+
+            case CarActivityIssuance.ACTION_SET_ISSUANCE_CAR:
+                setIssuanceCB();
                 break;
         }
 
@@ -157,14 +167,43 @@ public class SOAP_Dispatcher extends Thread {
                 CarDataList.soapHandler.sendEmptyMessage(DetailReception.ACTION_ConnectionError);
             }
 
-        }else if (ACTION == CarActivityMoving.ACTION_SET_MOVING_CAR) {
+        } else if (ACTION == CarActivityMoving.ACTION_SET_MOVING_CAR) {
             if (soap_Response != null) {
                 CarActivityMoving.soapParam_Response = soap_Response;
                 CarActivityMoving.soapHandler.sendEmptyMessage(ACTION);
             } else {
                 CarActivityMoving.soapHandler.sendEmptyMessage(DetailReception.ACTION_ConnectionError);
             }
+        } else if (ACTION == IssuanceFragment.ACTION_LIST) {
+            if (soap_Response != null) {
+                IssuanceFragment.soapParam_Response = soap_Response;
+                IssuanceFragment.soapHandler.sendEmptyMessage(ACTION);
+            } else {
+                IssuanceFragment.soapHandler.sendEmptyMessage(DetailReception.ACTION_ConnectionError);
+            }
+        }  else if (ACTION == CarActivityIssuance.ACTION_SET_ISSUANCE_CAR) {
+            if (soap_Response != null) {
+                CarActivityIssuance.soapParam_Response = soap_Response;
+                CarActivityIssuance.soapHandler.sendEmptyMessage(ACTION);
+            } else {
+                CarActivityIssuance.soapHandler.sendEmptyMessage(DetailReception.ACTION_ConnectionError);
+            }
         }
+    }
+
+    private void setIssuanceCB() {
+        String method = "setIssuance";
+        String action = NAMESPACE + "#setIssuance:" + method;
+        SoapObject request = new SoapObject(NAMESPACE, method);
+        request.addProperty("CarDataIssuance", string_Inquiry);
+        soap_Response = callWebService(request, action);
+    }
+
+    private void getIssuanceList() {
+        String method = "GetIssuanceList";
+        String action = NAMESPACE + "#GetIssuanceList:" + method;
+        SoapObject request = new SoapObject(NAMESPACE, method);
+        soap_Response = callWebService(request, action);
     }
 
     private void setMovingCB() {

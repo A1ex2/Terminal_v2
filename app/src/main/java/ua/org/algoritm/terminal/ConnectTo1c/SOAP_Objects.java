@@ -7,6 +7,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 
 import ua.org.algoritm.terminal.Objects.CarData;
+import ua.org.algoritm.terminal.Objects.CarDataIssuance;
 import ua.org.algoritm.terminal.Objects.Reception;
 
 public class SOAP_Objects {
@@ -19,9 +20,19 @@ public class SOAP_Objects {
     }
 
     public static String getCarData(CarData carData) {
+
         JSONCarData jsonCarData = new JSONCarData(carData);
         Gson gson = new GsonBuilder().create();
         String stringCarData = gson.toJson(jsonCarData);
+        return stringCarData;
+
+    }
+
+    public static String getCarDataIssuance(CarDataIssuance carData) {
+
+        JSONCarDataIssuance jsonCarDataIssuance = new JSONCarDataIssuance(carData);
+        Gson gson = new GsonBuilder().create();
+        String stringCarData = gson.toJson(jsonCarDataIssuance);
         return stringCarData;
 
     }
@@ -75,6 +86,19 @@ public class SOAP_Objects {
             sectorID = carData.getSectorID();
             row = carData.getRow();
             productionDate = carData.getProductionDateString();
+        }
+    }
+
+    private static class JSONCarDataIssuance {
+        @SerializedName("IssuanceID")
+        String IssuanceID;
+
+        @SerializedName("carID")
+        String carID;
+
+        JSONCarDataIssuance(CarDataIssuance carData) {
+            IssuanceID = carData.getIssuanceID();
+            carID = carData.getCarID();
         }
     }
 }

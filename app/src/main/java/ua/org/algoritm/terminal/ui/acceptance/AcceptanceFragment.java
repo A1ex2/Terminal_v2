@@ -1,7 +1,6 @@
 package ua.org.algoritm.terminal.ui.acceptance;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -13,25 +12,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.google.android.material.snackbar.Snackbar;
-
 import org.ksoap2.SoapFault;
-
 import java.lang.ref.WeakReference;
-
 import ua.org.algoritm.terminal.Activity.DetailReception;
 import ua.org.algoritm.terminal.Adapters.RecyclerReceptionAdapter;
 import ua.org.algoritm.terminal.ConnectTo1c.SOAP_Dispatcher;
 import ua.org.algoritm.terminal.ConnectTo1c.UIManager;
 import ua.org.algoritm.terminal.DataBase.SharedData;
-
 import ua.org.algoritm.terminal.Objects.Reception;
 import ua.org.algoritm.terminal.R;
 
