@@ -16,7 +16,7 @@ public class SharedData {
     public static MainActivity app;
     public static String LOGIN;
     public static String PASSWORD;
-    public static String VERSION = "2.0.0";
+    public static String VERSION = "2.0.1";
 
     public static void updateReception(CarData carData) {
         boolean mFinish = false;
