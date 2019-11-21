@@ -19,11 +19,11 @@ android {
     }
 
     // Gradle Plugin 2.0+
-    android {
-        defaultConfig {
-            vectorDrawables.useSupportLibrary = true
-        }
-    }
+//    android {
+//        defaultConfig {
+//            vectorDrawables.useSupportLibrary = true
+//        }
+//    }
 }
 
 dependencies {
