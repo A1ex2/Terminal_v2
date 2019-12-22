@@ -123,6 +123,9 @@ public class MainActivity extends AppCompatActivity {
             case android.R.id.home:
                 drawer.openDrawer(GravityCompat.START);
                 return true;
+            case R.id.action_settings:
+
+                break;
         }
 
         return super.onOptionsItemSelected(item);

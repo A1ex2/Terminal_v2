@@ -1,5 +1,7 @@
 package ua.org.algoritm.terminal.ConnectTo1c;
 
+import android.content.SharedPreferences;
+
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapObject;
@@ -23,6 +25,8 @@ import ua.org.algoritm.terminal.Objects.User;
 import ua.org.algoritm.terminal.ui.acceptance.AcceptanceFragment;
 import ua.org.algoritm.terminal.ui.issuance.IssuanceFragment;
 
+import static android.content.Context.MODE_PRIVATE;
+
 
 public class SOAP_Dispatcher extends Thread {
 
@@ -30,8 +34,10 @@ public class SOAP_Dispatcher extends Thread {
     public static String soapParam_pass = "31415926";
     public static String soapParam_user = "Администратор";
     //public static String soapParam_URL = "http://gate.algoritm.org.ua:8778/blg_log_test/ws/terminal.1cws";
-    //public static String soapParam_URL = "http://192.168.1.4:8090/blg_log/ws/terminal.1cws";
-    public static String soapParam_URL = "http://217.25.195.61:83/blg_log_dev/ws/terminal.1cws";
+    //public static String soapParam_URL = "http://192.168.1.10/blg/ws/terminal.1cws";
+    //public static String soapParam_URL = "http://217.25.195.61:83/blg_log_dev/ws/terminal.1cws";
+//    public static String soapParam_URL = "http://192.168.1.4:8090/blg_log/ws/terminal.1cws";
+    public static String soapParam_URL;
     public String string_Inquiry;
 
     int timeout;
@@ -44,6 +50,8 @@ public class SOAP_Dispatcher extends Thread {
     String mSoapParam_URL;
 
     public SOAP_Dispatcher(int SOAP_ACTION, String sParam_user, String sParam_pass) {
+        setSoapParamURL();
+
         timeout = soapParam_timeout;
         URL = soapParam_URL;
         user = sParam_user;
@@ -53,12 +61,23 @@ public class SOAP_Dispatcher extends Thread {
     }
 
     public SOAP_Dispatcher(int SOAP_ACTION) {
+        setSoapParamURL();
+
         timeout = soapParam_timeout;
         URL = soapParam_URL;
         user = soapParam_user;
         pass = soapParam_pass;
         ACTION = SOAP_ACTION;
         mSoapParam_URL = soapParam_URL;
+    }
+
+    private void setSoapParamURL(){
+        String server = SharedData.API;
+        if (server.equals("")){
+            server = "http://217.25.195.61:83/blg_log_dev";
+//            server = "http://192.168.1.10/blg_log";
+        }
+        soapParam_URL = server + "/ws/terminal.1cws";
     }
 
     @Override

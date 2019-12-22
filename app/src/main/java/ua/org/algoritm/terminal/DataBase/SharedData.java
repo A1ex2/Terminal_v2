@@ -1,6 +1,8 @@
 package ua.org.algoritm.terminal.DataBase;
 
 
+import android.content.SharedPreferences;
+
 import java.util.ArrayList;
 
 import ua.org.algoritm.terminal.MainActivity;
@@ -16,7 +18,9 @@ public class SharedData {
     public static MainActivity app;
     public static String LOGIN;
     public static String PASSWORD;
+    public static String API;
     public static String VERSION = "2.0.1";
+
 
     public static void updateReception(CarData carData) {
         boolean mFinish = false;
@@ -115,4 +119,14 @@ public class SharedData {
     }
 
 
+    public static void deleteCarData(String carID, Reception reception) {
+        ArrayList<CarData> carDataArrayList = reception.getCarData();
+        for (int i = 0; i < carDataArrayList.size(); i++) {
+            CarData mCarData = carDataArrayList.get(i);
+            if (mCarData.getCarID().equals(carID)) {
+                carDataArrayList.remove(i);
+                break;
+            }
+        }
+    }
 }

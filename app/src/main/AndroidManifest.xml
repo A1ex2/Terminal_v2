@@ -22,7 +22,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Activity.CarDataList"></activity>
+        <activity android:name=".Activity.ApiSettings"></activity>
+        <activity android:name=".Activity.CarDataList" />
 
         <service
             android:name=".Service.IntentServiceDataBase"
@@ -39,7 +40,6 @@
             android:name=".Activity.CarActivityMoving"
             android:theme="@style/NoBar" />
         <activity
-
             android:name=".Activity.DetailReception"
             android:theme="@style/NoBar" />
         <activity

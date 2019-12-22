@@ -1,6 +1,8 @@
 package ua.org.algoritm.terminal.Activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -120,7 +122,8 @@ public class DetailReception extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_PUT_CB) {
             if (resultCode == Activity.RESULT_OK) {
-                setCB();
+                CarData carData = data.getParcelableExtra("CarData");
+                setCB(carData);
                 //updateLists();
             }
         }
@@ -195,8 +198,13 @@ public class DetailReception extends AppCompatActivity {
     private void checkSetReception() {
 
         Boolean isSaveSuccess = Boolean.parseBoolean(soapParam_Response.getPropertyAsString("Result"));
+        String carID = soapParam_Response.getPrimitivePropertyAsString("CarID");
 
         if (isSaveSuccess) {
+            if (!carID.equals("")){
+                SharedData.deleteCarData(carID, reception);
+                updateListsCarData();
+            }
 
             uiManager.showToast(getString(R.string.success));
 
@@ -207,9 +215,19 @@ public class DetailReception extends AppCompatActivity {
 //            dispatcher.start();
 
         } else {
-            uiManager.showToast(soapParam_Response.getPropertyAsString("Description"));
-        }
 
+            //uiManager.showToast(soapParam_Response.getPropertyAsString("Description"));
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage(soapParam_Response.getPropertyAsString("Description"))
+                    .setCancelable(false)
+                    .setPositiveButton(getString(R.string.butt_OK), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    });
+            AlertDialog alert = builder.create();
+            alert.show();
+        }
     }
 
     private String getSoapErrorMessage() {
@@ -229,17 +247,18 @@ public class DetailReception extends AppCompatActivity {
         return errorMessage;
     }
 
-    private void setCB() {
+    private void setCB(CarData carData) {
+        Reception mReception = new Reception(reception);
+        mReception.getCarData().add(carData);
 
         SharedPreferences preferences = getSharedPreferences("MyPref", MODE_PRIVATE);
         String login = preferences.getString("Login", "");
         String password = preferences.getString("Password", "");
 
         SOAP_Dispatcher dispatcher = new SOAP_Dispatcher(ACTION_SET_RECEPTION, login, password);
-        String stringReception = SOAP_Objects.getReception(reception);
+        String stringReception = SOAP_Objects.getReception(mReception);
         dispatcher.string_Inquiry = stringReception;
 
         dispatcher.start();
-
     }
 }

@@ -1,6 +1,7 @@
 package ua.org.algoritm.terminal.Activity;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,6 +14,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -47,6 +50,8 @@ public class Password extends AppCompatActivity {
 
     private ProgressDialog mDialog;
 
+    private static final int REQUEST_CODE_EDIT_API = 2;
+
     public static String mLogin;
     public static String mPassword;
 
@@ -68,6 +73,9 @@ public class Password extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_password);
+
+        preferences = getSharedPreferences("MyPref", MODE_PRIVATE);
+        SharedData.API = preferences.getString("Api", "");
 
         SOAP_Dispatcher dispatcherUpdate = new SOAP_Dispatcher(ACTION_UPDATE);
         dispatcherUpdate.start();
@@ -99,8 +107,6 @@ public class Password extends AppCompatActivity {
             }
         });
 
-        preferences = getSharedPreferences("MyPref", MODE_PRIVATE);
-
         login.setText(preferences.getString("Login", ""));
 
         SOAP_Dispatcher dispatcher = new SOAP_Dispatcher(ACTION_LOGIN_LIST);
@@ -109,6 +115,35 @@ public class Password extends AppCompatActivity {
         if (hasPermission(Manifest.permission.GET_ACCOUNTS)) {
         } else {
             requestPermissions();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_settings, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.settings:
+                Intent intent = new Intent(Password.this, ApiSettings.class);
+                startActivityForResult(intent, REQUEST_CODE_EDIT_API);
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_EDIT_API) {
+            if (resultCode == Activity.RESULT_OK) {
+                SOAP_Dispatcher dispatcher = new SOAP_Dispatcher(ACTION_LOGIN_LIST);
+                dispatcher.start();
+            }
         }
     }
 

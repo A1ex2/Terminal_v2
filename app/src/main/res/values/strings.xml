@@ -52,5 +52,7 @@
     <string name="issuance_car">Выдать авто</string>
     <string name="textDriver">Водитель</string>
     <string name="textAutoNumber">Номер автовоза</string>
+    <string name="settings">Настройки</string>
+    <string name="Server">Сервер</string>
 
 </resources>

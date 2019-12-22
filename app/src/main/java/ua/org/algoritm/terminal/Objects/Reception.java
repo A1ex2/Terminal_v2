@@ -2,6 +2,7 @@ package ua.org.algoritm.terminal.Objects;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -17,6 +18,16 @@ public class Reception implements Parcelable {
     private ArrayList<CarData> CarData;
 
     public Reception() {
+    }
+
+    public Reception(Reception reception) {
+        ID = reception.getID();
+        Description = reception.getDescription();
+        AutoNumber = reception.getAutoNumber();
+        Driver = reception.getDriver();
+        DriverPhone = reception.getDriverPhone();
+        InvoiceNumber = reception.getInvoiceNumber();
+        CarData = new ArrayList<>();
     }
 
     @Override

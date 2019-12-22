@@ -173,18 +173,23 @@ public class CarActivity extends AppCompatActivity {
                 if (Result.getContents() == null) {
 
                 } else {
-                    barCode.setText(Result.getContents());
+                    String tBarCode = Result.getContents();
+                    tBarCode = tBarCode.replace("*", "");
+                    barCode.setText(tBarCode);
                 }
             } else {
                 super.onActivityResult(requestCode, resultCode, data);
             }
         } else if (requestCode == IntentServiceDataBase.REQUEST_CODE_CAR_DATA) {
             if (resultCode == Activity.RESULT_OK) {
-                setResult(Activity.RESULT_OK);
+                Intent intent = new Intent();
+                intent.putExtra("CarData", carData);
+                setResult(Activity.RESULT_OK, intent);
                 finish();
             }
         }
     }
+
 
     private TextWatcher getTextWatcher() {
         TextWatcher tw = new TextWatcher() {
