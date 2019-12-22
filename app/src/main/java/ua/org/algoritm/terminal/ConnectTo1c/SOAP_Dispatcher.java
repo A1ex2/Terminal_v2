@@ -71,11 +71,11 @@ public class SOAP_Dispatcher extends Thread {
         mSoapParam_URL = soapParam_URL;
     }
 
-    private void setSoapParamURL(){
+    private void setSoapParamURL() {
         String server = SharedData.API;
-        if (server.equals("")){
-            server = "http://217.25.195.61:83/blg_log_dev";
-//            server = "http://192.168.1.10/blg_log";
+        if (server.equals("")) {
+            // server = "http://217.25.195.61:83/blg_log_dev";
+            server = "http://192.168.1.10/blg_log";
         }
         soapParam_URL = server + "/ws/terminal.1cws";
     }
@@ -201,7 +201,7 @@ public class SOAP_Dispatcher extends Thread {
             } else {
                 IssuanceFragment.soapHandler.sendEmptyMessage(DetailReception.ACTION_ConnectionError);
             }
-        }  else if (ACTION == CarActivityIssuance.ACTION_SET_ISSUANCE_CAR) {
+        } else if (ACTION == CarActivityIssuance.ACTION_SET_ISSUANCE_CAR) {
             if (soap_Response != null) {
                 CarActivityIssuance.soapParam_Response = soap_Response;
                 CarActivityIssuance.soapHandler.sendEmptyMessage(ACTION);

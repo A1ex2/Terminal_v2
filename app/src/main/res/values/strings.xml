@@ -54,5 +54,6 @@
     <string name="textAutoNumber">Номер автовоза</string>
     <string name="settings">Настройки</string>
     <string name="Server">Сервер</string>
+    <string name="scaner">Сканер</string>
 
 </resources>

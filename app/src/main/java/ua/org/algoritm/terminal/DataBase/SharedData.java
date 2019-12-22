@@ -1,8 +1,5 @@
 package ua.org.algoritm.terminal.DataBase;
 
-
-import android.content.SharedPreferences;
-
 import java.util.ArrayList;
 
 import ua.org.algoritm.terminal.MainActivity;
@@ -19,7 +16,7 @@ public class SharedData {
     public static String LOGIN;
     public static String PASSWORD;
     public static String API;
-    public static String VERSION = "2.0.1";
+    public static String VERSION = "2.5.5";
 
 
     public static void updateReception(CarData carData) {
