@@ -74,8 +74,8 @@ public class SOAP_Dispatcher extends Thread {
     private void setSoapParamURL() {
         String server = SharedData.API;
         if (server.equals("")) {
-            // server = "http://217.25.195.61:83/blg_log_dev";
-            server = "http://192.168.1.10/blg_log";
+            server = "http://217.25.195.61:83/blg_log_dev";
+            //server = "http://192.168.1.10/blg_log";
         }
         soapParam_URL = server + "/ws/terminal.1cws";
     }
