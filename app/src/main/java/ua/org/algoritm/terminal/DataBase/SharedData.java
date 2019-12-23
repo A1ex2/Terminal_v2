@@ -16,7 +16,7 @@ public class SharedData {
     public static String LOGIN;
     public static String PASSWORD;
     public static String API;
-    public static String VERSION = "2.5.5";
+    public static String VERSION = "2.5.1";
 
 
     public static void updateReception(CarData carData) {
