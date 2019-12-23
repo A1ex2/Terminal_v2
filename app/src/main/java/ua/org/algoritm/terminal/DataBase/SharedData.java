@@ -115,7 +115,6 @@ public class SharedData {
         return sector;
     }
 
-
     public static void deleteCarData(String carID, Reception reception) {
         ArrayList<CarData> carDataArrayList = reception.getCarData();
         for (int i = 0; i < carDataArrayList.size(); i++) {
@@ -125,5 +124,18 @@ public class SharedData {
                 break;
             }
         }
+    }
+
+    public static String clearBarcode(String tBarCode){
+        tBarCode = tBarCode.replace("*", "");
+        tBarCode = tBarCode.replace(":", "");
+        tBarCode = tBarCode.replace(";", "");
+        tBarCode = tBarCode.replace("-", "");
+        tBarCode = tBarCode.replace(" ", "");
+        tBarCode = tBarCode.replace(".", "");
+        tBarCode = tBarCode.replace("/", "");
+        tBarCode = tBarCode.replace("_", "");
+
+        return tBarCode;
     }
 }

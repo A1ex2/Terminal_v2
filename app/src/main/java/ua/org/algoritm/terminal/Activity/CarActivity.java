@@ -174,7 +174,7 @@ public class CarActivity extends AppCompatActivity {
 
                 } else {
                     String tBarCode = Result.getContents();
-                    tBarCode = tBarCode.replace("*", "");
+                    tBarCode = SharedData.clearBarcode(tBarCode);
                     barCode.setText(tBarCode);
                 }
             } else {

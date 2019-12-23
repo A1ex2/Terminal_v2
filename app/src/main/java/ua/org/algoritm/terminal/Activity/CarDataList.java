@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import ua.org.algoritm.terminal.Adapters.RecyclerAdapterCarData;
 import ua.org.algoritm.terminal.ConnectTo1c.SOAP_Dispatcher;
 import ua.org.algoritm.terminal.ConnectTo1c.UIManager;
+import ua.org.algoritm.terminal.DataBase.SharedData;
 import ua.org.algoritm.terminal.MainActivity;
 import ua.org.algoritm.terminal.Objects.CarData;
 import ua.org.algoritm.terminal.R;
@@ -82,7 +83,7 @@ public class CarDataList extends AppCompatActivity {
 
                 } else {
                     String tBarCode = Result.getContents();
-                    tBarCode = tBarCode.replace("*", "");
+                    tBarCode = SharedData.clearBarcode(tBarCode);
 
                     for (int i = 0; i < carsData.size(); i++) {
                         CarData carData = carsData.get(i);
