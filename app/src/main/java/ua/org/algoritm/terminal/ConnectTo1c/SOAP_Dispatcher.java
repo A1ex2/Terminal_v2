@@ -30,7 +30,7 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class SOAP_Dispatcher extends Thread {
 
-    public static final Integer soapParam_timeout = 300;
+    public static final Integer soapParam_timeout = 120000;
     public static String soapParam_pass = "31415926";
     public static String soapParam_user = "Администратор";
     //public static String soapParam_URL = "http://gate.algoritm.org.ua:8778/blg_log_test/ws/terminal.1cws";
@@ -404,7 +404,7 @@ public class SOAP_Dispatcher extends Thread {
         envelope.setOutputSoapObject(request);
         envelope.dotNet = true;
         envelope.implicitTypes = true;
-        HttpTransportSE androidHttpTransport = new HttpTransportBasicAuthSE(URL, user, pass);
+        HttpTransportSE androidHttpTransport = new HttpTransportBasicAuthSE(URL, user, pass, timeout);
         androidHttpTransport.debug = false;
 
         try {

@@ -21,8 +21,9 @@ public class HttpTransportBasicAuthSE extends HttpTransportSE {
      *@param username Username for the Basic Authentication challenge RFC 2617
      *@param password Password for the Basic Authentication challenge RFC 2617
      */
-    public HttpTransportBasicAuthSE(String url, String username, String password) {
+    public HttpTransportBasicAuthSE(String url, String username, String password, int timeout) {
         super(url); //Это тайм аут в милесекундах
+        this.timeout  = timeout;
         this.username = username;
         this.password = password;
     }
