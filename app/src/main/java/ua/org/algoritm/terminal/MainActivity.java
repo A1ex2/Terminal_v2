@@ -1,7 +1,12 @@
 package ua.org.algoritm.terminal;
 
+import android.content.BroadcastReceiver;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.net.ConnectivityManager;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -16,8 +21,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.ActivityNavigator;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.DialogFragmentNavigator;
+import androidx.navigation.fragment.FragmentNavigator;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
@@ -37,19 +45,24 @@ import org.ksoap2.serialization.SoapObject;
 
 import java.lang.ref.WeakReference;
 
+import ua.org.algoritm.terminal.Activity.CarActivityMoving;
+import ua.org.algoritm.terminal.Activity.CarDataList;
+import ua.org.algoritm.terminal.ConnectTo1c.NetworkChangeReceiver;
 import ua.org.algoritm.terminal.ConnectTo1c.SOAP_Dispatcher;
 import ua.org.algoritm.terminal.ConnectTo1c.UIManager;
 import ua.org.algoritm.terminal.DataBase.SharedData;
+import ua.org.algoritm.terminal.ui.acceptance.AcceptanceFragment;
+import ua.org.algoritm.terminal.ui.issuance.IssuanceFragment;
 
 public class MainActivity extends AppCompatActivity {
 
     private long backPressedTime;
+    private BroadcastReceiver mNetworkReceiver;
 
     public static final int ACTION_SECTORS_LIST = 13;
     //    public static final int ACTION_RECEPTION_LIST = 12;
     //    public static final int REQUEST_CODE_UPDATE_RECEPTION = 15;
     public static final int ACTION_ConnectionError = 0;
-
 
     public static UIManager uiManager;
     public static SoapFault responseFault;
@@ -59,12 +72,19 @@ public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     private DrawerLayout drawer;
-    private NavController navController;
+    private static NavController navController;
+    private static NavigationView navigationView;
+    private static Boolean start;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        start = true;
+        mNetworkReceiver = new NetworkChangeReceiver();
+        registerNetworkBroadcastForNougat();
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -78,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
 //        });
 
         drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_acceptance, R.id.nav_moving, R.id.nav_issue)
                 .setDrawerLayout(drawer)
@@ -101,12 +121,73 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public static void dialog(boolean value) {
+
+        if (start){
+            start = false;
+            return;
+        }
+
+        try {
+            int acceptance = 2131230906; //приемка
+            int issuance = 2131230909; // выдача
+            int moving = 2131230910; // перемещение
+
+            if (value) {
+
+                getUpdateSectorsList();
+
+                if (navController.getCurrentDestination().getId() == acceptance) {
+                    AcceptanceFragment.soapHandler.sendEmptyMessage(AcceptanceFragment.ACTION_Connection);
+                } else if (navController.getCurrentDestination().getId() == issuance) {
+                    IssuanceFragment.soapHandler.sendEmptyMessage(IssuanceFragment.ACTION_Connection);
+                } else if (navController.getCurrentDestination().getId() == moving) {
+                    CarDataList.soapHandler.sendEmptyMessage(CarDataList.ACTION_Connection);
+                }
+            } else {
+                if (navController.getCurrentDestination().getId() == acceptance) {
+                    AcceptanceFragment.soapHandler.sendEmptyMessage(AcceptanceFragment.ACTION_Connection_Lost);
+                } else if (navController.getCurrentDestination().getId() == issuance) {
+                    IssuanceFragment.soapHandler.sendEmptyMessage(IssuanceFragment.ACTION_Connection_Lost);
+                } else if (navController.getCurrentDestination().getId() == moving) {
+                    CarDataList.soapHandler.sendEmptyMessage(CarDataList.ACTION_Connection_Lost);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void registerNetworkBroadcastForNougat() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            registerReceiver(mNetworkReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            registerReceiver(mNetworkReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        }
+    }
+
+    protected void unregisterNetworkChanges() {
+        try {
+            unregisterReceiver(mNetworkReceiver);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        unregisterNetworkChanges();
+    }
+
     private void getUpdateReceptionList() {
 //        SOAP_Dispatcher dispatcher = new SOAP_Dispatcher(ACTION_RECEPTION_LIST);
 //        dispatcher.start();
     }
 
-    private void getUpdateSectorsList() {
+    private static void getUpdateSectorsList() {
         SOAP_Dispatcher dispatcher = new SOAP_Dispatcher(ACTION_SECTORS_LIST);
         dispatcher.start();
     }
@@ -147,7 +228,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }

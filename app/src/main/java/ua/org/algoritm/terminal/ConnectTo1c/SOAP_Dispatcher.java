@@ -30,7 +30,7 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class SOAP_Dispatcher extends Thread {
 
-    public static final Integer soapParam_timeout = 100;
+    public static final Integer soapParam_timeout = 300;
     public static String soapParam_pass = "31415926";
     public static String soapParam_user = "Администратор";
     //public static String soapParam_URL = "http://gate.algoritm.org.ua:8778/blg_log_test/ws/terminal.1cws";
@@ -374,23 +374,27 @@ public class SOAP_Dispatcher extends Thread {
         SoapObject request = new SoapObject(NAMESPACE, method);
         soap_Response = callWebService(request, action);
 
-        int count = soap_Response.getPropertyCount();
-        ArrayList<Sector> sectors = SharedData.SECTORS;
-        sectors.clear();
+        try {
+            int count = soap_Response.getPropertyCount();
+            ArrayList<Sector> sectors = SharedData.SECTORS;
+            sectors.clear();
 
-        Sector mSector = new Sector();
-        mSector.setID("0");
-        mSector.setName("");
-        sectors.add(mSector);
+            Sector mSector = new Sector();
+            mSector.setID("0");
+            mSector.setName("");
+            sectors.add(mSector);
 
-        for (int i = 0; i < count; i++) {
-            SoapObject sectorList = (SoapObject) soap_Response.getProperty(i);
+            for (int i = 0; i < count; i++) {
+                SoapObject sectorList = (SoapObject) soap_Response.getProperty(i);
 
-            Sector sector = new Sector();
-            sector.setID(sectorList.getPrimitivePropertyAsString("ID"));
-            sector.setName(sectorList.getPrimitivePropertyAsString("Name"));
+                Sector sector = new Sector();
+                sector.setID(sectorList.getPrimitivePropertyAsString("ID"));
+                sector.setName(sectorList.getPrimitivePropertyAsString("Name"));
 
-            sectors.add(sector);
+                sectors.add(sector);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

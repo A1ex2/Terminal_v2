@@ -55,5 +55,6 @@
     <string name="settings">Настройки</string>
     <string name="Server">Сервер</string>
     <string name="scaner">Сканер</string>
-
+    <string name="lost_for_internet">потеряно интернет-соединение...</string>
+    <string name="connection_for_internet">интернет-соединение восстановлено</string>
 </resources>

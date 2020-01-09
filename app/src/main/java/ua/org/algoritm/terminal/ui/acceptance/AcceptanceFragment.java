@@ -12,13 +12,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import org.ksoap2.SoapFault;
+
 import java.lang.ref.WeakReference;
+
 import ua.org.algoritm.terminal.Activity.DetailReception;
 import ua.org.algoritm.terminal.Adapters.RecyclerReceptionAdapter;
 import ua.org.algoritm.terminal.ConnectTo1c.SOAP_Dispatcher;
@@ -31,6 +35,8 @@ public class AcceptanceFragment extends Fragment {
     public static final int ACTION_RECEPTION_LIST = 12;
     public static final int REQUEST_CODE_UPDATE_RECEPTION = 15;
     public static final int ACTION_ConnectionError = 0;
+    public static final int ACTION_Connection = 1111;
+    public static final int ACTION_Connection_Lost = 2222;
 
     public static UIManager uiManager;
     public static SoapFault responseFault;
@@ -187,6 +193,14 @@ public class AcceptanceFragment extends Fragment {
                     break;
                 case ACTION_RECEPTION_LIST:
                     target.checkReceptionListResult();
+                    break;
+
+                case ACTION_Connection:
+                    uiManager.showToast(getString(R.string.connection_for_internet));
+                    target.getUpdateReceptionList();
+                    break;
+                case ACTION_Connection_Lost:
+                    uiManager.showToast(getString(R.string.lost_for_internet));
                     break;
             }
         }

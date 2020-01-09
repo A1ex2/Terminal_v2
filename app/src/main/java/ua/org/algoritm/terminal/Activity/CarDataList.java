@@ -7,12 +7,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.SearchView;
 
@@ -20,7 +23,6 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 import org.ksoap2.SoapFault;
-import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapObject;
 
 import java.lang.ref.WeakReference;
@@ -28,13 +30,12 @@ import java.text.ParseException;
 import java.util.ArrayList;
 
 import ua.org.algoritm.terminal.Adapters.RecyclerAdapterCarData;
+import ua.org.algoritm.terminal.ConnectTo1c.NetworkChangeReceiver;
 import ua.org.algoritm.terminal.ConnectTo1c.SOAP_Dispatcher;
 import ua.org.algoritm.terminal.ConnectTo1c.UIManager;
 import ua.org.algoritm.terminal.DataBase.SharedData;
-import ua.org.algoritm.terminal.MainActivity;
 import ua.org.algoritm.terminal.Objects.CarData;
 import ua.org.algoritm.terminal.R;
-import ua.org.algoritm.terminal.ui.acceptance.AcceptanceFragment;
 
 public class CarDataList extends AppCompatActivity {
     private RecyclerView recyclerView;
@@ -46,6 +47,8 @@ public class CarDataList extends AppCompatActivity {
 
     public static final int ACTION_CAR_LIST = 20;
     public static final int ACTION_ConnectionError = 0;
+    public static final int ACTION_Connection = 1111;
+    public static final int ACTION_Connection_Lost = 2222;
 
     public static UIManager uiManager;
     public static SoapFault responseFault;
@@ -142,6 +145,16 @@ public class CarDataList extends AppCompatActivity {
 
     }
 
+    public static void dialog(boolean value) {
+
+        try {
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
     private void scanBarCode() {
         IntentIntegrator intentIntegrator = new IntentIntegrator(this);
         intentIntegrator.setCaptureActivity(ScannerActivity.class);
@@ -182,6 +195,13 @@ public class CarDataList extends AppCompatActivity {
 
                 case ACTION_CAR_LIST:
                     target.checkListResult();
+                    break;
+                case ACTION_Connection:
+                    uiManager.showToast(getString(R.string.connection_for_internet));
+                    target.getList();
+                    break;
+                case ACTION_Connection_Lost:
+                    uiManager.showToast(getString(R.string.lost_for_internet));
                     break;
             }
         }

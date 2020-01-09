@@ -12,15 +12,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import org.ksoap2.SoapFault;
 import org.ksoap2.serialization.SoapObject;
+
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+
 import ua.org.algoritm.terminal.Activity.CarActivityIssuance;
 import ua.org.algoritm.terminal.Adapters.RecyclerAdapterCarDataIssuance;
 import ua.org.algoritm.terminal.ConnectTo1c.SOAP_Dispatcher;
@@ -34,6 +38,8 @@ public class IssuanceFragment extends Fragment {
 
     public static final int ACTION_LIST = 22;
     public static final int ACTION_ConnectionError = 0;
+    public static final int ACTION_Connection = 1111;
+    public static final int ACTION_Connection_Lost = 2222;
 
     public static UIManager uiManager;
     public static SoapObject soapParam_Response;
@@ -158,6 +164,14 @@ public class IssuanceFragment extends Fragment {
                     break;
                 case ACTION_LIST:
                     target.checkListResult();
+                    break;
+
+                case ACTION_Connection:
+                    uiManager.showToast(getString(R.string.connection_for_internet));
+                    target.getUpdateList();
+                    break;
+                case ACTION_Connection_Lost:
+                    uiManager.showToast(getString(R.string.lost_for_internet));
                     break;
             }
         }

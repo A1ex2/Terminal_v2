@@ -1,5 +1,9 @@
 package ua.org.algoritm.terminal.DataBase;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+
 import java.util.ArrayList;
 
 import ua.org.algoritm.terminal.MainActivity;
@@ -16,7 +20,7 @@ public class SharedData {
     public static String LOGIN;
     public static String PASSWORD;
     public static String API;
-    public static String VERSION = "2.5.6";
+    public static String VERSION = "2.6.0";
 
 
     public static void updateReception(CarData carData) {
@@ -137,5 +141,17 @@ public class SharedData {
         tBarCode = tBarCode.replace("_", "");
 
         return tBarCode;
+    }
+
+    public static boolean isOnline(Context context){
+        try {
+            ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo netInfo = cm.getActiveNetworkInfo();
+            //should check null because in airplane mode it will be null
+            return (netInfo != null && netInfo.isConnected());
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }
