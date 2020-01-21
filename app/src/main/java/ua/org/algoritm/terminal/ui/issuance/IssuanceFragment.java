@@ -112,7 +112,7 @@ public class IssuanceFragment extends Fragment {
         mDialog.setCancelable(false);
         mDialog.show();
 
-        SOAP_Dispatcher dispatcher = new SOAP_Dispatcher(ACTION_LIST, SharedData.LOGIN, SharedData.PASSWORD);
+        SOAP_Dispatcher dispatcher = new SOAP_Dispatcher(ACTION_LIST, SharedData.LOGIN, SharedData.PASSWORD, getContext());
         dispatcher.start();
 
     }

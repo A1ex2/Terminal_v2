@@ -1,6 +1,7 @@
 package ua.org.algoritm.terminal.DataBase;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
@@ -11,6 +12,7 @@ import ua.org.algoritm.terminal.Objects.CarData;
 import ua.org.algoritm.terminal.Objects.Reception;
 import ua.org.algoritm.terminal.Objects.Sector;
 import ua.org.algoritm.terminal.Objects.User;
+import ua.org.algoritm.terminal.R;
 
 public class SharedData {
     public static ArrayList<Sector> SECTORS = new ArrayList<>();
@@ -20,7 +22,7 @@ public class SharedData {
     public static String LOGIN;
     public static String PASSWORD;
     public static String API;
-    public static String VERSION = "2.6.0";
+    public static String VERSION;
 
 
     public static void updateReception(CarData carData) {

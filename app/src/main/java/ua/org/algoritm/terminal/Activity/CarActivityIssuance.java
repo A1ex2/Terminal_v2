@@ -123,7 +123,7 @@ public class CarActivityIssuance extends AppCompatActivity {
         String login = preferences.getString("Login", "");
         String password = preferences.getString("Password", "");
 
-        SOAP_Dispatcher dispatcher = new SOAP_Dispatcher(ACTION_SET_ISSUANCE_CAR, login, password);
+        SOAP_Dispatcher dispatcher = new SOAP_Dispatcher(ACTION_SET_ISSUANCE_CAR, login, password, getApplicationContext());
         String stringCarData = SOAP_Objects.getCarDataIssuance(carData);
         dispatcher.string_Inquiry = stringCarData;
 

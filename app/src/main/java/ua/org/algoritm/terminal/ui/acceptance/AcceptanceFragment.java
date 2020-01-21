@@ -145,7 +145,7 @@ public class AcceptanceFragment extends Fragment {
         recyclerView.setVisibility(RecyclerView.INVISIBLE);
         progressBar.setVisibility(ProgressBar.VISIBLE);
 
-        SOAP_Dispatcher dispatcher = new SOAP_Dispatcher(ACTION_RECEPTION_LIST, SharedData.LOGIN, SharedData.PASSWORD);
+        SOAP_Dispatcher dispatcher = new SOAP_Dispatcher(ACTION_RECEPTION_LIST, SharedData.LOGIN, SharedData.PASSWORD, getContext());
         dispatcher.start();
     }
 

@@ -76,8 +76,9 @@ public class Password extends AppCompatActivity {
 
         preferences = getSharedPreferences("MyPref", MODE_PRIVATE);
         SharedData.API = preferences.getString("Api", "");
+        SharedData.VERSION = getString(R.string.nav_header_version);
 
-        SOAP_Dispatcher dispatcherUpdate = new SOAP_Dispatcher(ACTION_UPDATE);
+        SOAP_Dispatcher dispatcherUpdate = new SOAP_Dispatcher(ACTION_UPDATE, getApplicationContext());
         dispatcherUpdate.start();
 
         uiManager = new UIManager(this);
@@ -109,7 +110,7 @@ public class Password extends AppCompatActivity {
 
         login.setText(preferences.getString("Login", ""));
 
-        SOAP_Dispatcher dispatcher = new SOAP_Dispatcher(ACTION_LOGIN_LIST);
+        SOAP_Dispatcher dispatcher = new SOAP_Dispatcher(ACTION_LOGIN_LIST, getApplicationContext());
         dispatcher.start();
 
         if (hasPermission(Manifest.permission.GET_ACCOUNTS)) {
@@ -141,7 +142,7 @@ public class Password extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_EDIT_API) {
             if (resultCode == Activity.RESULT_OK) {
-                SOAP_Dispatcher dispatcher = new SOAP_Dispatcher(ACTION_LOGIN_LIST);
+                SOAP_Dispatcher dispatcher = new SOAP_Dispatcher(ACTION_LOGIN_LIST, getApplicationContext());
                 dispatcher.start();
             }
         }
@@ -180,7 +181,7 @@ public class Password extends AppCompatActivity {
         ok.setEnabled(false);
 
 
-        SOAP_Dispatcher dispatcher = new SOAP_Dispatcher(ACTION_VERIFY);
+        SOAP_Dispatcher dispatcher = new SOAP_Dispatcher(ACTION_VERIFY, getApplicationContext());
         dispatcher.start();
 
     }

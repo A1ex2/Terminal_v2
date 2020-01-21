@@ -168,7 +168,7 @@ public class CarDataList extends AppCompatActivity {
     }
 
     private void getList() {
-        SOAP_Dispatcher dispatcher = new SOAP_Dispatcher(ACTION_CAR_LIST);
+        SOAP_Dispatcher dispatcher = new SOAP_Dispatcher(ACTION_CAR_LIST, getApplicationContext());
         dispatcher.start();
     }
 

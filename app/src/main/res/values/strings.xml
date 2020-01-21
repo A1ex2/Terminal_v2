@@ -1,7 +1,10 @@
 <resources>
     <string name="app_name">Terminal</string>
+
+    <string name="nav_header_version">v. 2.6.5</string>
+
     <string name="nav_header_title">Terminal</string>
-    <string name="nav_header_subtitle"></string>
+    <string name="nav_header_subtitle">v. 1.0.0</string>
     <string name="navigation_drawer_open">Открыть меню</string>
     <string name="navigation_drawer_close">Закрыть меню</string>
     <string name="nav_header_desc">Заголовок</string>

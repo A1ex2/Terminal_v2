@@ -1,6 +1,7 @@
 package ua.org.algoritm.terminal;
 
 import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -39,6 +40,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
+import android.widget.TextView;
 
 import org.ksoap2.SoapFault;
 import org.ksoap2.serialization.SoapObject;
@@ -116,12 +118,12 @@ public class MainActivity extends AppCompatActivity {
 //        login = preferences.getString("Login", "");
 //        password = preferences.getString("Password", "");
 
-        getUpdateSectorsList();
+        getUpdateSectorsList(getApplicationContext());
         getUpdateReceptionList();
 
     }
 
-    public static void dialog(boolean value) {
+    public static void dialog(boolean value, Context context) {
 
         if (start){
             start = false;
@@ -135,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
 
             if (value) {
 
-                getUpdateSectorsList();
+                getUpdateSectorsList(context);
 
                 if (navController.getCurrentDestination().getId() == acceptance) {
                     AcceptanceFragment.soapHandler.sendEmptyMessage(AcceptanceFragment.ACTION_Connection);
@@ -187,8 +189,8 @@ public class MainActivity extends AppCompatActivity {
 //        dispatcher.start();
     }
 
-    private static void getUpdateSectorsList() {
-        SOAP_Dispatcher dispatcher = new SOAP_Dispatcher(ACTION_SECTORS_LIST);
+    private static void getUpdateSectorsList(Context context) {
+        SOAP_Dispatcher dispatcher = new SOAP_Dispatcher(ACTION_SECTORS_LIST, context);
         dispatcher.start();
     }
 

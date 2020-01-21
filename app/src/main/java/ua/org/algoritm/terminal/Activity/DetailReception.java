@@ -255,7 +255,7 @@ public class DetailReception extends AppCompatActivity {
         String login = preferences.getString("Login", "");
         String password = preferences.getString("Password", "");
 
-        SOAP_Dispatcher dispatcher = new SOAP_Dispatcher(ACTION_SET_RECEPTION, login, password);
+        SOAP_Dispatcher dispatcher = new SOAP_Dispatcher(ACTION_SET_RECEPTION, login, password, getApplicationContext());
         String stringReception = SOAP_Objects.getReception(mReception);
         dispatcher.string_Inquiry = stringReception;
 

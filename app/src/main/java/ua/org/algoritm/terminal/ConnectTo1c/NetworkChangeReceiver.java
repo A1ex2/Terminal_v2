@@ -15,9 +15,9 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
         try {
             if (!isInitialStickyBroadcast()) {
                 if (SharedData.isOnline(context)) {
-                    dialog(true);
+                    dialog(true, context);
                 } else {
-                    dialog(false);
+                    dialog(false, context);
                 }
             }
         } catch (NullPointerException e) {
