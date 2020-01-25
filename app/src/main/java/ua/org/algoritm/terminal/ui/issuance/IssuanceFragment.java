@@ -26,11 +26,14 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import ua.org.algoritm.terminal.Activity.CarActivityIssuance;
+import ua.org.algoritm.terminal.Activity.DetailIssuance;
 import ua.org.algoritm.terminal.Adapters.RecyclerAdapterCarDataIssuance;
+import ua.org.algoritm.terminal.Adapters.RecyclerIssuanceAdapter;
 import ua.org.algoritm.terminal.ConnectTo1c.SOAP_Dispatcher;
 import ua.org.algoritm.terminal.ConnectTo1c.UIManager;
 import ua.org.algoritm.terminal.DataBase.SharedData;
 import ua.org.algoritm.terminal.Objects.CarDataIssuance;
+import ua.org.algoritm.terminal.Objects.Issuance;
 import ua.org.algoritm.terminal.R;
 
 public class IssuanceFragment extends Fragment {
@@ -47,9 +50,9 @@ public class IssuanceFragment extends Fragment {
     public static Handler soapHandler;
 
     private RecyclerView recyclerView;
-    private RecyclerAdapterCarDataIssuance adapter;
+    private RecyclerIssuanceAdapter adapter;
     private ProgressDialog mDialog;
-    private ArrayList<CarDataIssuance> mCarData = new ArrayList<>();
+    private ArrayList<Issuance> mCarData = new ArrayList<>();
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -90,7 +93,7 @@ public class IssuanceFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String newText) {
 
-                adapter.setFilter(newText, mCarData);
+                adapter.setFilter(newText);
 
                 return true;
             }
@@ -123,20 +126,20 @@ public class IssuanceFragment extends Fragment {
             LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
             recyclerView.setLayoutManager(layoutManager);
 
-            adapter = new RecyclerAdapterCarDataIssuance(getContext(), R.layout.item_issuance, mCarData);
+            adapter = new RecyclerIssuanceAdapter(getContext(), R.layout.item_issuance_new);
             recyclerView.setAdapter(adapter);
-            adapter.setActionListener(new RecyclerAdapterCarDataIssuance.ActionListener() {
+            adapter.setActionListener(new RecyclerIssuanceAdapter.ActionListener() {
                 @Override
-                public void onClick(CarDataIssuance carData) {
-                    Intent intent = new Intent(getContext(), CarActivityIssuance.class);
-                    intent.putExtra("CarDataIssuance", carData);
+                public void onClick(Issuance issuance) {
+                    Intent intent = new Intent(getContext(), DetailIssuance.class);
+                    intent.putExtra("Issuance", issuance.getID());
                     startActivityForResult(intent, REQUEST_CODE_UPDATE);
                 }
             });
 
         } else {
 
-            adapter.setCarDataIssuance(mCarData);
+            adapter.setIssuances();
             recyclerView.setAdapter(adapter);
 
         }
@@ -197,29 +200,29 @@ public class IssuanceFragment extends Fragment {
     public void checkListResult() {
         try {
 
-            int count = soapParam_Response.getPropertyCount();
-            mCarData.clear();
-
-            for (int i = 0; i < count; i++) {
-                SoapObject carDetail = (SoapObject) soapParam_Response.getProperty(i);
-
-                CarDataIssuance mCarDataIssuance = new CarDataIssuance();
-
-                mCarDataIssuance.setIssuanceID(carDetail.getPrimitivePropertyAsString("IssuanceID"));
-
-                mCarDataIssuance.setDescription(carDetail.getPrimitivePropertyAsString("Description"));
-                mCarDataIssuance.setAutoNumber(carDetail.getPrimitivePropertyAsString("AutoNumber"));
-                mCarDataIssuance.setDriver(carDetail.getPrimitivePropertyAsString("Driver"));
-                mCarDataIssuance.setDriverPhone(carDetail.getPrimitivePropertyAsString("DriverPhone"));
-
-                mCarDataIssuance.setCarID(carDetail.getPrimitivePropertyAsString("CarID"));
-                mCarDataIssuance.setCar(carDetail.getPrimitivePropertyAsString("Car"));
-                mCarDataIssuance.setSectorID(carDetail.getPrimitivePropertyAsString("SectorID"));
-                mCarDataIssuance.setSector(carDetail.getPrimitivePropertyAsString("Sector"));
-                mCarDataIssuance.setRow(carDetail.getPrimitivePropertyAsString("Row"));
-
-                mCarData.add(mCarDataIssuance);
-            }
+//            int count = soapParam_Response.getPropertyCount();
+//            mCarData.clear();
+//
+//            for (int i = 0; i < count; i++) {
+//                SoapObject carDetail = (SoapObject) soapParam_Response.getProperty(i);
+//
+//                CarDataIssuance mCarDataIssuance = new CarDataIssuance();
+//
+//                mCarDataIssuance.setIssuanceID(carDetail.getPrimitivePropertyAsString("IssuanceID"));
+//
+//                mCarDataIssuance.setDescription(carDetail.getPrimitivePropertyAsString("Description"));
+//                mCarDataIssuance.setAutoNumber(carDetail.getPrimitivePropertyAsString("AutoNumber"));
+//                mCarDataIssuance.setDriver(carDetail.getPrimitivePropertyAsString("Driver"));
+//                mCarDataIssuance.setDriverPhone(carDetail.getPrimitivePropertyAsString("DriverPhone"));
+//
+//                mCarDataIssuance.setCarID(carDetail.getPrimitivePropertyAsString("CarID"));
+//                mCarDataIssuance.setCar(carDetail.getPrimitivePropertyAsString("Car"));
+//                mCarDataIssuance.setSectorID(carDetail.getPrimitivePropertyAsString("SectorID"));
+//                mCarDataIssuance.setSector(carDetail.getPrimitivePropertyAsString("Sector"));
+//                mCarDataIssuance.setRow(carDetail.getPrimitivePropertyAsString("Row"));
+//
+//                mCarData.add(mCarDataIssuance);
+//            }
 
             updateLists();
 

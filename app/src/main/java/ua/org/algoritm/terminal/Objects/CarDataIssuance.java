@@ -24,6 +24,11 @@ public class CarDataIssuance implements Parcelable {
     private String sector;
     private String row;
 
+    private String isMoving;
+    private String sectorIDMoving;
+    private String sectorMoving;
+    private String rowMoving;
+
     public CarDataIssuance() {
     }
 
@@ -38,7 +43,41 @@ public class CarDataIssuance implements Parcelable {
                 + car + " "
                 + sectorID + " "
                 + sector + row + " "
-                + sector + " " + row;
+                + isMoving + " "
+                + sectorIDMoving + " "
+                + sectorMoving + " " + rowMoving;
+    }
+
+    public String getMoving() {
+        return isMoving;
+    }
+
+    public void setMoving(String moving) {
+        isMoving = moving;
+    }
+
+    public String getSectorIDMoving() {
+        return sectorIDMoving;
+    }
+
+    public void setSectorIDMoving(String sectorIDMoving) {
+        this.sectorIDMoving = sectorIDMoving;
+    }
+
+    public String getSectorMoving() {
+        return sectorMoving;
+    }
+
+    public void setSectorMoving(String sectorMoving) {
+        this.sectorMoving = sectorMoving;
+    }
+
+    public String getRowMoving() {
+        return rowMoving;
+    }
+
+    public void setRowMoving(String rowMoving) {
+        this.rowMoving = rowMoving;
     }
 
     public String getIssuanceID() {
@@ -138,6 +177,10 @@ public class CarDataIssuance implements Parcelable {
         dest.writeString(this.sectorID);
         dest.writeString(this.sector);
         dest.writeString(this.row);
+        dest.writeString(this.isMoving);
+        dest.writeString(this.sectorIDMoving);
+        dest.writeString(this.sectorMoving);
+        dest.writeString(this.rowMoving);
     }
 
     protected CarDataIssuance(Parcel in) {
@@ -151,6 +194,11 @@ public class CarDataIssuance implements Parcelable {
         this.sectorID = in.readString();
         this.sector = in.readString();
         this.row = in.readString();
+
+        this.isMoving = in.readString();
+        this.sectorIDMoving = in.readString();
+        this.sectorMoving = in.readString();
+        this.rowMoving = in.readString();
     }
 
     public static final Creator<CarDataIssuance> CREATOR = new Creator<CarDataIssuance>() {

@@ -21,6 +21,8 @@ import ua.org.algoritm.terminal.Activity.Password;
 import ua.org.algoritm.terminal.DataBase.SharedData;
 import ua.org.algoritm.terminal.MainActivity;
 import ua.org.algoritm.terminal.Objects.CarData;
+import ua.org.algoritm.terminal.Objects.CarDataIssuance;
+import ua.org.algoritm.terminal.Objects.Issuance;
 import ua.org.algoritm.terminal.Objects.Reception;
 import ua.org.algoritm.terminal.Objects.Sector;
 import ua.org.algoritm.terminal.Objects.User;
@@ -237,6 +239,60 @@ public class SOAP_Dispatcher extends Thread {
         String action = NAMESPACE + "#GetIssuanceList:" + method;
         SoapObject request = new SoapObject(NAMESPACE, method);
         soap_Response = callWebService(request, action);
+
+        try {
+            int count = soap_Response.getPropertyCount();
+            ArrayList<Issuance> mIssuances = SharedData.ISSUANCE;
+            mIssuances.clear();
+
+            for (int i = 0; i < count; i++) {
+                SoapObject issuanceList = (SoapObject) soap_Response.getProperty(i);
+
+                Issuance issuance = new Issuance();
+                issuance.setID(issuanceList.getPropertyAsString("ID"));
+                issuance.setDescription(issuanceList.getPropertyAsString("Description"));
+                issuance.setAutoNumber(issuanceList.getPropertyAsString("AutoNumber"));
+                issuance.setDriver(issuanceList.getPropertyAsString("Driver"));
+                issuance.setDriverPhone(issuanceList.getPropertyAsString("DriverPhone"));
+
+                ArrayList<CarDataIssuance> carDataList = new ArrayList<>();
+
+                for (int j = 0; j < issuanceList.getPropertyCount(); j++) {
+                    PropertyInfo pi = new PropertyInfo();
+                    issuanceList.getPropertyInfo(j, pi);
+                    Object property = issuanceList.getProperty(j);
+                    if (pi.name.equals("CarDataIssuance") && property instanceof SoapObject) {
+                        SoapObject carDetail = (SoapObject) property;
+
+                        CarDataIssuance mCarDataIssuance = new CarDataIssuance();
+
+                        mCarDataIssuance.setIssuanceID(carDetail.getPrimitivePropertyAsString("IssuanceID"));
+
+                        mCarDataIssuance.setDescription(issuance.getDescription());
+                        mCarDataIssuance.setAutoNumber(issuance.getAutoNumber());
+                        mCarDataIssuance.setDriver(issuance.getDriver());
+                        mCarDataIssuance.setDriverPhone(issuance.getDriverPhone());
+
+                        mCarDataIssuance.setCarID(carDetail.getPrimitivePropertyAsString("CarID"));
+                        mCarDataIssuance.setCar(carDetail.getPrimitivePropertyAsString("Car"));
+                        mCarDataIssuance.setSectorID(carDetail.getPrimitivePropertyAsString("SectorID"));
+                        mCarDataIssuance.setSector(carDetail.getPrimitivePropertyAsString("Sector"));
+                        mCarDataIssuance.setRow(carDetail.getPrimitivePropertyAsString("Row"));
+
+                        carDataList.add(mCarDataIssuance);
+                    }
+                }
+                issuance.setCarData(carDataList);
+
+                mIssuances.add(issuance);
+            }
+
+            SharedData.updateReceptionsDB();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void setMovingCB() {

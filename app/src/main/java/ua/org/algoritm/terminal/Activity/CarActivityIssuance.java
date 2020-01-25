@@ -13,7 +13,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -52,6 +54,11 @@ public class CarActivityIssuance extends AppCompatActivity {
 
     private ProgressDialog mDialog;
 
+    private ArrayList<Sector> mSectors = SharedData.getSectorIssuanceMoving();
+    private Spinner editSectorMoving;
+    private EditText editRowMoving;
+    private Switch aSwitch;
+    private LinearLayout moving;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -73,6 +80,11 @@ public class CarActivityIssuance extends AppCompatActivity {
         TextView editRow = findViewById(R.id.editRow);
         ImageView imageOk = findViewById(R.id.imageOk);
         ImageView imageCancel = findViewById(R.id.imageCancel);
+
+        editSectorMoving = findViewById(R.id.editSectorMoving);
+        editRowMoving = findViewById(R.id.editRowMoving);
+        aSwitch = findViewById(R.id.switchMoving);
+        moving = findViewById(R.id.moving);
 
         imageOk.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,6 +112,22 @@ public class CarActivityIssuance extends AppCompatActivity {
 
         Sector sector = SharedData.getSector(carData.getSectorID());
         editSector.setText(sector.getName());
+
+        ArrayAdapter<Sector> adapter = new ArrayAdapter<>(this, R.layout.item_spinner, mSectors);
+        editSectorMoving.setAdapter(adapter);
+//        int spinnerPosition = adapter.getPosition(SharedData.getSector(carData.getSectorID()));
+//        editSectorMoving.setSelection(spinnerPosition);
+
+        aSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (aSwitch.isChecked()) {
+                    moving.setVisibility(View.VISIBLE);
+                } else {
+                    moving.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
     }
 
     @Override
@@ -114,10 +142,20 @@ public class CarActivityIssuance extends AppCompatActivity {
     }
 
     private void setCB() {
+        if (aSwitch.isChecked() & !verify()) {
+            return;
+        }
+
         mDialog = new ProgressDialog(this);
         mDialog.setMessage(getString(R.string.wait_sending));
         mDialog.setCancelable(false);
         mDialog.show();
+
+        carData.setMoving(aSwitch.isChecked() ? "true" : "false");
+        Sector mSectorMoving = mSectors.get(editSectorMoving.getSelectedItemPosition());
+        carData.setSectorMoving(mSectorMoving.getName());
+        carData.setSectorIDMoving(mSectorMoving.getID());
+        carData.setRowMoving(editRowMoving.getText().toString());
 
         SharedPreferences preferences = getSharedPreferences("MyPref", MODE_PRIVATE);
         String login = preferences.getString("Login", "");
@@ -129,6 +167,26 @@ public class CarActivityIssuance extends AppCompatActivity {
 
         dispatcher.start();
 
+    }
+
+    private Boolean verify() {
+//        mLogin = login.getText().toString();
+        String mRowMoving = editRowMoving.getText().toString();
+
+        if (!validateRowMoving(mRowMoving)) {
+            return false;
+        }
+        return true;
+    }
+
+    private boolean validateRowMoving(String mRowMoving) {
+        if (mRowMoving.isEmpty()) {
+            editRowMoving.setError(getString(R.string.error_not_completed));
+            return false;
+        } else {
+            editRowMoving.setError(null);
+            return true;
+        }
     }
 
     class incomingHandler extends Handler {
@@ -164,7 +222,9 @@ public class CarActivityIssuance extends AppCompatActivity {
         if (isSaveSuccess) {
 
             uiManager.showToast(getString(R.string.success));
-            setResult(Activity.RESULT_OK);
+            Intent intent = new Intent();
+            intent.putExtra("CarID", carData.getCarID());
+            setResult(Activity.RESULT_OK, intent);
             finish();
 
         } else {

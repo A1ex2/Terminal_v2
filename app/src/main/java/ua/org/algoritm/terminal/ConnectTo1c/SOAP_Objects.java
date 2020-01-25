@@ -96,9 +96,22 @@ public class SOAP_Objects {
         @SerializedName("carID")
         String carID;
 
+        @SerializedName("isMoving")
+        String isMoving;
+
+        @SerializedName("sectorIDMoving")
+        String sectorIDMoving;
+
+        @SerializedName("rowMoving")
+        String rowMoving;
+
         JSONCarDataIssuance(CarDataIssuance carData) {
             IssuanceID = carData.getIssuanceID();
             carID = carData.getCarID();
+
+            isMoving = carData.getMoving();
+            sectorIDMoving = carData.getSectorIDMoving();
+            rowMoving = carData.getRowMoving();
         }
     }
 }
