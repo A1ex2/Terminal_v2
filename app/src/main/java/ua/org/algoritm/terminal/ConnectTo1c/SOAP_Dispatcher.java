@@ -235,8 +235,8 @@ public class SOAP_Dispatcher extends Thread {
     private void getIssuanceList() {
         thisGet = true;
 
-        String method = "GetIssuanceList";
-        String action = NAMESPACE + "#GetIssuanceList:" + method;
+        String method = "GetIssuanceListNew";
+        String action = NAMESPACE + "#GetIssuanceListNew:" + method;
         SoapObject request = new SoapObject(NAMESPACE, method);
         soap_Response = callWebService(request, action);
 
