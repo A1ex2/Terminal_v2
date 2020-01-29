@@ -5,6 +5,7 @@
         android:drawable="@color/colorWhite"/>
 
     <item
+
         android:width="70dp"
         android:height="70dp"
         android:gravity="center|center"
