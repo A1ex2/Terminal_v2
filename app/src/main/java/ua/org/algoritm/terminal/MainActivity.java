@@ -131,9 +131,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         try {
-            int acceptance = 2131230906; //приемка
-            int issuance = 2131230909; // выдача
-            int moving = 2131230910; // перемещение
+            int acceptance = R.id.nav_acceptance; //приемка
+            int issuance = R.id.nav_issue; // выдача
+            int moving = R.id.nav_moving; // перемещение
 
             if (value) {
 
