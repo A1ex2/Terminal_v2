@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
         drawer = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_acceptance, R.id.nav_moving, R.id.nav_issue)
+                R.id.nav_acceptance, R.id.nav_moving, R.id.nav_issue, R.id.nav_order_outfit)
                 .setDrawerLayout(drawer)
                 .build();
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -134,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
             int acceptance = R.id.nav_acceptance; //приемка
             int issuance = R.id.nav_issue; // выдача
             int moving = R.id.nav_moving; // перемещение
+            int orderOutfit = R.id.nav_order_outfit; // перемещение
 
             if (value) {
 

@@ -13,10 +13,10 @@
         <item
             android:id="@+id/nav_issue"
             android:title="@string/menu_issue" />
-<!--        <item-->
-<!--            android:id="@+id/nav_tools"-->
-<!--            android:icon="@drawable/ic_menu_manage"-->
-<!--            android:title="@string/menu_tools" />-->
+        <item
+            android:id="@+id/nav_order_outfit"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="@string/menu_order_outfit" />
     </group>
 
 <!--    <item android:title="Communicate">-->

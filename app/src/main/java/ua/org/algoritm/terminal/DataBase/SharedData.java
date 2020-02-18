@@ -11,6 +11,7 @@ import ua.org.algoritm.terminal.MainActivity;
 import ua.org.algoritm.terminal.Objects.CarData;
 import ua.org.algoritm.terminal.Objects.CarDataIssuance;
 import ua.org.algoritm.terminal.Objects.Issuance;
+import ua.org.algoritm.terminal.Objects.OrderOutfit;
 import ua.org.algoritm.terminal.Objects.Reception;
 import ua.org.algoritm.terminal.Objects.Sector;
 import ua.org.algoritm.terminal.Objects.User;
@@ -21,6 +22,7 @@ public class SharedData {
     public static ArrayList<User> USERS = new ArrayList<>();
     public static ArrayList<Reception> RECEPTION = new ArrayList<>();
     public static ArrayList<Issuance> ISSUANCE = new ArrayList<>();
+    public static ArrayList<OrderOutfit> ORDER_OUTFIT = new ArrayList<>();
     public static MainActivity app;
     public static String LOGIN;
     public static String PASSWORD;

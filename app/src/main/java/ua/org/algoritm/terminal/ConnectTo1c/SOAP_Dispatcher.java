@@ -4,12 +4,17 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
+import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.util.ArrayList;
 
@@ -23,11 +28,13 @@ import ua.org.algoritm.terminal.MainActivity;
 import ua.org.algoritm.terminal.Objects.CarData;
 import ua.org.algoritm.terminal.Objects.CarDataIssuance;
 import ua.org.algoritm.terminal.Objects.Issuance;
+import ua.org.algoritm.terminal.Objects.OrderOutfit;
 import ua.org.algoritm.terminal.Objects.Reception;
 import ua.org.algoritm.terminal.Objects.Sector;
 import ua.org.algoritm.terminal.Objects.User;
 import ua.org.algoritm.terminal.ui.acceptance.AcceptanceFragment;
 import ua.org.algoritm.terminal.ui.issuance.IssuanceFragment;
+import ua.org.algoritm.terminal.ui.order.OrderOutfitFragment;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -51,6 +58,7 @@ public class SOAP_Dispatcher extends Thread {
     String pass;
     int ACTION;
     SoapObject soap_Response;
+    String soap_ResponseString;
     final String NAMESPACE = "www.URI.com";//"ReturnPhones_XDTO";
     String mSoapParam_URL;
     int attempt;
@@ -85,11 +93,17 @@ public class SOAP_Dispatcher extends Thread {
     }
 
     private void setSoapParamURL() {
-        String server = SharedData.API;
-        if (server.equals("")) {
+        String server;
+        try {
+            server = SharedData.API;
+            if (server.equals("")) {
+                server = "http://217.25.195.61:83/blg_log";
+                //server = "http://192.168.1.10/blg_log";
+            }
+        } catch (Exception e) {
             server = "http://217.25.195.61:83/blg_log";
-            //server = "http://192.168.1.10/blg_log";
         }
+
         soapParam_URL = server + "/ws/terminal.1cws";
     }
 
@@ -143,6 +157,10 @@ public class SOAP_Dispatcher extends Thread {
 
             case CarActivityIssuance.ACTION_SET_ISSUANCE_CAR:
                 setIssuanceCB();
+                break;
+
+            case OrderOutfitFragment.ACTION_LIST:
+                GetOrderOutfitsList();
                 break;
         }
 
@@ -221,6 +239,12 @@ public class SOAP_Dispatcher extends Thread {
             } else {
                 CarActivityIssuance.soapHandler.sendEmptyMessage(DetailReception.ACTION_ConnectionError);
             }
+        } else if (ACTION == OrderOutfitFragment.ACTION_LIST) {
+            if (!soap_ResponseString.equals("")) {
+                OrderOutfitFragment.soapHandler.sendEmptyMessage(ACTION);
+            } else {
+                OrderOutfitFragment.soapHandler.sendEmptyMessage(DetailReception.ACTION_ConnectionError);
+            }
         }
     }
 
@@ -288,6 +312,33 @@ public class SOAP_Dispatcher extends Thread {
             }
 
             SharedData.updateReceptionsDB();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void GetOrderOutfitsList() {
+        thisGet = true;
+
+        String method = "GetOrderOutfitsList";
+        String action = NAMESPACE + "#GetOrderOutfitsList:" + method;
+        SoapObject request = new SoapObject(NAMESPACE, method);
+        soap_ResponseString = callWebServiceString(request, action);
+
+        try {
+            GsonBuilder builder = new GsonBuilder();
+            Gson gson = builder.create();
+
+            ArrayList<OrderOutfit> mOrderOutfits = SharedData.ORDER_OUTFIT;
+            mOrderOutfits.clear();
+
+            Type itemsArrType = new TypeToken<OrderOutfit[]>() {}.getType();
+            OrderOutfit[] arrOrderOutfit = gson.fromJson(soap_ResponseString, itemsArrType);
+            for (int i = 0; i < arrOrderOutfit.length; i++) {
+                mOrderOutfits.add(arrOrderOutfit[i]);
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -486,6 +537,8 @@ public class SOAP_Dispatcher extends Thread {
 
         try {
             androidHttpTransport.call(action, envelope);
+            attempt = 100;
+
             return (SoapObject) envelope.getResponse();
         } catch (Exception e) {
             //e.printStackTrace();
@@ -501,5 +554,32 @@ public class SOAP_Dispatcher extends Thread {
         return null;
     }
 
+    private String callWebServiceString(SoapObject request, String action) {
+
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+        envelope.setOutputSoapObject(request);
+        envelope.dotNet = true;
+        envelope.implicitTypes = true;
+        HttpTransportSE androidHttpTransport = new HttpTransportBasicAuthSE(URL, user, pass, timeout);
+        androidHttpTransport.debug = false;
+
+        try {
+            androidHttpTransport.call(action, envelope);
+            attempt = 100;
+
+            return envelope.getResponse().toString();
+        } catch (Exception e) {
+            //e.printStackTrace();
+            Log.d("myLogsTerminal", "" + attempt + " / " + action + " / " + e.toString());
+            attempt++;
+            if (SharedData.isOnline(mContext)) {
+                if (attempt < 50 && thisGet) {
+                    return callWebServiceString(request, action);
+                }
+            }
+        }
+
+        return null;
+    }
 }
 

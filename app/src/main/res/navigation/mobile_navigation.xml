@@ -23,11 +23,11 @@
         android:label="@string/menu_issue"
         tools:layout="@layout/fragment_issuance" />
 
-<!--    <fragment-->
-<!--        android:id="@+id/nav_tools"-->
-<!--        android:name="ua.org.algoritm.terminal.ui.tools.ToolsFragment"-->
-<!--        android:label="@string/menu_tools"-->
-<!--        tools:layout="@layout/fragment_tools" />-->
+    <fragment
+        android:id="@+id/nav_order_outfit"
+        android:name="ua.org.algoritm.terminal.ui.order.OrderOutfitFragment"
+        android:label="@string/menu_order_outfit"
+        tools:layout="@layout/fragment_order_outfit" />
 
 <!--    <fragment-->
 <!--        android:id="@+id/nav_share"-->
