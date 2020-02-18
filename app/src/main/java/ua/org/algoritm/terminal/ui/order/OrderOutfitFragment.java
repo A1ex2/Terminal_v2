@@ -205,5 +205,4 @@ public class OrderOutfitFragment extends Fragment {
             e.printStackTrace();
         }
     }
-
 }

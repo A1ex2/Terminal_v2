@@ -27,6 +27,7 @@ public class OrderOutfit {
     private ArrayList<CarDataOutfit> CarDataOutfit = new ArrayList<>();
 
     public OrderOutfit() {
+
     }
 
     public String getID() {

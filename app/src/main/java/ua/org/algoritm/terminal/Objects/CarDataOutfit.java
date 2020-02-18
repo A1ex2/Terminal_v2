@@ -12,9 +12,6 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class CarDataOutfit {
-    @SerializedName("OutfitID")
-    private String OutfitID;
-
     @SerializedName("carID")
     private String carID;
 
@@ -53,14 +50,6 @@ public class CarDataOutfit {
 
     public void setCarID(String carID) {
         this.carID = carID;
-    }
-
-    public String getOutfitID() {
-        return OutfitID;
-    }
-
-    public void setOutfitID(String receptionID) {
-        OutfitID = receptionID;
     }
 
     public String getSectorID() {

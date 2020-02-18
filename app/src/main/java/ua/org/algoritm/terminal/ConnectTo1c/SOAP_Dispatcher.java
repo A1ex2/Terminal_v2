@@ -17,6 +17,7 @@ import org.ksoap2.transport.HttpTransportSE;
 import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.List;
 
 import ua.org.algoritm.terminal.Activity.CarActivityIssuance;
 import ua.org.algoritm.terminal.Activity.CarActivityMoving;
@@ -328,17 +329,24 @@ public class SOAP_Dispatcher extends Thread {
         soap_ResponseString = callWebServiceString(request, action);
 
         try {
-            GsonBuilder builder = new GsonBuilder();
-            Gson gson = builder.create();
 
             ArrayList<OrderOutfit> mOrderOutfits = SharedData.ORDER_OUTFIT;
             mOrderOutfits.clear();
+            mOrderOutfits.addAll(JsonParser.getOrderOutfit(soap_ResponseString));
 
-            Type itemsArrType = new TypeToken<OrderOutfit[]>() {}.getType();
-            OrderOutfit[] arrOrderOutfit = gson.fromJson(soap_ResponseString, itemsArrType);
-            for (int i = 0; i < arrOrderOutfit.length; i++) {
-                mOrderOutfits.add(arrOrderOutfit[i]);
-            }
+//            GsonBuilder builder = new GsonBuilder();
+//            Gson gson = builder.create();
+//
+//            ArrayList<OrderOutfit> mOrderOutfits = SharedData.ORDER_OUTFIT;
+//            mOrderOutfits.clear();
+//
+//            Type itemsListType = new TypeToken<List<OrderOutfit>>() {}.getType();
+//            List<OrderOutfit> listOrderOutfit = new Gson().fromJson(soap_ResponseString, itemsListType);
+//
+//            for (int i = 0; i < listOrderOutfit.size(); i++) {
+//
+//                //mOrderOutfits.add(listOrderOutfit[i]);
+//            }
 
         } catch (Exception e) {
             e.printStackTrace();
