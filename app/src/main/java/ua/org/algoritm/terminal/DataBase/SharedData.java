@@ -1,7 +1,6 @@
 package ua.org.algoritm.terminal.DataBase;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
@@ -10,12 +9,12 @@ import java.util.ArrayList;
 import ua.org.algoritm.terminal.MainActivity;
 import ua.org.algoritm.terminal.Objects.CarData;
 import ua.org.algoritm.terminal.Objects.CarDataIssuance;
+import ua.org.algoritm.terminal.Objects.CarDataOutfit;
 import ua.org.algoritm.terminal.Objects.Issuance;
 import ua.org.algoritm.terminal.Objects.OrderOutfit;
 import ua.org.algoritm.terminal.Objects.Reception;
 import ua.org.algoritm.terminal.Objects.Sector;
 import ua.org.algoritm.terminal.Objects.User;
-import ua.org.algoritm.terminal.R;
 
 public class SharedData {
     public static ArrayList<Sector> SECTORS = new ArrayList<>();
@@ -189,14 +188,43 @@ public class SharedData {
     public static ArrayList<Sector> getSectorIssuanceMoving() {
         ArrayList<Sector> mSectors = new ArrayList<>();
 
-        for (int i = 0; i < SECTORS.size(); i++){
+        for (int i = 0; i < SECTORS.size(); i++) {
 
             Sector mSector = SECTORS.get(i);
-            if (mSector.getName().equals("Bufer")){
+            if (mSector.getName().equals("Bufer")) {
                 mSectors.add(mSector);
             }
         }
 
         return mSectors;
+    }
+
+    public static OrderOutfit getOrderOutfit(String id) {
+        OrderOutfit orderOutfit = new OrderOutfit();
+        for (int i = 0; i < ORDER_OUTFIT.size(); i++) {
+            OrderOutfit mOrderOutfit = ORDER_OUTFIT.get(i);
+            if (mOrderOutfit.getID().equals(id)) {
+                orderOutfit = mOrderOutfit;
+                break;
+            }
+
+        }
+        return orderOutfit;
+
+    }
+
+    public static CarDataOutfit getCarOrderOutfit(String orderID, String carID) {
+        CarDataOutfit carActivityOrderOutfit = new CarDataOutfit();
+
+        OrderOutfit orderOutfit = getOrderOutfit(orderID);
+        ArrayList<CarDataOutfit> carActivityOrderOutfits = orderOutfit.getCarDataOutfit();
+        for (int i = 0; i < carActivityOrderOutfits.size(); i++) {
+            CarDataOutfit mCarDataOutfit = carActivityOrderOutfits.get(i);
+            if (mCarDataOutfit.getCarID().equals(carID)){
+                carActivityOrderOutfit = mCarDataOutfit;
+                break;
+            }
+        }
+        return carActivityOrderOutfit;
     }
 }

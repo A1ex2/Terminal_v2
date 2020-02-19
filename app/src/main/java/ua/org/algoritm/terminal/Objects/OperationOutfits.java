@@ -9,6 +9,9 @@ public class OperationOutfits {
     @SerializedName("Operation")
     private String Operation;
 
+    @SerializedName("Performed")
+    private Boolean Performed = false;
+
     public OperationOutfits() {
     }
 
@@ -26,5 +29,13 @@ public class OperationOutfits {
 
     public void setOperation(String operation) {
         Operation = operation;
+    }
+
+    public Boolean getPerformed() {
+        return Performed;
+    }
+
+    public void setPerformed(Boolean performed) {
+        Performed = performed;
     }
 }

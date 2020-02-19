@@ -13,8 +13,9 @@
     <string name="menu_acceptance">Приемка</string>
     <string name="menu_moving">Перемещение</string>
     <string name="menu_order_outfit">Заказ-наряд</string>
-    <string name="moving">Переместить авто</string>
     <string name="menu_issue">Выдача</string>
+
+    <string name="moving">Переместить авто</string>
     <string name="password_form_header">Ваш логин/пароль...</string>
     <string name="login">логин</string>
     <string name="password">пароль</string>
@@ -62,7 +63,8 @@
     <string name="scaner">Сканер</string>
     <string name="lost_for_internet">потеряно интернет-соединение...</string>
     <string name="connection_for_internet">интернет-соединение восстановлено</string>
+    <string name="operation">Операции</string>
+    <string name="photo">Фото</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

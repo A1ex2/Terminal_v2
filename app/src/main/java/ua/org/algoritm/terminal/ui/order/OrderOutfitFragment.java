@@ -28,6 +28,7 @@ import org.ksoap2.serialization.SoapObject;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
+import ua.org.algoritm.terminal.Activity.DetailOrderOutfit;
 import ua.org.algoritm.terminal.Adapters.RecyclerOrderOutfitAdapter;
 import ua.org.algoritm.terminal.ConnectTo1c.SOAP_Dispatcher;
 import ua.org.algoritm.terminal.ConnectTo1c.UIManager;
@@ -129,9 +130,9 @@ public class OrderOutfitFragment extends Fragment {
             adapter.setActionListener(new RecyclerOrderOutfitAdapter.ActionListener() {
                 @Override
                 public void onClick(OrderOutfit orderOutfit) {
-//                    Intent intent = new Intent(getContext(), DetailOrderOutfit.class);
-//                    intent.putExtra("Issuance", issuance.getID());
-//                    startActivityForResult(intent, REQUEST_CODE_UPDATE);
+                    Intent intent = new Intent(getContext(), DetailOrderOutfit.class);
+                    intent.putExtra("OrderOutfit", orderOutfit.getID());
+                    startActivityForResult(intent, REQUEST_CODE_UPDATE);
                 }
             });
 
