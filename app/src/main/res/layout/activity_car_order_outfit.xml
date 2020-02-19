@@ -129,10 +129,23 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical">
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recyclerViewOperation"
+                    <androidx.coordinatorlayout.widget.CoordinatorLayout
+                        android:id="@+id/main_content"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"></androidx.recyclerview.widget.RecyclerView>
+                        android:layout_height="match_parent">
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/recyclerViewOperation"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="#ffffff"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:focusableInTouchMode="true"
+                            android:scrollbars="vertical"
+                            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+                    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
                 </LinearLayout>
 
@@ -142,10 +155,34 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical">
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recyclerViewPhoto"
+                    <androidx.coordinatorlayout.widget.CoordinatorLayout
+                        android:id="@+id/main_content2"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"></androidx.recyclerview.widget.RecyclerView>
+                        android:layout_height="match_parent">
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/recyclerViewPhoto"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="#ffffff"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:focusableInTouchMode="true"
+                            android:scrollbars="vertical"
+                            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+                        <com.google.android.material.floatingactionbutton.FloatingActionButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="32dp"
+                            android:clickable="true"
+                            app:backgroundTint="@color/colorItemReception"
+                            app:layout_anchor="@id/recyclerViewPhoto"
+                            app:layout_anchorGravity="bottom|right|end"
+                            app:srcCompat="@android:drawable/ic_input_add" />
+
+                    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
                 </LinearLayout>
 
             </FrameLayout>
