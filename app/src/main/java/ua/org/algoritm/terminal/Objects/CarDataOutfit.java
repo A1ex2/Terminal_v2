@@ -33,6 +33,9 @@ public class CarDataOutfit {
     @SerializedName("Operations")
     private ArrayList<OperationOutfits> Operations = new ArrayList<>();
 
+    @SerializedName("Photo")
+    private ArrayList<Photo> Photo = new ArrayList<>();
+
     public CarDataOutfit() {
     }
 
@@ -92,6 +95,13 @@ public class CarDataOutfit {
         this.row = row;
     }
 
+    public ArrayList<Photo> getPhoto() {
+        return Photo;
+    }
+
+    public void setPhoto(ArrayList<Photo> photo) {
+        Photo = photo;
+    }
 
     @Override
     public String toString() {
