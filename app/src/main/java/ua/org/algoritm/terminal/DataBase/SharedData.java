@@ -227,4 +227,13 @@ public class SharedData {
         }
         return carActivityOrderOutfit;
     }
+
+//    public static void insertPhotoCarDataOutfit(String orderID, String carID, String currentPhotoPath) {
+//        DataBaseHelper helper = new DataBaseHelper(app);
+//
+//        long id = helper.insertPhotoCarDataOutfit(orderID, carID, currentPhotoPath);
+//        if (id == 0 ){
+//
+//        }
+//    }
 }

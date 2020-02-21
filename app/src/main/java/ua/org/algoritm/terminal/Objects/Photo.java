@@ -6,6 +6,7 @@ import android.net.Uri;
 public class Photo {
     private String name;
     private Uri uri;
+    private String currentPhotoPath;
 
     public Photo() {
     }
@@ -24,5 +25,13 @@ public class Photo {
 
     public void setUri(Uri uri) {
         this.uri = uri;
+    }
+
+    public String getCurrentPhotoPath() {
+        return currentPhotoPath;
+    }
+
+    public void setCurrentPhotoPath(String currentPhotoPath) {
+        this.currentPhotoPath = currentPhotoPath;
     }
 }

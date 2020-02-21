@@ -32,9 +32,13 @@ import ua.org.algoritm.terminal.Objects.CarDataOutfit;
 import ua.org.algoritm.terminal.Objects.OperationOutfits;
 import ua.org.algoritm.terminal.Objects.Photo;
 import ua.org.algoritm.terminal.R;
+import ua.org.algoritm.terminal.Service.IntentServiceDataBase;
 
 public class CarActivityOrderOutfit extends AppCompatActivity {
     private CarDataOutfit carDataOutfit;
+    String orderID;
+    String carID;
+
     private TextView itemCar;
     private TextView itemBarCode;
     private TextView itemSector;
@@ -53,6 +57,7 @@ public class CarActivityOrderOutfit extends AppCompatActivity {
     private RecyclerAdapterPhoto adapterPhoto;
 
    private Uri photoURI;
+   private String mCurrentPhotoPath;
 
     static final int REQUEST_TAKE_PHOTO = 1;
 
@@ -109,8 +114,8 @@ public class CarActivityOrderOutfit extends AppCompatActivity {
         tabHost.setCurrentTab(0);
 
         Intent intent = getIntent();
-        String orderID = intent.getStringExtra("orderID");
-        String carID = intent.getStringExtra("carID");
+        orderID = intent.getStringExtra("orderID");
+        carID = intent.getStringExtra("carID");
 
         carDataOutfit = SharedData.getCarOrderOutfit(orderID, carID);
 
@@ -175,10 +180,16 @@ public class CarActivityOrderOutfit extends AppCompatActivity {
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
             Photo photo = new Photo();
             photo.setUri(photoURI);
+            photo.setCurrentPhotoPath(mCurrentPhotoPath);
             mPhotos.add(photo);
             carDataOutfit.setPhoto(mPhotos);
+
+            adapterPhoto.setPhoto(carDataOutfit.getPhoto());
+
+            IntentServiceDataBase.startInsertPhotoCarDataOutfit(CarActivityOrderOutfit.this, orderID, carID, mCurrentPhotoPath);
+
             photoURI = null;
-            updateListsPhoto();
+            mCurrentPhotoPath = "";
         }
     }
 
@@ -194,7 +205,7 @@ public class CarActivityOrderOutfit extends AppCompatActivity {
         );
 
         // Save a file: path for use with ACTION_VIEW intents
-//        mCurrentPhotoPath = image.getAbsolutePath();
+        mCurrentPhotoPath = image.getAbsolutePath();
         return image;
     }
 

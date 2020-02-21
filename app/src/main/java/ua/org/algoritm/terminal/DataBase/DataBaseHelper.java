@@ -5,16 +5,20 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
 import ua.org.algoritm.terminal.Objects.CarData;
+import ua.org.algoritm.terminal.Objects.CarDataOutfit;
+import ua.org.algoritm.terminal.Objects.Photo;
 import ua.org.algoritm.terminal.Objects.Sector;
 import ua.org.algoritm.terminal.Objects.User;
+
 import java.util.ArrayList;
 
 
 public class DataBaseHelper extends SQLiteOpenHelper {
 
     public DataBaseHelper(Context context) {
-        super(context, "MyBD.db", null, 1);
+        super(context, "MyBD.db", null, 2);
     }
 
     @Override
@@ -221,6 +225,23 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
 
         return users;
+    }
+
+    public long insertPhotoCarDataOutfit(String orderID, String carID, String currentPhotoPath) {
+        SQLiteDatabase db = getReadableDatabase();
+        long id = 0;
+
+        try {
+                ContentValues values = new ContentValues();
+                values.put("orderID", orderID);
+                values.put("carID", carID);
+                //values.put("currentPhotoPath", currentPhotoPath);
+
+                id = db.insert("CarDataOutfitPhoto", null, values);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return id;
     }
 
 
@@ -640,6 +661,12 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        if (newVersion == 2) {
+            db.execSQL("CREATE TABLE CarDataOutfitPhoto ("
+                    + "_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + "orderID TEXT NOT NULL,"
+                    + "carID TEXT NOT NULL,"
+                    + "currentPhotoPath TEXT NOT NULL)");
+        }
     }
 }
