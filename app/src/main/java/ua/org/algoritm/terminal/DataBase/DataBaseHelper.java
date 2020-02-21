@@ -34,6 +34,17 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     }
 
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        if (newVersion == 2) {
+            db.execSQL("CREATE TABLE CarDataOutfitPhoto ("
+                    + "_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + "orderID TEXT NOT NULL,"
+                    + "carID TEXT NOT NULL,"
+                    + "currentPhotoPath TEXT NOT NULL)");
+        }
+    }
+
     public void insertCarData(CarData carData) {
         SQLiteDatabase db = getReadableDatabase();
         long id = 0;
@@ -235,7 +246,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 ContentValues values = new ContentValues();
                 values.put("orderID", orderID);
                 values.put("carID", carID);
-                //values.put("currentPhotoPath", currentPhotoPath);
+                values.put("currentPhotoPath", currentPhotoPath);
 
                 id = db.insert("CarDataOutfitPhoto", null, values);
         } catch (Exception e) {
@@ -659,14 +670,4 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 //        return productArrayList;
 //    }
 
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if (newVersion == 2) {
-            db.execSQL("CREATE TABLE CarDataOutfitPhoto ("
-                    + "_id INTEGER PRIMARY KEY AUTOINCREMENT, "
-                    + "orderID TEXT NOT NULL,"
-                    + "carID TEXT NOT NULL,"
-                    + "currentPhotoPath TEXT NOT NULL)");
-        }
-    }
 }

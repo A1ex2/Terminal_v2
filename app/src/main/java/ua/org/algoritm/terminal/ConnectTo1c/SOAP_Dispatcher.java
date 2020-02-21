@@ -28,7 +28,9 @@ import ua.org.algoritm.terminal.DataBase.SharedData;
 import ua.org.algoritm.terminal.MainActivity;
 import ua.org.algoritm.terminal.Objects.CarData;
 import ua.org.algoritm.terminal.Objects.CarDataIssuance;
+import ua.org.algoritm.terminal.Objects.CarDataOutfit;
 import ua.org.algoritm.terminal.Objects.Issuance;
+import ua.org.algoritm.terminal.Objects.OperationOutfits;
 import ua.org.algoritm.terminal.Objects.OrderOutfit;
 import ua.org.algoritm.terminal.Objects.Reception;
 import ua.org.algoritm.terminal.Objects.Sector;
@@ -352,6 +354,52 @@ public class SOAP_Dispatcher extends Thread {
             e.printStackTrace();
         }
 
+        boolean test = true;
+        if (test) {
+            soap_ResponseString = "1";
+
+            ArrayList<OrderOutfit> mOrderOutfits = new ArrayList<>();
+
+            OrderOutfit orderOutfit = new OrderOutfit();
+
+            orderOutfit.setID("ID");
+            orderOutfit.setDescription("Description");
+            orderOutfit.setResponsibleID("ResponsibleID");
+            orderOutfit.setResponsible("Responsible");
+            orderOutfit.setStateID("StateID");
+            orderOutfit.setState("State");
+
+            ArrayList<CarDataOutfit> mCarDataOutfits = new ArrayList<>();
+
+            CarDataOutfit mCar = new CarDataOutfit();
+            mCar.setCarID("CarID");
+            mCar.setCar("Car");
+            mCar.setSectorID("SectorID");
+            mCar.setSector("Sector");
+            mCar.setRow("Row");
+            mCar.setBarCode("BarCode");
+
+            ArrayList<OperationOutfits> mOperation = new ArrayList<>();
+
+            OperationOutfits mOperationOutfits = new OperationOutfits();
+            mOperationOutfits.setOperationID("OperationID");
+            mOperationOutfits.setOperation("Operation");
+
+            mOperation.add(mOperationOutfits);
+
+            mCar.setOperations(mOperation);
+
+            mCarDataOutfits.add(mCar);
+
+            orderOutfit.setCarDataOutfit(mCarDataOutfits);
+
+            mOrderOutfits.add(orderOutfit);
+
+            ArrayList<OrderOutfit> _mOrderOutfits = SharedData.ORDER_OUTFIT;
+            _mOrderOutfits.clear();
+            _mOrderOutfits.addAll(mOrderOutfits);
+        }
+
     }
 
     private void setMovingCB() {
@@ -587,7 +635,7 @@ public class SOAP_Dispatcher extends Thread {
             }
         }
 
-        return null;
+        return "";
     }
 }
 
