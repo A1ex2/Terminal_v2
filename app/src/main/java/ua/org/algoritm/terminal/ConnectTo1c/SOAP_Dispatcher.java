@@ -335,7 +335,9 @@ public class SOAP_Dispatcher extends Thread {
             ArrayList<OrderOutfit> mOrderOutfits = SharedData.ORDER_OUTFIT;
             mOrderOutfits.clear();
             mOrderOutfits.addAll(JsonParser.getOrderOutfit(soap_ResponseString));
-
+            for (int i = 0; i < mOrderOutfits.size(); i++) {
+                SharedData.setPhoto(mOrderOutfits.get(i));
+            }
 //            GsonBuilder builder = new GsonBuilder();
 //            Gson gson = builder.create();
 //
@@ -354,51 +356,51 @@ public class SOAP_Dispatcher extends Thread {
             e.printStackTrace();
         }
 
-        boolean test = true;
-        if (test) {
-            soap_ResponseString = "1";
-
-            ArrayList<OrderOutfit> mOrderOutfits = new ArrayList<>();
-
-            OrderOutfit orderOutfit = new OrderOutfit();
-
-            orderOutfit.setID("ID");
-            orderOutfit.setDescription("Description");
-            orderOutfit.setResponsibleID("ResponsibleID");
-            orderOutfit.setResponsible("Responsible");
-            orderOutfit.setStateID("StateID");
-            orderOutfit.setState("State");
-
-            ArrayList<CarDataOutfit> mCarDataOutfits = new ArrayList<>();
-
-            CarDataOutfit mCar = new CarDataOutfit();
-            mCar.setCarID("CarID");
-            mCar.setCar("Car");
-            mCar.setSectorID("SectorID");
-            mCar.setSector("Sector");
-            mCar.setRow("Row");
-            mCar.setBarCode("BarCode");
-
-            ArrayList<OperationOutfits> mOperation = new ArrayList<>();
-
-            OperationOutfits mOperationOutfits = new OperationOutfits();
-            mOperationOutfits.setOperationID("OperationID");
-            mOperationOutfits.setOperation("Operation");
-
-            mOperation.add(mOperationOutfits);
-
-            mCar.setOperations(mOperation);
-
-            mCarDataOutfits.add(mCar);
-
-            orderOutfit.setCarDataOutfit(mCarDataOutfits);
-
-            mOrderOutfits.add(orderOutfit);
-
-            ArrayList<OrderOutfit> _mOrderOutfits = SharedData.ORDER_OUTFIT;
-            _mOrderOutfits.clear();
-            _mOrderOutfits.addAll(mOrderOutfits);
-        }
+//        boolean test = true;
+//        if (test) {
+//            soap_ResponseString = "1";
+//
+//            ArrayList<OrderOutfit> mOrderOutfits = new ArrayList<>();
+//
+//            OrderOutfit orderOutfit = new OrderOutfit();
+//
+//            orderOutfit.setID("ID");
+//            orderOutfit.setDescription("Description");
+//            orderOutfit.setResponsibleID("ResponsibleID");
+//            orderOutfit.setResponsible("Responsible");
+//            orderOutfit.setStateID("StateID");
+//            orderOutfit.setState("State");
+//
+//            ArrayList<CarDataOutfit> mCarDataOutfits = new ArrayList<>();
+//
+//            CarDataOutfit mCar = new CarDataOutfit();
+//            mCar.setCarID("CarID");
+//            mCar.setCar("Car");
+//            mCar.setSectorID("SectorID");
+//            mCar.setSector("Sector");
+//            mCar.setRow("Row");
+//            mCar.setBarCode("BarCode");
+//
+//            ArrayList<OperationOutfits> mOperation = new ArrayList<>();
+//
+//            OperationOutfits mOperationOutfits = new OperationOutfits();
+//            mOperationOutfits.setOperationID("OperationID");
+//            mOperationOutfits.setOperation("Operation");
+//
+//            mOperation.add(mOperationOutfits);
+//
+//            mCar.setOperations(mOperation);
+//
+//            mCarDataOutfits.add(mCar);
+//
+//            orderOutfit.setCarDataOutfit(mCarDataOutfits);
+//
+//            mOrderOutfits.add(orderOutfit);
+//
+//            ArrayList<OrderOutfit> _mOrderOutfits = SharedData.ORDER_OUTFIT;
+//            _mOrderOutfits.clear();
+//            _mOrderOutfits.addAll(mOrderOutfits);
+//        }
 
     }
 

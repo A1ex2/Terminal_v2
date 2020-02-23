@@ -12,6 +12,7 @@ import ua.org.algoritm.terminal.Objects.CarDataIssuance;
 import ua.org.algoritm.terminal.Objects.CarDataOutfit;
 import ua.org.algoritm.terminal.Objects.Issuance;
 import ua.org.algoritm.terminal.Objects.OrderOutfit;
+import ua.org.algoritm.terminal.Objects.Photo;
 import ua.org.algoritm.terminal.Objects.Reception;
 import ua.org.algoritm.terminal.Objects.Sector;
 import ua.org.algoritm.terminal.Objects.User;
@@ -236,4 +237,13 @@ public class SharedData {
 //
 //        }
 //    }
+
+    public static void setPhoto(OrderOutfit orderOutfit){
+        DataBaseHelper helper = new DataBaseHelper(app);
+        ArrayList<CarDataOutfit> mCarDataOutfits = orderOutfit.getCarDataOutfit();
+        for (int i = 0; i < mCarDataOutfits.size(); i++) {
+            CarDataOutfit mCar = mCarDataOutfits.get(i);
+            mCar.setPhoto(helper.getPhotoList(orderOutfit.getID(), mCar.getCarID()));
+        }
+    }
 }

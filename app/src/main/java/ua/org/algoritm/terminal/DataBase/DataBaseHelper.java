@@ -12,6 +12,7 @@ import ua.org.algoritm.terminal.Objects.Photo;
 import ua.org.algoritm.terminal.Objects.Sector;
 import ua.org.algoritm.terminal.Objects.User;
 
+import java.io.File;
 import java.util.ArrayList;
 
 
@@ -31,6 +32,12 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 + "sectorID TEXT NOT NULL,"
                 + "mRow INTEGER NOT NULL,"
                 + "productionDate TEXT NOT NULL)");
+
+        db.execSQL("CREATE TABLE CarDataOutfitPhoto ("
+                + "_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + "orderID TEXT NOT NULL,"
+                + "carID TEXT NOT NULL,"
+                + "currentPhotoPath TEXT NOT NULL)");
 
     }
 
@@ -243,17 +250,60 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         long id = 0;
 
         try {
-                ContentValues values = new ContentValues();
-                values.put("orderID", orderID);
-                values.put("carID", carID);
-                values.put("currentPhotoPath", currentPhotoPath);
+            ContentValues values = new ContentValues();
+            values.put("orderID", orderID);
+            values.put("carID", carID);
+            values.put("currentPhotoPath", currentPhotoPath);
 
-                id = db.insert("CarDataOutfitPhoto", null, values);
+            id = db.insert("CarDataOutfitPhoto", null, values);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return id;
     }
+
+    public ArrayList<Photo> getPhotoList(String orderID, String carID) {
+        ArrayList<Photo> mPhotoArrayList = new ArrayList<>();
+        SQLiteDatabase db = getWritableDatabase();
+        Cursor cursor = null;
+
+        try {
+            String select = "orderID = '" + orderID + "' and carID = '" + carID + "'";
+            cursor = db.query("CarDataOutfitPhoto", null, select, null, null, null, null);
+            //cursor = db.query("CarDataOutfitPhoto", null, null, null, null, null, null);
+
+            if (cursor.moveToNext()) {
+                while (!cursor.isAfterLast()) {
+                    Photo photo = new Photo();
+
+                    String fileName=new File(cursor.getString(cursor.getColumnIndex("currentPhotoPath"))).getName();
+                    photo.setName(fileName);
+
+                    photo.setCurrentPhotoPath(cursor.getString(cursor.getColumnIndex("currentPhotoPath")));
+
+                    mPhotoArrayList.add(photo);
+
+                    cursor.moveToNext();
+
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+
+        return mPhotoArrayList;
+    }
+
+    public void deletePhoto(String currentPhotoPath) {
+        SQLiteDatabase db = getWritableDatabase();
+
+        db.delete("CarData", "currentPhotoPath=" + currentPhotoPath, null);
+    }
+
 
 
 //    public ArrayList<Document> getDocuments(String typeDoc) {
