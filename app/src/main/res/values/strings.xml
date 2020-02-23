@@ -53,6 +53,7 @@
     <string name="exit">Нажмите еще раз чтобы выйти</string>
     <string name="wait_update">Получение данных</string>
     <string name="wait_sending">Отправка данных</string>
+    <string name="wait">В обработке</string>
     <string name="select_auto">Выбор автомобиля:</string>
     <string name="add_moving">создайте перемещение</string>
     <string name="issuance_car">Выдать авто</string>

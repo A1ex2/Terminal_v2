@@ -1,33 +1,48 @@
 package ua.org.algoritm.terminal.Activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.ksoap2.SoapFault;
+import org.ksoap2.serialization.SoapObject;
+
 import java.io.File;
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
 import ua.org.algoritm.terminal.Adapters.RecyclerAdapterOperation;
 import ua.org.algoritm.terminal.Adapters.RecyclerAdapterPhoto;
+import ua.org.algoritm.terminal.ConnectTo1c.SOAP_Dispatcher;
+import ua.org.algoritm.terminal.ConnectTo1c.SOAP_Objects;
+import ua.org.algoritm.terminal.ConnectTo1c.UIManager;
 import ua.org.algoritm.terminal.DataBase.SharedData;
+import ua.org.algoritm.terminal.MainActivity;
 import ua.org.algoritm.terminal.Objects.CarDataOutfit;
 import ua.org.algoritm.terminal.Objects.OperationOutfits;
 import ua.org.algoritm.terminal.Objects.Photo;
@@ -52,19 +67,32 @@ public class CarActivityOrderOutfit extends AppCompatActivity {
     private RecyclerView recyclerViewOperation;
     private RecyclerAdapterOperation adapterOperation;
 
-    private ArrayList<Photo> mPhotos = new ArrayList<>();
     private RecyclerView recyclerViewPhoto;
     private RecyclerAdapterPhoto adapterPhoto;
 
-   private Uri photoURI;
-   private String mCurrentPhotoPath;
+    private Uri photoURI;
+    private String mCurrentPhotoPath;
 
-    static final int REQUEST_TAKE_PHOTO = 1;
+    private ProgressDialog mDialog;
+
+    public static final int REQUEST_TAKE_PHOTO = 1;
+
+    public static final int ACTION_SET_CAR_Outfit = 25;
+    public static final int ACTION_ConnectionError = 0;
+
+    public static UIManager uiManager;
+    public static SoapFault responseFault;
+
+    public static SoapObject soapParam_Response;
+    public static Handler soapHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_car_order_outfit);
+
+        uiManager = new UIManager(this);
+        soapHandler = new incomingHandler(this);
 
         itemCar = findViewById(R.id.itemCar);
         itemBarCode = findViewById(R.id.itemBarCode);
@@ -77,8 +105,7 @@ public class CarActivityOrderOutfit extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 carDataOutfit.setOperations(mOperations);
-
-
+                setCB();
             }
         });
 
@@ -137,6 +164,48 @@ public class CarActivityOrderOutfit extends AppCompatActivity {
         updateListsOperation();
         updateListsPhoto();
 
+        ItemTouchHelper.SimpleCallback itemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                final int fromPos = viewHolder.getAdapterPosition();
+
+                mDialog = new ProgressDialog(CarActivityOrderOutfit.this);
+                mDialog.setMessage(getString(R.string.wait));
+                mDialog.setCancelable(false);
+                mDialog.show();
+
+                Photo mPhoto = carDataOutfit.getPhoto().get(fromPos);
+
+                carDataOutfit.getPhoto().remove(mPhoto);
+                IntentServiceDataBase.startDeletePhotoCarDataOutfit(CarActivityOrderOutfit.this, mPhoto.getCurrentPhotoPath());
+            }
+        };
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemTouchCallback);
+        itemTouchHelper.attachToRecyclerView(recyclerViewPhoto);
+    }
+
+    private void setCB() {
+        mDialog = new ProgressDialog(this);
+        mDialog.setMessage(getString(R.string.wait_sending));
+        mDialog.setCancelable(false);
+        mDialog.show();
+
+        SharedPreferences preferences = getSharedPreferences("MyPref", MODE_PRIVATE);
+        String login = preferences.getString("Login", "");
+        String password = preferences.getString("Password", "");
+
+        String stringCarData = SOAP_Objects.getCarDataOutfit(orderID, carDataOutfit);
+
+        SOAP_Dispatcher dispatcher = new SOAP_Dispatcher(ACTION_SET_CAR_Outfit, login, password, getApplicationContext());
+        dispatcher.string_Inquiry = stringCarData;
+
+        dispatcher.start();
     }
 
     private void updateListsOperation() {
@@ -169,7 +238,7 @@ public class CarActivityOrderOutfit extends AppCompatActivity {
                 }
             });
         } else {
-            adapterOperation.notifyDataSetChanged();
+            adapterPhoto.notifyDataSetChanged();
         }
     }
 
@@ -179,10 +248,11 @@ public class CarActivityOrderOutfit extends AppCompatActivity {
 
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
             Photo photo = new Photo();
-            photo.setUri(photoURI);
+//            photo.setUri(photoURI);
+            String fileName = new File(mCurrentPhotoPath).getName();
+            photo.setName(fileName);
             photo.setCurrentPhotoPath(mCurrentPhotoPath);
-            mPhotos.add(photo);
-            carDataOutfit.setPhoto(mPhotos);
+            carDataOutfit.getPhoto().add(photo);
 
             adapterPhoto.setPhoto(carDataOutfit.getPhoto());
 
@@ -190,6 +260,14 @@ public class CarActivityOrderOutfit extends AppCompatActivity {
 
             photoURI = null;
             mCurrentPhotoPath = "";
+        } else if (requestCode == IntentServiceDataBase.REQUEST_CODE_DELETE_PHOTO){
+
+            adapterPhoto.setPhoto(carDataOutfit.getPhoto());
+            updateListsPhoto();
+
+            if (mDialog != null && mDialog.isShowing()) {
+                mDialog.dismiss();
+            }
         }
     }
 
@@ -231,4 +309,66 @@ public class CarActivityOrderOutfit extends AppCompatActivity {
             }
         }
     }
+
+    class incomingHandler extends Handler {
+        private final WeakReference<CarActivityOrderOutfit> mTarget;
+
+        public incomingHandler(CarActivityOrderOutfit context) {
+            mTarget = new WeakReference<>(context);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            CarActivityOrderOutfit target = mTarget.get();
+
+            if (mDialog != null && mDialog.isShowing()) {
+                mDialog.dismiss();
+            }
+
+            switch (msg.what) {
+                case ACTION_ConnectionError:
+                    uiManager.showToast(getString(R.string.errorConnection) + getSoapErrorMessage());
+                    break;
+                case ACTION_SET_CAR_Outfit: {
+                    target.checkSetMovingCar();
+                }
+                break;
+            }
+        }
+    }
+
+    private void checkSetMovingCar() {
+        Boolean isSaveSuccess = Boolean.parseBoolean(soapParam_Response.getPropertyAsString("Result"));
+
+        if (isSaveSuccess) {
+
+            uiManager.showToast(getString(R.string.success));
+            finish();
+
+        } else {
+
+            uiManager.showToast(soapParam_Response.getPropertyAsString("Description"));
+
+        }
+
+    }
+
+    private String getSoapErrorMessage() {
+
+        String errorMessage;
+
+        if (responseFault == null)
+            errorMessage = getString(R.string.textNoInternet);
+        else {
+            try {
+                errorMessage = responseFault.faultstring;
+            } catch (Exception e) {
+                e.printStackTrace();
+                errorMessage = getString(R.string.unknownError);
+            }
+        }
+        return errorMessage;
+    }
+
+
 }

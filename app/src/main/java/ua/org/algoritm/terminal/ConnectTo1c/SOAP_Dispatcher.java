@@ -14,13 +14,16 @@ import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
+import java.io.File;
 import java.lang.reflect.Type;
+import java.math.BigInteger;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
 import ua.org.algoritm.terminal.Activity.CarActivityIssuance;
 import ua.org.algoritm.terminal.Activity.CarActivityMoving;
+import ua.org.algoritm.terminal.Activity.CarActivityOrderOutfit;
 import ua.org.algoritm.terminal.Activity.CarDataList;
 import ua.org.algoritm.terminal.Activity.DetailReception;
 import ua.org.algoritm.terminal.Activity.Password;
@@ -165,6 +168,10 @@ public class SOAP_Dispatcher extends Thread {
             case OrderOutfitFragment.ACTION_LIST:
                 GetOrderOutfitsList();
                 break;
+
+            case CarActivityOrderOutfit.ACTION_SET_CAR_Outfit:
+                setOrderOutfit();
+                break;
         }
 
         if (ACTION == Password.ACTION_VERIFY | ACTION == Password.ACTION_LOGIN_LIST
@@ -248,7 +255,26 @@ public class SOAP_Dispatcher extends Thread {
             } else {
                 OrderOutfitFragment.soapHandler.sendEmptyMessage(DetailReception.ACTION_ConnectionError);
             }
+        }else if (ACTION == CarActivityOrderOutfit.ACTION_SET_CAR_Outfit) {
+            if (soap_Response != null) {
+                CarActivityOrderOutfit.soapParam_Response = soap_Response;
+                CarActivityOrderOutfit.soapHandler.sendEmptyMessage(ACTION);
+            } else {
+                CarActivityOrderOutfit.soapHandler.sendEmptyMessage(DetailReception.ACTION_ConnectionError);
+            }
         }
+    }
+
+    private void setOrderOutfit() {
+        String method = "setOrderOutfit";
+        String action = NAMESPACE + "#setOrderOutfit:" + method;
+        SoapObject request = new SoapObject(NAMESPACE, method);
+        request.addProperty("CarData", string_Inquiry);
+
+//        String s = SharedData.toBase64("/storage/emulated/0/Android/data/ua.org.algoritm.terminal/files/Pictures/JPEG_20200223_145617_1416345249.jpg");
+//        request.addProperty("file", s);
+
+        soap_Response = callWebService(request, action);
     }
 
     private void setIssuanceCB() {
@@ -599,7 +625,8 @@ public class SOAP_Dispatcher extends Thread {
 
             return (SoapObject) envelope.getResponse();
         } catch (Exception e) {
-            //e.printStackTrace();
+            e.printStackTrace();
+
             Log.d("myLogsTerminal", "" + attempt + " / " + action + " / " + e.toString());
             attempt++;
             if (SharedData.isOnline(mContext)) {

@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,14 +25,17 @@ public class IntentServiceDataBase extends IntentService {
     private static final String EXTRA_PENDING_INTENT = "ua.org.algoritm.terminal.Service.extra.PENDING_INTENT";
     private static final String ACTION_INSERT_CAR_DATA = "ua.org.algoritm.terminal.Service.action.INSERT_CAR_DATA";
     private static final String ACTION_INSERT_PHOTO = "ua.org.algoritm.terminal.Service.action.INSERT_PHOTO";
+    private static final String ACTION_DELETE_PHOTO = "ua.org.algoritm.terminal.Service.action.DELETE_PHOTO";
 
     private static final String EXTRA_INSERT_CAR_DATA = "ua.org.algoritm.terminal.Service.extra.INSERT_CAR_DATA";
     private static final String EXTRA_INSERT_PHOTO = "ua.org.algoritm.terminal.Service.extra.INSERT_PHOTO";
+    private static final String EXTRA_DELETE_PHOTO = "ua.org.algoritm.terminal.Service.extra.DELETE_PHOTO";
 
     public static final String EXTRA_CAR_DATA = "ua.org.algoritm.terminal.Service.extra.EXTRA_CAR_DATA";
 
     public static final int REQUEST_CODE_CAR_DATA = 100;
     public static final int REQUEST_CODE_PHOTO = 200;
+    public static final int REQUEST_CODE_DELETE_PHOTO = 300;
 
     public IntentServiceDataBase() {
         super("IntentServiceDataBase");
@@ -66,6 +70,18 @@ public class IntentServiceDataBase extends IntentService {
         activity.startService(intent);
     }
 
+    public static void startDeletePhotoCarDataOutfit(AppCompatActivity activity, String currentPhotoPath) {
+
+        Intent intent = new Intent(activity, IntentServiceDataBase.class);
+        PendingIntent pendingIntent = activity.createPendingResult(REQUEST_CODE_DELETE_PHOTO, intent, 0);
+        intent.putExtra(EXTRA_PENDING_INTENT, pendingIntent);
+        intent.putExtra(EXTRA_DELETE_PHOTO, currentPhotoPath);
+
+        intent.setAction(ACTION_DELETE_PHOTO);
+
+        activity.startService(intent);
+    }
+
     @Override
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
@@ -78,8 +94,7 @@ public class IntentServiceDataBase extends IntentService {
                 CarData carData = intent.getParcelableExtra(EXTRA_INSERT_CAR_DATA);
                 helper.insertCarData(carData);
                 //result.putExtra(EXTRA_CAR_DATA, true);
-            }
-            if (ACTION_INSERT_PHOTO.equals(action)) {
+            } else if (ACTION_INSERT_PHOTO.equals(action)) {
 
                 HashMap<String, String> map = (HashMap<String, String>) intent.getSerializableExtra(EXTRA_INSERT_PHOTO);
 
@@ -90,7 +105,17 @@ public class IntentServiceDataBase extends IntentService {
                 helper.insertPhotoCarDataOutfit(orderID, carID, currentPhotoPath);
                 //result.putExtra(EXTRA_CAR_DATA, true);
 
+            } else if (ACTION_DELETE_PHOTO.equals(action)) {
+
+                String currentPhotoPath = intent.getStringExtra(EXTRA_DELETE_PHOTO);
+
+                helper.deletePhoto(currentPhotoPath);
+                File mFile = new File(currentPhotoPath);
+                if (mFile.delete()) {
+
+                }
             }
+
 //            else if (ACTION_BAZ.equals(action)) {
 //                final String param2 = intent.getStringExtra(EXTRA_PARAM2);
 //                handleActionBaz(param1, param2);

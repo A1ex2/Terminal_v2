@@ -276,7 +276,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 while (!cursor.isAfterLast()) {
                     Photo photo = new Photo();
 
-                    String fileName=new File(cursor.getString(cursor.getColumnIndex("currentPhotoPath"))).getName();
+                    String fileName = new File(cursor.getString(cursor.getColumnIndex("currentPhotoPath"))).getName();
                     photo.setName(fileName);
 
                     photo.setCurrentPhotoPath(cursor.getString(cursor.getColumnIndex("currentPhotoPath")));
@@ -301,9 +301,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public void deletePhoto(String currentPhotoPath) {
         SQLiteDatabase db = getWritableDatabase();
 
-        db.delete("CarData", "currentPhotoPath=" + currentPhotoPath, null);
+        db.delete("CarDataOutfitPhoto", "currentPhotoPath='" + currentPhotoPath + "'", null);
     }
-
 
 
 //    public ArrayList<Document> getDocuments(String typeDoc) {

@@ -3,7 +3,11 @@ package ua.org.algoritm.terminal.DataBase;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import org.kobjects.base64.Base64;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import ua.org.algoritm.terminal.MainActivity;
@@ -245,5 +249,47 @@ public class SharedData {
             CarDataOutfit mCar = mCarDataOutfits.get(i);
             mCar.setPhoto(helper.getPhotoList(orderOutfit.getID(), mCar.getCarID()));
         }
+    }
+
+    public static String toBase64(String currentPhotoPath) {
+        String strFile = "";
+
+        File file = new File(currentPhotoPath);
+
+        try {
+
+            byte[] bytesArray = new byte[(int) file.length()];
+            FileInputStream fis = new FileInputStream(file);
+            fis.read(bytesArray);
+            fis.close();
+
+            strFile = Base64.encode(bytesArray);
+
+        } catch (IOException e) {
+
+            e.printStackTrace();
+
+        }
+
+        return strFile;
+    }
+
+    public static byte[] getByte(String currentPhotoPath) {
+        File file = new File(currentPhotoPath);
+        byte[] bytesArray = new byte[(int) file.length()];
+
+        try {
+
+            FileInputStream fis = new FileInputStream(file);
+            fis.read(bytesArray);
+            fis.close();
+
+        } catch (IOException e) {
+
+            e.printStackTrace();
+
+        }
+
+        return bytesArray;
     }
 }

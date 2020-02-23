@@ -4,10 +4,15 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.File;
 import java.util.ArrayList;
 
+import ua.org.algoritm.terminal.DataBase.SharedData;
 import ua.org.algoritm.terminal.Objects.CarData;
 import ua.org.algoritm.terminal.Objects.CarDataIssuance;
+import ua.org.algoritm.terminal.Objects.CarDataOutfit;
+import ua.org.algoritm.terminal.Objects.OperationOutfits;
+import ua.org.algoritm.terminal.Objects.Photo;
 import ua.org.algoritm.terminal.Objects.Reception;
 
 public class SOAP_Objects {
@@ -33,6 +38,15 @@ public class SOAP_Objects {
         JSONCarDataIssuance jsonCarDataIssuance = new JSONCarDataIssuance(carData);
         Gson gson = new GsonBuilder().create();
         String stringCarData = gson.toJson(jsonCarDataIssuance);
+        return stringCarData;
+
+    }
+
+    public static String getCarDataOutfit(String orderID, CarDataOutfit carDataOutfit) {
+
+        JSONCarDataOutfit jsonCarData = new JSONCarDataOutfit(orderID, carDataOutfit);
+        Gson gson = new GsonBuilder().create();
+        String stringCarData = gson.toJson(jsonCarData);
         return stringCarData;
 
     }
@@ -114,4 +128,68 @@ public class SOAP_Objects {
             rowMoving = carData.getRowMoving();
         }
     }
+
+    private static class JSONCarDataOutfit {
+        @SerializedName("ID")
+        String ID;
+
+        @SerializedName("carID")
+        String carID;
+
+        @SerializedName("operations")
+        ArrayList<JSONOperation> mJsonOperations = new ArrayList<>();
+
+        @SerializedName("photos")
+        ArrayList<JSONPhoto> mJsonPhotos = new ArrayList<>();
+
+        JSONCarDataOutfit(String orderID, CarDataOutfit carData) {
+            ID = orderID;
+            carID = carData.getCarID();
+
+            ArrayList<OperationOutfits> mOperation = carData.getOperations();
+            for (int i = 0; i < mOperation.size(); i++) {
+                mJsonOperations.add(new JSONOperation(mOperation.get(i)));
+            }
+
+//            ArrayList<Photo> mPhotos = carData.getPhoto();
+//            for (int i = 0; i < mPhotos.size(); i++) {
+//                mJsonPhotos.add(new JSONPhoto(mPhotos.get(i)));
+//
+//                break;
+//            }
+        }
+    }
+
+    private static class JSONOperation {
+        @SerializedName("operationID")
+        String OperationID;
+
+        @SerializedName("performed")
+        Boolean Performed;
+
+        JSONOperation(OperationOutfits mOperationOutfits) {
+            OperationID = mOperationOutfits.getOperationID();
+            Performed = mOperationOutfits.getPerformed();
+        }
+    }
+
+    private static class JSONPhoto {
+        @SerializedName("name")
+        String name;
+
+//        @SerializedName("data")
+//        String data;
+
+        @SerializedName("data")
+        byte[] b;
+
+        JSONPhoto(Photo mPhoto) {
+            name = mPhoto.getName();
+            //data = mPhoto.getCurrentPhotoPath();
+
+            //String file = SharedData.toBase64(data);
+            b = SharedData.getByte(mPhoto.getCurrentPhotoPath());
+        }
+    }
+
 }
