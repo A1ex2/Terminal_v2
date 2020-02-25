@@ -1,14 +1,17 @@
 package ua.org.algoritm.terminal.Activity;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -30,14 +33,19 @@ import org.ksoap2.SoapFault;
 import org.ksoap2.serialization.SoapObject;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Formatter;
 
 import ua.org.algoritm.terminal.Adapters.RecyclerAdapterOperation;
 import ua.org.algoritm.terminal.Adapters.RecyclerAdapterPhoto;
+import ua.org.algoritm.terminal.ConnectTo1c.FtpUtil;
 import ua.org.algoritm.terminal.ConnectTo1c.SOAP_Dispatcher;
 import ua.org.algoritm.terminal.ConnectTo1c.SOAP_Objects;
 import ua.org.algoritm.terminal.ConnectTo1c.UIManager;
@@ -74,6 +82,7 @@ public class CarActivityOrderOutfit extends AppCompatActivity {
     private String mCurrentPhotoPath;
 
     private ProgressDialog mDialog;
+    private SaveTaskPhotoFTP mTaskPhotoFTP;
 
     public static final int REQUEST_TAKE_PHOTO = 1;
 
@@ -260,7 +269,7 @@ public class CarActivityOrderOutfit extends AppCompatActivity {
 
             photoURI = null;
             mCurrentPhotoPath = "";
-        } else if (requestCode == IntentServiceDataBase.REQUEST_CODE_DELETE_PHOTO){
+        } else if (requestCode == IntentServiceDataBase.REQUEST_CODE_DELETE_PHOTO) {
 
             adapterPhoto.setPhoto(carDataOutfit.getPhoto());
             updateListsPhoto();
@@ -343,7 +352,35 @@ public class CarActivityOrderOutfit extends AppCompatActivity {
         if (isSaveSuccess) {
 
             uiManager.showToast(getString(R.string.success));
-            finish();
+
+            if (carDataOutfit.getPhoto().size() != 0) {
+                String message = getString(R.string.send_photo);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage(message)
+                        .setCancelable(true)
+                        .setPositiveButton(getString(R.string.butt_Yes), new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+
+                                mTaskPhotoFTP = new SaveTaskPhotoFTP();
+                                mTaskPhotoFTP.execute(carDataOutfit.getPhoto());
+
+                            }
+                        })
+                        .setNegativeButton(getString(R.string.butt_Not), new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+
+                                dialog.cancel();
+                                finish();
+
+                            }
+                        });
+                AlertDialog alert = builder.create();
+                alert.show();
+
+            } else {
+                finish();
+            }
 
         } else {
 
@@ -370,5 +407,70 @@ public class CarActivityOrderOutfit extends AppCompatActivity {
         return errorMessage;
     }
 
+
+    public class SaveTaskPhotoFTP extends AsyncTask<ArrayList<Photo>, Integer, Boolean> {
+        private ProgressDialog mDialog;
+
+        public SaveTaskPhotoFTP() {
+        }
+
+        @Override
+        protected Boolean doInBackground(ArrayList<Photo>... arrayLists) {
+            for (ArrayList<Photo> mPhotos : arrayLists) {
+                for (int i = 0; i < mPhotos.size(); i++) {
+                    Photo photo = mPhotos.get(i);
+
+                    if (sendPhoto(photo)) {
+                        publishProgress(mPhotos.size(), i + 1);
+                    } else {
+                        break;
+                    }
+                }
+            }
+            return null;
+        }
+
+        private boolean sendPhoto(Photo photo) {
+            boolean uploadFile = false;
+
+            try {
+                String host = "192.168.1.10";
+                int port = 21;
+                String username = "admin";
+                String password = "123456";
+                String basePath = "";
+                String filePath = "";
+                String filename = photo.getName();
+                InputStream input = new FileInputStream(new File(photo.getCurrentPhotoPath()));
+                uploadFile = FtpUtil.uploadFile(host, port, username, password, basePath, filePath, filename, input);
+            } catch (Exception e) {
+                uploadFile = false;
+            }
+            return uploadFile;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            mDialog = new ProgressDialog(CarActivityOrderOutfit.this);
+            mDialog.setMessage("Wait...");
+            mDialog.setCancelable(false);
+            mDialog.show();
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            mDialog.setMessage(String.format("Saved %d from %d", values[1], values[0]));
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            if (mDialog != null && mDialog.isShowing()) {
+                mDialog.dismiss();
+            }
+            Toast.makeText(CarActivityOrderOutfit.this, "загрузка ячеек завершена", Toast.LENGTH_LONG).show();
+        }
+    }
 
 }

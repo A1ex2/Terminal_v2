@@ -66,6 +66,7 @@
     <string name="connection_for_internet">интернет-соединение восстановлено</string>
     <string name="operation">Операции</string>
     <string name="photo">Фото</string>
+    <string name="send_photo">Отправить фото?</string>
 
 
 </resources>

@@ -48,6 +48,7 @@ public class JsonParser {
                     OperationOutfits mOperationOutfits = new OperationOutfits();
                     mOperationOutfits.setOperationID(operation.getString("OperationID"));
                     mOperationOutfits.setOperation(operation.getString("Operation"));
+                    mOperationOutfits.setPerformed(operation.getBoolean("Performed"));
 
                     mOperation.add(mOperationOutfits);
                 }

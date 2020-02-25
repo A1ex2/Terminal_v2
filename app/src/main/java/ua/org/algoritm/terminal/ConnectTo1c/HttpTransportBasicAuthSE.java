@@ -14,7 +14,7 @@ public class HttpTransportBasicAuthSE extends HttpTransportSE {
     private String username;
     private String password;
 
-    /**
+    /**HttpURLConnection
      * Constructor with username and password
      *
      *@param url      The url address of the webservice endpoint

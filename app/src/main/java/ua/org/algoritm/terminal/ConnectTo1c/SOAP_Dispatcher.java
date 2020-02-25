@@ -271,10 +271,9 @@ public class SOAP_Dispatcher extends Thread {
         SoapObject request = new SoapObject(NAMESPACE, method);
         request.addProperty("CarData", string_Inquiry);
 
-//        String s = SharedData.toBase64("/storage/emulated/0/Android/data/ua.org.algoritm.terminal/files/Pictures/JPEG_20200223_145617_1416345249.jpg");
-//        request.addProperty("file", s);
-
         soap_Response = callWebService(request, action);
+
+        //new FilesUploadingTask("/storage/emulated/0/Android/data/ua.org.algoritm.terminal/files/Pictures/JPEG_20200223_145617_1416345249.jpg", user, pass).execute();
     }
 
     private void setIssuanceCB() {
