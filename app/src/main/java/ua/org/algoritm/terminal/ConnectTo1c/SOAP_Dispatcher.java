@@ -360,9 +360,13 @@ public class SOAP_Dispatcher extends Thread {
             ArrayList<OrderOutfit> mOrderOutfits = SharedData.ORDER_OUTFIT;
             mOrderOutfits.clear();
             mOrderOutfits.addAll(JsonParser.getOrderOutfit(soap_ResponseString));
+
+            SharedData.checkPhoto(mOrderOutfits);
+
             for (int i = 0; i < mOrderOutfits.size(); i++) {
                 SharedData.setPhoto(mOrderOutfits.get(i));
             }
+
 //            GsonBuilder builder = new GsonBuilder();
 //            Gson gson = builder.create();
 //

@@ -1,13 +1,11 @@
 package ua.org.algoritm.terminal.Activity;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -21,7 +19,6 @@ import com.google.zxing.integration.android.IntentResult;
 import java.util.ArrayList;
 
 import ua.org.algoritm.terminal.Adapters.RecyclerAdapterCarDataOrderOutfit;
-import ua.org.algoritm.terminal.ConnectTo1c.SaveTaskPhotoFTP;
 import ua.org.algoritm.terminal.DataBase.SharedData;
 import ua.org.algoritm.terminal.Objects.CarDataOutfit;
 import ua.org.algoritm.terminal.Objects.OrderOutfit;

@@ -151,12 +151,10 @@ public class SOAP_Objects {
                 mJsonOperations.add(new JSONOperation(mOperation.get(i)));
             }
 
-//            ArrayList<Photo> mPhotos = carData.getPhoto();
-//            for (int i = 0; i < mPhotos.size(); i++) {
-//                mJsonPhotos.add(new JSONPhoto(mPhotos.get(i)));
-//
-//                break;
-//            }
+            ArrayList<Photo> mPhotos = carData.getPhoto();
+            for (int i = 0; i < mPhotos.size(); i++) {
+                mJsonPhotos.add(new JSONPhoto(mPhotos.get(i)));
+            }
         }
     }
 
@@ -177,18 +175,8 @@ public class SOAP_Objects {
         @SerializedName("name")
         String name;
 
-//        @SerializedName("data")
-//        String data;
-
-        @SerializedName("data")
-        byte[] b;
-
         JSONPhoto(Photo mPhoto) {
             name = mPhoto.getName();
-            //data = mPhoto.getCurrentPhotoPath();
-
-            //String file = SharedData.toBase64(data);
-            b = SharedData.getByte(mPhoto.getCurrentPhotoPath());
         }
     }
 

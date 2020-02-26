@@ -3,6 +3,7 @@ package ua.org.algoritm.terminal.DataBase;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+
 import org.kobjects.base64.Base64;
 
 import java.io.File;
@@ -229,7 +230,7 @@ public class SharedData {
         ArrayList<CarDataOutfit> carActivityOrderOutfits = orderOutfit.getCarDataOutfit();
         for (int i = 0; i < carActivityOrderOutfits.size(); i++) {
             CarDataOutfit mCarDataOutfit = carActivityOrderOutfits.get(i);
-            if (mCarDataOutfit.getCarID().equals(carID)){
+            if (mCarDataOutfit.getCarID().equals(carID)) {
                 carActivityOrderOutfit = mCarDataOutfit;
                 break;
             }
@@ -246,12 +247,44 @@ public class SharedData {
 //        }
 //    }
 
-    public static void setPhoto(OrderOutfit orderOutfit){
+    public static void setPhoto(OrderOutfit orderOutfit) {
         DataBaseHelper helper = new DataBaseHelper(app);
         ArrayList<CarDataOutfit> mCarDataOutfits = orderOutfit.getCarDataOutfit();
         for (int i = 0; i < mCarDataOutfits.size(); i++) {
             CarDataOutfit mCar = mCarDataOutfits.get(i);
             mCar.setPhoto(helper.getPhotoList(orderOutfit.getID(), mCar.getCarID()));
+        }
+    }
+
+    public static void deletePhoto(String currentPhotoPath) {
+        try {
+            DataBaseHelper helper = new DataBaseHelper(app);
+
+            helper.deletePhoto(currentPhotoPath);
+            File mFile = new File(currentPhotoPath);
+            if (mFile.delete()) {
+            }
+        } catch (Exception e) {
+
+        }
+    }
+
+    public static void checkPhoto(ArrayList<OrderOutfit> orderOutfits) {
+        DataBaseHelper helper = new DataBaseHelper(app);
+        ArrayList<Photo> mPhotos = helper.getPhotoAll();
+        for (int i = 0; i < mPhotos.size(); i++) {
+            Photo mPhoto = mPhotos.get(i);
+            for (int j = 0; j <orderOutfits.size(); j++) {
+                if (orderOutfits.get(j).getID().equals(mPhoto.getOrderID())){
+                    break;
+                } else {
+                    try {
+                        deletePhoto(mPhoto.getCurrentPhotoPath());
+                    } catch (Exception e) {
+
+                    }
+                }
+            }
         }
     }
 

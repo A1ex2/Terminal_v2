@@ -1,6 +1,7 @@
 package ua.org.algoritm.terminal.Activity;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -48,10 +49,8 @@ import ua.org.algoritm.terminal.Adapters.RecyclerAdapterPhoto;
 import ua.org.algoritm.terminal.ConnectTo1c.FtpUtil;
 import ua.org.algoritm.terminal.ConnectTo1c.SOAP_Dispatcher;
 import ua.org.algoritm.terminal.ConnectTo1c.SOAP_Objects;
-import ua.org.algoritm.terminal.ConnectTo1c.SaveTaskPhotoFTP;
 import ua.org.algoritm.terminal.ConnectTo1c.UIManager;
 import ua.org.algoritm.terminal.DataBase.SharedData;
-import ua.org.algoritm.terminal.MainActivity;
 import ua.org.algoritm.terminal.Objects.CarDataOutfit;
 import ua.org.algoritm.terminal.Objects.OperationOutfits;
 import ua.org.algoritm.terminal.Objects.Photo;
@@ -262,6 +261,8 @@ public class CarActivityOrderOutfit extends AppCompatActivity {
             String fileName = new File(mCurrentPhotoPath).getName();
             photo.setName(fileName);
             photo.setCurrentPhotoPath(mCurrentPhotoPath);
+            photo.setOrderID(orderID);
+            photo.setCarID(carID);
             carDataOutfit.getPhoto().add(photo);
 
             adapterPhoto.setPhoto(carDataOutfit.getPhoto());
@@ -365,7 +366,6 @@ public class CarActivityOrderOutfit extends AppCompatActivity {
 
                                 mTaskPhotoFTP = new SaveTaskPhotoFTP(CarActivityOrderOutfit.this, orderID, carID);
                                 mTaskPhotoFTP.execute(carDataOutfit.getPhoto());
-
                             }
                         })
                         .setNegativeButton(getString(R.string.butt_Not), new DialogInterface.OnClickListener() {
@@ -406,5 +406,80 @@ public class CarActivityOrderOutfit extends AppCompatActivity {
             }
         }
         return errorMessage;
+    }
+
+    public class SaveTaskPhotoFTP extends AsyncTask<ArrayList<Photo>, Integer, Boolean> {
+        private Context mContext;
+        private ProgressDialog mDialog;
+        private String orderID;
+        private String carID;
+
+        public SaveTaskPhotoFTP(Context context, String orderID, String carID) {
+            this.mContext = context;
+            this.orderID = orderID;
+            this.carID = carID;
+        }
+
+        @Override
+        protected Boolean doInBackground(ArrayList<Photo>... arrayLists) {
+            for (ArrayList<Photo> mPhotos : arrayLists) {
+                for (int i = 0; i < mPhotos.size(); i++) {
+                    Photo photo = mPhotos.get(i);
+                    publishProgress(mPhotos.size(), i + 1);
+
+                    if (sendPhoto(photo)) {
+                        //SharedData.deletePhoto(photo.getCurrentPhotoPath());
+                    } else {
+                        break;
+                    }
+                }
+            }
+            return null;
+        }
+
+        private boolean sendPhoto(Photo photo) {
+            boolean uploadFile = false;
+
+            try {
+
+                String host = SharedData.hostFTP;
+                int port = SharedData.portFTP;
+                String username = SharedData.usernameFTP;
+                String password = SharedData.passwordFTP;
+
+                String basePath = "";
+                String filePath = "" + orderID + "/" + carID;
+                String filename = photo.getName();
+                InputStream input = new FileInputStream(new File(photo.getCurrentPhotoPath()));
+                uploadFile = FtpUtil.uploadFile(host, port, username, password, basePath, filePath, filename, input);
+            } catch (Exception e) {
+                uploadFile = false;
+            }
+            return uploadFile;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            mDialog = new ProgressDialog(mContext);
+            mDialog.setMessage(mContext.getResources().getString(R.string.wait_ftp));
+            mDialog.setCancelable(false);
+            mDialog.show();
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            mDialog.setMessage(String.format(mContext.getResources().getString(R.string.send_ftp), values[1], values[0]));
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            if (mDialog != null && mDialog.isShowing()) {
+                mDialog.dismiss();
+            }
+            Toast.makeText(mContext, R.string.ok_ftp, Toast.LENGTH_LONG).show();
+            finish();
+        }
     }
 }

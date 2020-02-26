@@ -281,6 +281,46 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
                     photo.setCurrentPhotoPath(cursor.getString(cursor.getColumnIndex("currentPhotoPath")));
 
+                    photo.setOrderID(cursor.getString(cursor.getColumnIndex("orderID")));
+                    photo.setCarID(cursor.getString(cursor.getColumnIndex("carID")));
+
+                    mPhotoArrayList.add(photo);
+
+                    cursor.moveToNext();
+
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+
+        return mPhotoArrayList;
+    }
+
+    public ArrayList<Photo> getPhotoAll() {
+        ArrayList<Photo> mPhotoArrayList = new ArrayList<>();
+        SQLiteDatabase db = getWritableDatabase();
+        Cursor cursor = null;
+
+        try {
+            cursor = db.query("CarDataOutfitPhoto", null, null, null, null, null, null);
+
+            if (cursor.moveToNext()) {
+                while (!cursor.isAfterLast()) {
+                    Photo photo = new Photo();
+
+                    String fileName = new File(cursor.getString(cursor.getColumnIndex("currentPhotoPath"))).getName();
+                    photo.setName(fileName);
+
+                    photo.setCurrentPhotoPath(cursor.getString(cursor.getColumnIndex("currentPhotoPath")));
+
+                    photo.setOrderID(cursor.getString(cursor.getColumnIndex("orderID")));
+                    photo.setCarID(cursor.getString(cursor.getColumnIndex("carID")));
+
                     mPhotoArrayList.add(photo);
 
                     cursor.moveToNext();

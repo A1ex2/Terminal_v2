@@ -4,6 +4,9 @@ import android.net.Uri;
 
 
 public class Photo {
+    private String orderID;
+    private String carID;
+
     private String name;
     private Uri uri;
     private String currentPhotoPath;
@@ -33,5 +36,21 @@ public class Photo {
 
     public void setCurrentPhotoPath(String currentPhotoPath) {
         this.currentPhotoPath = currentPhotoPath;
+    }
+
+    public String getOrderID() {
+        return orderID;
+    }
+
+    public void setOrderID(String orderID) {
+        this.orderID = orderID;
+    }
+
+    public String getCarID() {
+        return carID;
+    }
+
+    public void setCarID(String carID) {
+        this.carID = carID;
     }
 }
