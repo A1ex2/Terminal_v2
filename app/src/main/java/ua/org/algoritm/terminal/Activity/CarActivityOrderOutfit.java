@@ -48,6 +48,7 @@ import ua.org.algoritm.terminal.Adapters.RecyclerAdapterPhoto;
 import ua.org.algoritm.terminal.ConnectTo1c.FtpUtil;
 import ua.org.algoritm.terminal.ConnectTo1c.SOAP_Dispatcher;
 import ua.org.algoritm.terminal.ConnectTo1c.SOAP_Objects;
+import ua.org.algoritm.terminal.ConnectTo1c.SaveTaskPhotoFTP;
 import ua.org.algoritm.terminal.ConnectTo1c.UIManager;
 import ua.org.algoritm.terminal.DataBase.SharedData;
 import ua.org.algoritm.terminal.MainActivity;
@@ -362,7 +363,7 @@ public class CarActivityOrderOutfit extends AppCompatActivity {
                         .setPositiveButton(getString(R.string.butt_Yes), new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
 
-                                mTaskPhotoFTP = new SaveTaskPhotoFTP();
+                                mTaskPhotoFTP = new SaveTaskPhotoFTP(CarActivityOrderOutfit.this, orderID, carID);
                                 mTaskPhotoFTP.execute(carDataOutfit.getPhoto());
 
                             }
@@ -406,71 +407,4 @@ public class CarActivityOrderOutfit extends AppCompatActivity {
         }
         return errorMessage;
     }
-
-
-    public class SaveTaskPhotoFTP extends AsyncTask<ArrayList<Photo>, Integer, Boolean> {
-        private ProgressDialog mDialog;
-
-        public SaveTaskPhotoFTP() {
-        }
-
-        @Override
-        protected Boolean doInBackground(ArrayList<Photo>... arrayLists) {
-            for (ArrayList<Photo> mPhotos : arrayLists) {
-                for (int i = 0; i < mPhotos.size(); i++) {
-                    Photo photo = mPhotos.get(i);
-
-                    if (sendPhoto(photo)) {
-                        publishProgress(mPhotos.size(), i + 1);
-                    } else {
-                        break;
-                    }
-                }
-            }
-            return null;
-        }
-
-        private boolean sendPhoto(Photo photo) {
-            boolean uploadFile = false;
-
-            try {
-                String host = "192.168.1.10";
-                int port = 21;
-                String username = "admin";
-                String password = "123456";
-                String basePath = "";
-                String filePath = "";
-                String filename = photo.getName();
-                InputStream input = new FileInputStream(new File(photo.getCurrentPhotoPath()));
-                uploadFile = FtpUtil.uploadFile(host, port, username, password, basePath, filePath, filename, input);
-            } catch (Exception e) {
-                uploadFile = false;
-            }
-            return uploadFile;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            mDialog = new ProgressDialog(CarActivityOrderOutfit.this);
-            mDialog.setMessage("Wait...");
-            mDialog.setCancelable(false);
-            mDialog.show();
-        }
-
-        @Override
-        protected void onProgressUpdate(Integer... values) {
-            mDialog.setMessage(String.format("Saved %d from %d", values[1], values[0]));
-        }
-
-        @Override
-        protected void onPostExecute(Boolean aBoolean) {
-            if (mDialog != null && mDialog.isShowing()) {
-                mDialog.dismiss();
-            }
-            Toast.makeText(CarActivityOrderOutfit.this, "загрузка ячеек завершена", Toast.LENGTH_LONG).show();
-        }
-    }
-
 }

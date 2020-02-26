@@ -1,11 +1,13 @@
 package ua.org.algoritm.terminal.Activity;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -19,6 +21,7 @@ import com.google.zxing.integration.android.IntentResult;
 import java.util.ArrayList;
 
 import ua.org.algoritm.terminal.Adapters.RecyclerAdapterCarDataOrderOutfit;
+import ua.org.algoritm.terminal.ConnectTo1c.SaveTaskPhotoFTP;
 import ua.org.algoritm.terminal.DataBase.SharedData;
 import ua.org.algoritm.terminal.Objects.CarDataOutfit;
 import ua.org.algoritm.terminal.Objects.OrderOutfit;
@@ -31,6 +34,7 @@ public class DetailOrderOutfit extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RecyclerAdapterCarDataOrderOutfit adapter;
     private OrderOutfit orderOutfit;
+    private static final int SAVE_FTP = 101;
 
     private static final int REQUEST_CODE_SCAN = 0x0000c0de;
 
@@ -106,6 +110,39 @@ public class DetailOrderOutfit extends AppCompatActivity {
                 return true;
             }
         });
+
+//        menu.add(Menu.NONE, SAVE_FTP, Menu.NONE, R.string.send_ftp_menu)
+//                .setIcon(R.drawable.ic_send)
+//                .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+//                    @Override
+//                    public boolean onMenuItemClick(MenuItem menuItem) {
+//
+//                        String message = getString(R.string.send_photo);
+//
+//                        AlertDialog.Builder builder = new AlertDialog.Builder(DetailOrderOutfit.this);
+//                        builder.setMessage(message)
+//                                .setCancelable(true)
+//                                .setPositiveButton(getString(R.string.butt_Yes), new DialogInterface.OnClickListener() {
+//                                    public void onClick(DialogInterface dialog, int id) {
+//
+////                                        mTaskPhotoFTP = new SaveTaskPhotoFTP(DetailOrderOutfit.this, orderID, carID);
+////                                        mTaskPhotoFTP.execute(carDataOutfit.getPhoto());
+//
+//                                    }
+//                                })
+//                                .setNegativeButton(getString(R.string.butt_Not), new DialogInterface.OnClickListener() {
+//                                    public void onClick(DialogInterface dialog, int id) {
+//
+//                                        dialog.cancel();
+//                                    }
+//                                });
+//                        AlertDialog alert = builder.create();
+//                        alert.show();
+//
+//                        return false;
+//                    }
+//                })
+//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
         return true;
     }

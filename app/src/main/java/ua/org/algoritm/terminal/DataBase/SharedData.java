@@ -33,6 +33,10 @@ public class SharedData {
     public static String API;
     public static String VERSION;
 
+    public static String hostFTP;
+    public static int portFTP;
+    public static String usernameFTP;
+    public static String passwordFTP;
 
     public static void updateReception(CarData carData) {
         boolean mFinish = false;

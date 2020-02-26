@@ -54,6 +54,10 @@
     <string name="wait_update">Получение данных</string>
     <string name="wait_sending">Отправка данных</string>
     <string name="wait">В обработке</string>
+    <string name="wait_ftp">Подключение к FTP</string>
+    <string name="send_ftp">"Запись %d из %d"</string>
+    <string name="send_ftp_menu">"Записать фото на FTP"</string>
+    <string name="ok_ftp">"Фото отправлены"</string>
     <string name="select_auto">Выбор автомобиля:</string>
     <string name="add_moving">создайте перемещение</string>
     <string name="issuance_car">Выдать авто</string>
