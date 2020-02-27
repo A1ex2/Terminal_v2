@@ -62,7 +62,7 @@ public class FtpUtil {
                         if (i == 0) {
                             tempPath += dir;
                         } else {
-                            tempPath += "/" + dir;
+                            tempPath = dir;
                         }
                         if (!ftp.changeWorkingDirectory(tempPath)) {
                             if (!ftp.makeDirectory(tempPath)) {
@@ -71,6 +71,7 @@ public class FtpUtil {
                                 ftp.changeWorkingDirectory(tempPath);
                             }
                         }
+                        i++;
                     }
                 }
                 //设置上传文件的类型为二进制类型

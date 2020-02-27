@@ -22,7 +22,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Activity.DetailOrderOutfit"></activity>
+        <activity
+            android:name=".Activity.ViewPhoto"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity android:name=".Activity.DetailOrderOutfit" />
         <activity
             android:name=".Activity.CarActivityOrderOutfit"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -72,6 +76,7 @@
             <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
             <!-- </intent-filter> -->
         </activity>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.example.android.provider"
@@ -79,7 +84,7 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"></meta-data>
+                android:resource="@xml/file_paths" />
         </provider>
     </application>
 

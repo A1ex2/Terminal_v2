@@ -71,6 +71,7 @@
     <string name="operation">Операции</string>
     <string name="photo">Фото</string>
     <string name="send_photo">Отправить фото?</string>
+    <string name="view_photo">Фото</string>
 
 
 </resources>

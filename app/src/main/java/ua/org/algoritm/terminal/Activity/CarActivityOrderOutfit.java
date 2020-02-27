@@ -243,7 +243,9 @@ public class CarActivityOrderOutfit extends AppCompatActivity {
             adapterPhoto.setActionListener(new RecyclerAdapterPhoto.ActionListener() {
                 @Override
                 public void onClick(Photo photo) {
-
+                    Intent i = new Intent(getApplicationContext(), ViewPhoto.class);
+                    i.putExtra("currentPhotoPath", photo.getCurrentPhotoPath());
+                    startActivity(i);
                 }
             });
         } else {
