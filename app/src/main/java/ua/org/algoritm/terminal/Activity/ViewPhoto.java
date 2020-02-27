@@ -20,6 +20,7 @@ public class ViewPhoto extends AppCompatActivity {
     private ImageView mPhotoView;
     private ImageView imageBack;
     private ImageView imageRotate;
+    int rotate  = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,13 +32,7 @@ public class ViewPhoto extends AppCompatActivity {
         mPhotoFile = new File(currentPhotoPath);
 
         mPhotoView = findViewById(R.id.view_photo);
-        if (mPhotoFile == null || !mPhotoFile.exists()) {
-            mPhotoView.setImageDrawable(null);
-        } else {
-            Bitmap bitmap = getScaledBitmap(
-                    mPhotoFile.getPath(), this);
-            mPhotoView.setImageBitmap(bitmap);
-        }
+        setPhoto();
 
         imageBack = findViewById(R.id.imageBack);
         imageBack.setOnClickListener(new View.OnClickListener() {
@@ -47,16 +42,36 @@ public class ViewPhoto extends AppCompatActivity {
             }
         });
 
+        imageRotate = findViewById(R.id.imageRotate);
+        imageRotate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mPhotoFile != null || mPhotoFile.exists()) {
+                    rotate += 90;
+                    mPhotoView.setRotation(rotate);
+                }
+            }
+        });
     }
 
-    public static Bitmap getScaledBitmap(String path, Activity activity) {
+    public void setPhoto() {
+        if (mPhotoFile == null || !mPhotoFile.exists()) {
+            mPhotoView.setImageDrawable(null);
+        } else {
+            Bitmap bitmap = getScaledBitmap(
+                    mPhotoFile.getPath(), this);
+            mPhotoView.setImageBitmap(bitmap);
+        }
+    }
+
+    public Bitmap getScaledBitmap(String path, Activity activity) {
         Point size = new Point();
         activity.getWindowManager().getDefaultDisplay()
                 .getSize(size);
         return getScaledBitmap(path, size.x, size.y);
     }
 
-    public static Bitmap getScaledBitmap(String path, int destWidth, int
+    public Bitmap getScaledBitmap(String path, int destWidth, int
             destHeight) {
         // Чтение размеров изображения на диске
         BitmapFactory.Options options = new BitmapFactory.Options();
