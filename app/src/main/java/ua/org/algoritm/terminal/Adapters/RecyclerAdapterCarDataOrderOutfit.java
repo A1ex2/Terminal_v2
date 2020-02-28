@@ -1,15 +1,18 @@
 package ua.org.algoritm.terminal.Adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import ua.org.algoritm.terminal.Objects.CarDataOutfit;
+import ua.org.algoritm.terminal.Objects.OperationOutfits;
 import ua.org.algoritm.terminal.R;
 
 public class RecyclerAdapterCarDataOrderOutfit extends RecyclerView.Adapter<RecyclerAdapterCarDataOrderOutfit.CarDataViewHolder> {
@@ -89,6 +92,9 @@ public class RecyclerAdapterCarDataOrderOutfit extends RecyclerView.Adapter<Recy
         private TextView itemProductionDate;
         private TextView itemSector;
         private TextView itemRow;
+        private ProgressBar pbHorizontal;
+        private TextView tvProgressHorizontal;
+
 //        private ConstraintLayout mConstraintLayout;
 
         public CarDataViewHolder(View itemView) {
@@ -99,6 +105,10 @@ public class RecyclerAdapterCarDataOrderOutfit extends RecyclerView.Adapter<Recy
             itemProductionDate = itemView.findViewById(R.id.itemProductionDate);
             itemSector = itemView.findViewById(R.id.itemSector);
             itemRow = itemView.findViewById(R.id.itemRow);
+
+            pbHorizontal = itemView.findViewById(R.id.pb_horizontal);
+            tvProgressHorizontal = itemView.findViewById(R.id.tv_progress_horizontal);
+
 //            mConstraintLayout = itemView.findViewById(R.id.constraintLayout);
         }
 
@@ -108,6 +118,27 @@ public class RecyclerAdapterCarDataOrderOutfit extends RecyclerView.Adapter<Recy
 //            itemProductionDate.setText(carData.getProductionDateString());
             itemSector.setText(carData.getSector());
             itemRow.setText(carData.getRow());
+
+            int performed = 0;
+            for (int i = 0; i <carData.getOperations().size() ; i++) {
+                if (carData.getOperations().get(i).getPerformed()){
+                    performed ++;
+                };
+            }
+            int progress = Math.round(performed * 100 / carData.getOperations().size());
+            postProgress(progress, performed, carData.getOperations().size());
+        }
+
+        private void postProgress(int progress, int performed, int quantity) {
+            String strProgress = String.valueOf(progress) + " %";
+            pbHorizontal.setProgress(progress);
+
+            if (progress == 0) {
+                pbHorizontal.setSecondaryProgress(0);
+            } else {
+                pbHorizontal.setSecondaryProgress(progress + 5);
+            }
+            tvProgressHorizontal.setText("" + performed + " / " + quantity);
         }
     }
 }

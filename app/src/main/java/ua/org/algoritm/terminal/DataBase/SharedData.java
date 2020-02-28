@@ -274,15 +274,18 @@ public class SharedData {
         ArrayList<Photo> mPhotos = helper.getPhotoAll();
         for (int i = 0; i < mPhotos.size(); i++) {
             Photo mPhoto = mPhotos.get(i);
-            for (int j = 0; j <orderOutfits.size(); j++) {
-                if (orderOutfits.get(j).getID().equals(mPhoto.getOrderID())){
-                    break;
+            boolean isDelete = true;
+            for (int j = 0; j < orderOutfits.size(); j++) {
+                if (orderOutfits.get(j).getID().equals(mPhoto.getOrderID())) {
+                    isDelete = false;
                 } else {
-                    try {
-                        deletePhoto(mPhoto.getCurrentPhotoPath());
-                    } catch (Exception e) {
+                }
+            }
 
-                    }
+            if (isDelete) {
+                try {
+                    deletePhoto(mPhoto.getCurrentPhotoPath());
+                } catch (Exception e) {
                 }
             }
         }

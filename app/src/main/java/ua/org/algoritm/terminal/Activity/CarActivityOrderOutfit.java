@@ -155,7 +155,9 @@ public class CarActivityOrderOutfit extends AppCompatActivity {
 
         carDataOutfit = SharedData.getCarOrderOutfit(orderID, carID);
 
-        mOperations.addAll(carDataOutfit.getOperations());
+        for (int i = 0; i <carDataOutfit.getOperations().size(); i++) {
+            mOperations.add(new OperationOutfits(carDataOutfit.getOperations().get(i)));
+        }
 
         itemCar.setText(carDataOutfit.getCar());
         itemBarCode.setText(carDataOutfit.getBarCode());
@@ -273,6 +275,9 @@ public class CarActivityOrderOutfit extends AppCompatActivity {
 
             photoURI = null;
             mCurrentPhotoPath = "";
+        } else if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_CANCELED) {
+            SharedData.deletePhoto(mCurrentPhotoPath);
+
         } else if (requestCode == IntentServiceDataBase.REQUEST_CODE_DELETE_PHOTO) {
 
             adapterPhoto.setPhoto(carDataOutfit.getPhoto());
@@ -481,6 +486,8 @@ public class CarActivityOrderOutfit extends AppCompatActivity {
                 mDialog.dismiss();
             }
             Toast.makeText(mContext, R.string.ok_ftp, Toast.LENGTH_LONG).show();
+
+            setResult(RESULT_OK);
             finish();
         }
     }

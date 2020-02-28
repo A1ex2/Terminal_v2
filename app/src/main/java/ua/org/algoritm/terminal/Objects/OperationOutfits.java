@@ -15,6 +15,12 @@ public class OperationOutfits {
     public OperationOutfits() {
     }
 
+    public OperationOutfits(OperationOutfits mOperationOutfits) {
+        this.OperationID = mOperationOutfits.getOperationID();
+        this.Operation = mOperationOutfits.getOperation();
+        this.Performed = mOperationOutfits.getPerformed();
+    }
+
     public String getOperationID() {
         return OperationID;
     }

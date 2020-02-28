@@ -61,7 +61,7 @@ public class DetailOrderOutfit extends AppCompatActivity {
 
     private void updateLists() {
         if (adapter == null) {
-            adapter = new RecyclerAdapterCarDataOrderOutfit(this, R.layout.item_issuance_detail, orderOutfit.getCarDataOutfit());
+            adapter = new RecyclerAdapterCarDataOrderOutfit(this, R.layout.item_car_order_outfit_detail, orderOutfit.getCarDataOutfit());
             recyclerView.setAdapter(adapter);
             adapter.setActionListener(new RecyclerAdapterCarDataOrderOutfit.ActionListener() {
                 @Override
@@ -80,7 +80,7 @@ public class DetailOrderOutfit extends AppCompatActivity {
         intent.putExtra("carID", carData.getCarID());
         setResult(Activity.RESULT_OK, intent);
 
-        startActivity(intent);
+        startActivityForResult(intent, 1);
     }
 
     @Override
@@ -192,6 +192,8 @@ public class DetailOrderOutfit extends AppCompatActivity {
             } else {
                 super.onActivityResult(requestCode, resultCode, data);
             }
+        } else if (requestCode == 1 || resultCode == RESULT_OK){
+            updateLists();
         }
     }
 
