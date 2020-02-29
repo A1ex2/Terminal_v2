@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +20,7 @@ import java.util.TreeMap;
 
 import ua.org.algoritm.terminal.DataBase.DataBaseHelper;
 import ua.org.algoritm.terminal.Objects.CarData;
+import ua.org.algoritm.terminal.Objects.Photo;
 
 public class IntentServiceDataBase extends IntentService {
 
@@ -26,16 +28,19 @@ public class IntentServiceDataBase extends IntentService {
     private static final String ACTION_INSERT_CAR_DATA = "ua.org.algoritm.terminal.Service.action.INSERT_CAR_DATA";
     private static final String ACTION_INSERT_PHOTO = "ua.org.algoritm.terminal.Service.action.INSERT_PHOTO";
     private static final String ACTION_DELETE_PHOTO = "ua.org.algoritm.terminal.Service.action.DELETE_PHOTO";
+    private static final String ACTION_GET_PHOTO_OUTFIT = "ua.org.algoritm.terminal.Service.action.GET_PHOTO_OUTFIT";
 
     private static final String EXTRA_INSERT_CAR_DATA = "ua.org.algoritm.terminal.Service.extra.INSERT_CAR_DATA";
     private static final String EXTRA_INSERT_PHOTO = "ua.org.algoritm.terminal.Service.extra.INSERT_PHOTO";
     private static final String EXTRA_DELETE_PHOTO = "ua.org.algoritm.terminal.Service.extra.DELETE_PHOTO";
+    private static final String EXTRA_GET_PHOTO_OUTFIT = "ua.org.algoritm.terminal.Service.extra.GET_PHOTO_OUTFIT";
 
     public static final String EXTRA_CAR_DATA = "ua.org.algoritm.terminal.Service.extra.EXTRA_CAR_DATA";
 
     public static final int REQUEST_CODE_CAR_DATA = 100;
     public static final int REQUEST_CODE_PHOTO = 200;
     public static final int REQUEST_CODE_DELETE_PHOTO = 300;
+    public static final int REQUEST_CODE_GET_PHOTO_OUTFIT = 400;
 
     public IntentServiceDataBase() {
         super("IntentServiceDataBase");
@@ -66,6 +71,18 @@ public class IntentServiceDataBase extends IntentService {
         map.put("currentPhotoPath", currentPhotoPath);
 
         intent.putExtra(EXTRA_INSERT_PHOTO, map);
+
+        activity.startService(intent);
+    }
+
+    public static void getPhotoOutfit(AppCompatActivity activity, String orderID) {
+
+        Intent intent = new Intent(activity, IntentServiceDataBase.class);
+        PendingIntent pendingIntent = activity.createPendingResult(REQUEST_CODE_GET_PHOTO_OUTFIT, intent, 0);
+        intent.putExtra(EXTRA_PENDING_INTENT, pendingIntent);
+
+        intent.setAction(ACTION_GET_PHOTO_OUTFIT);
+        intent.putExtra(EXTRA_GET_PHOTO_OUTFIT, orderID);
 
         activity.startService(intent);
     }
@@ -114,6 +131,10 @@ public class IntentServiceDataBase extends IntentService {
                 if (mFile.delete()) {
 
                 }
+            } else if (ACTION_GET_PHOTO_OUTFIT.equals(action)) {
+                String orderID = intent.getStringExtra(EXTRA_GET_PHOTO_OUTFIT);
+                ArrayList<Photo> mPhotos = helper.getPhotoOutfit(orderID);
+                result.putExtra("photos", mPhotos);
             }
 
 //            else if (ACTION_BAZ.equals(action)) {

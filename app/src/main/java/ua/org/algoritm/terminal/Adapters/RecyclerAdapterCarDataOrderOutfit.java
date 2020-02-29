@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+
 import ua.org.algoritm.terminal.Objects.CarDataOutfit;
 import ua.org.algoritm.terminal.Objects.OperationOutfits;
 import ua.org.algoritm.terminal.R;
@@ -19,11 +20,13 @@ public class RecyclerAdapterCarDataOrderOutfit extends RecyclerView.Adapter<Recy
     private int mResourse;
     private ArrayList<CarDataOutfit> mCarData = new ArrayList<>();
     private LayoutInflater mInflater;
+    private Context mContext;
 
     public RecyclerAdapterCarDataOrderOutfit(Context context, int resourse, ArrayList<CarDataOutfit> carData) {
         mResourse = resourse;
         mCarData.addAll(carData);
         mInflater = LayoutInflater.from(context);
+        mContext = context;
     }
 
     public interface ActionListener {
@@ -120,17 +123,17 @@ public class RecyclerAdapterCarDataOrderOutfit extends RecyclerView.Adapter<Recy
             itemRow.setText(carData.getRow());
 
             int performed = 0;
-            for (int i = 0; i <carData.getOperations().size() ; i++) {
-                if (carData.getOperations().get(i).getPerformed()){
-                    performed ++;
-                };
+            for (int i = 0; i < carData.getOperations().size(); i++) {
+                if (carData.getOperations().get(i).getPerformed()) {
+                    performed++;
+                }
+                ;
             }
             int progress = Math.round(performed * 100 / carData.getOperations().size());
-            postProgress(progress, performed, carData.getOperations().size());
+            postProgress(progress, performed, carData.getOperations().size(), carData.getPhoto().size());
         }
 
-        private void postProgress(int progress, int performed, int quantity) {
-            String strProgress = String.valueOf(progress) + " %";
+        private void postProgress(int progress, int performed, int quantity, int quantityPhoto) {
             pbHorizontal.setProgress(progress);
 
             if (progress == 0) {
@@ -138,7 +141,8 @@ public class RecyclerAdapterCarDataOrderOutfit extends RecyclerView.Adapter<Recy
             } else {
                 pbHorizontal.setSecondaryProgress(progress + 5);
             }
-            tvProgressHorizontal.setText("" + performed + " / " + quantity);
+            tvProgressHorizontal.setText("" + performed + " / " + quantity
+                    + " (" + quantityPhoto + " " + mContext.getResources().getString(R.string.photo) + ")");
         }
     }
 }

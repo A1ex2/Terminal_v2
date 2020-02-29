@@ -370,7 +370,6 @@ public class CarActivityOrderOutfit extends AppCompatActivity {
                         .setCancelable(true)
                         .setPositiveButton(getString(R.string.butt_Yes), new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-
                                 mTaskPhotoFTP = new SaveTaskPhotoFTP(CarActivityOrderOutfit.this, orderID, carID);
                                 mTaskPhotoFTP.execute(carDataOutfit.getPhoto());
                             }

@@ -1,14 +1,15 @@
 package ua.org.algoritm.terminal.Objects;
 
 import android.net.Uri;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 
-public class Photo {
+public class Photo implements Parcelable {
     private String orderID;
     private String carID;
 
     private String name;
-    private Uri uri;
     private String currentPhotoPath;
 
     public Photo() {
@@ -20,14 +21,6 @@ public class Photo {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Uri getUri() {
-        return uri;
-    }
-
-    public void setUri(Uri uri) {
-        this.uri = uri;
     }
 
     public String getCurrentPhotoPath() {
@@ -53,4 +46,37 @@ public class Photo {
     public void setCarID(String carID) {
         this.carID = carID;
     }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.orderID);
+        dest.writeString(this.carID);
+        dest.writeString(this.name);
+        dest.writeString(this.currentPhotoPath);
+    }
+
+    protected Photo(Parcel in) {
+        this.orderID = in.readString();
+        this.carID = in.readString();
+        this.name = in.readString();
+        this.currentPhotoPath = in.readString();
+    }
+
+    public static final Creator<Photo> CREATOR = new Creator<Photo>() {
+        @Override
+        public Photo createFromParcel(Parcel source) {
+            return new Photo(source);
+        }
+
+        @Override
+        public Photo[] newArray(int size) {
+            return new Photo[size];
+        }
+    };
 }

@@ -53,9 +53,10 @@
     <string name="exit">Нажмите еще раз чтобы выйти</string>
     <string name="wait_update">Получение данных</string>
     <string name="wait_sending">Отправка данных</string>
+    <string name="wait_send_status">Отправка данных по статусу</string>
     <string name="wait">В обработке</string>
     <string name="wait_ftp">Подключение к FTP</string>
-    <string name="send_ftp">"Запись %d из %d"</string>
+    <string name="send_ftp">"Запись фото %d из %d"</string>
     <string name="send_ftp_menu">"Записать фото на FTP"</string>
     <string name="ok_ftp">"Фото отправлены"</string>
     <string name="select_auto">Выбор автомобиля:</string>
@@ -71,6 +72,7 @@
     <string name="operation">Операции</string>
     <string name="photo">Фото</string>
     <string name="send_photo">Отправить фото?</string>
+    <string name="completed_outfit">По Заказ-наряду будут отправлены фотографии и отметка о выполении. Продолжить?</string>
     <string name="view_photo">Фото</string>
 
 

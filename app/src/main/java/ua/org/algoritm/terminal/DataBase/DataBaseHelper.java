@@ -344,6 +344,44 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.delete("CarDataOutfitPhoto", "currentPhotoPath='" + currentPhotoPath + "'", null);
     }
 
+    public ArrayList<Photo> getPhotoOutfit(String orderID) {
+        ArrayList<Photo> mPhotos = new ArrayList<>();
+        SQLiteDatabase db = getWritableDatabase();
+        Cursor cursor = null;
+
+        try {
+            String select = "orderID = '" + orderID + "'";
+            cursor = db.query("CarDataOutfitPhoto", null, select, null, null, null, null);
+            //cursor = db.query("CarDataOutfitPhoto", null, null, null, null, null, null);
+
+            if (cursor.moveToNext()) {
+                while (!cursor.isAfterLast()) {
+                    Photo photo = new Photo();
+
+                    String fileName = new File(cursor.getString(cursor.getColumnIndex("currentPhotoPath"))).getName();
+                    photo.setName(fileName);
+
+                    photo.setCurrentPhotoPath(cursor.getString(cursor.getColumnIndex("currentPhotoPath")));
+
+                    photo.setOrderID(cursor.getString(cursor.getColumnIndex("orderID")));
+                    photo.setCarID(cursor.getString(cursor.getColumnIndex("carID")));
+
+                    mPhotos.add(photo);
+
+                    cursor.moveToNext();
+
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return mPhotos;
+    }
+
 
 //    public ArrayList<Document> getDocuments(String typeDoc) {
 //        ArrayList<Document> documents = new ArrayList<>();
