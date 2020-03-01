@@ -12,6 +12,7 @@ import ua.org.algoritm.terminal.Objects.CarData;
 import ua.org.algoritm.terminal.Objects.CarDataIssuance;
 import ua.org.algoritm.terminal.Objects.CarDataOutfit;
 import ua.org.algoritm.terminal.Objects.OperationOutfits;
+import ua.org.algoritm.terminal.Objects.OrderOutfit;
 import ua.org.algoritm.terminal.Objects.Photo;
 import ua.org.algoritm.terminal.Objects.Reception;
 
@@ -51,6 +52,15 @@ public class SOAP_Objects {
 
     }
 
+    public static String getOrderOutfit(OrderOutfit mOutfit) {
+
+        JSONOutfit jsonOutfit = new JSONOutfit(mOutfit);
+        Gson gson = new GsonBuilder().create();
+        String stringCarData = gson.toJson(jsonOutfit);
+        return stringCarData;
+
+    }
+
     private static class JSONReception {
         @SerializedName("ID")
         String ID;
@@ -67,7 +77,7 @@ public class SOAP_Objects {
                 JSONCarData jsonCarData = new JSONCarData(carData);
                 mJSONCarData.add(jsonCarData);
 
-                if (!carData.getRow().equals("") | !carData.getSector().equals("")){
+                if (!carData.getRow().equals("") | !carData.getSector().equals("")) {
                     carData.saveCB = true;
                 }
             }
@@ -180,4 +190,46 @@ public class SOAP_Objects {
         }
     }
 
+
+    private static class JSONOutfit {
+        @SerializedName("ID")
+        String ID;
+
+        @SerializedName("car")
+        ArrayList<JSONCarOutfit> mJsonCar = new ArrayList<>();
+
+        JSONOutfit(OrderOutfit orderOutfit) {
+            ID = orderOutfit.getID();
+
+            ArrayList<CarDataOutfit> mCarDataOutfit = orderOutfit.getCarDataOutfit();
+            for (int i = 0; i < mCarDataOutfit.size(); i++) {
+                mJsonCar.add(new JSONCarOutfit(mCarDataOutfit.get(i)));
+            }
+        }
+    }
+
+    private static class JSONCarOutfit {
+        @SerializedName("carID")
+        String carID;
+
+        @SerializedName("operations")
+        ArrayList<JSONOperation> mJsonOperations = new ArrayList<>();
+
+        @SerializedName("photos")
+        ArrayList<JSONPhoto> mJsonPhotos = new ArrayList<>();
+
+        JSONCarOutfit(CarDataOutfit mCarDataOutfit) {
+            carID = mCarDataOutfit.getCarID();
+
+            ArrayList<OperationOutfits> mOperation = mCarDataOutfit.getOperations();
+            for (int i = 0; i < mOperation.size(); i++) {
+                mJsonOperations.add(new JSONOperation(mOperation.get(i)));
+            }
+
+            ArrayList<Photo> mPhotos = mCarDataOutfit.getPhoto();
+            for (int i = 0; i < mPhotos.size(); i++) {
+                mJsonPhotos.add(new JSONPhoto(mPhotos.get(i)));
+            }
+        }
+    }
 }

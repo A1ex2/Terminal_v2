@@ -25,6 +25,7 @@ import ua.org.algoritm.terminal.Activity.CarActivityIssuance;
 import ua.org.algoritm.terminal.Activity.CarActivityMoving;
 import ua.org.algoritm.terminal.Activity.CarActivityOrderOutfit;
 import ua.org.algoritm.terminal.Activity.CarDataList;
+import ua.org.algoritm.terminal.Activity.DetailOrderOutfit;
 import ua.org.algoritm.terminal.Activity.DetailReception;
 import ua.org.algoritm.terminal.Activity.Password;
 import ua.org.algoritm.terminal.DataBase.SharedData;
@@ -172,6 +173,9 @@ public class SOAP_Dispatcher extends Thread {
             case CarActivityOrderOutfit.ACTION_SET_CAR_Outfit:
                 setOrderOutfit();
                 break;
+            case DetailOrderOutfit.ACTION_SET_Outfit:
+                setStatusOutfit();
+                break;
         }
 
         if (ACTION == Password.ACTION_VERIFY | ACTION == Password.ACTION_LOGIN_LIST
@@ -262,7 +266,23 @@ public class SOAP_Dispatcher extends Thread {
             } else {
                 CarActivityOrderOutfit.soapHandler.sendEmptyMessage(DetailReception.ACTION_ConnectionError);
             }
+        } else if (ACTION == DetailOrderOutfit.ACTION_SET_Outfit) {
+            if (soap_Response != null) {
+                DetailOrderOutfit.soapParam_Response = soap_Response;
+                DetailOrderOutfit.soapHandler.sendEmptyMessage(ACTION);
+            } else {
+                DetailOrderOutfit.soapHandler.sendEmptyMessage(DetailReception.ACTION_ConnectionError);
+            }
         }
+    }
+
+    private void setStatusOutfit() {
+        String method = "setStatusOrderOutfit";
+        String action = NAMESPACE + "#setStatusOrderOutfit:" + method;
+        SoapObject request = new SoapObject(NAMESPACE, method);
+        request.addProperty("CarData", string_Inquiry);
+
+        soap_Response = callWebService(request, action);
     }
 
     private void setOrderOutfit() {

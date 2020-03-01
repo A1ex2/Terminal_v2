@@ -59,6 +59,7 @@
     <string name="send_ftp">"Запись фото %d из %d"</string>
     <string name="send_ftp_menu">"Записать фото на FTP"</string>
     <string name="ok_ftp">"Фото отправлены"</string>
+    <string name="error_ftp">"Ошибка отправки фото на FTP, попробуйте позже. Если ошибка останется, обратитесь к администратору"</string>
     <string name="select_auto">Выбор автомобиля:</string>
     <string name="add_moving">создайте перемещение</string>
     <string name="issuance_car">Выдать авто</string>

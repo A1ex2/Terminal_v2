@@ -16,6 +16,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.SearchView;
@@ -25,15 +27,20 @@ import android.widget.Toast;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
+import org.ksoap2.SoapFault;
+import org.ksoap2.serialization.SoapObject;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import ua.org.algoritm.terminal.Adapters.RecyclerAdapterCarDataOrderOutfit;
 import ua.org.algoritm.terminal.ConnectTo1c.FtpUtil;
 import ua.org.algoritm.terminal.ConnectTo1c.SOAP_Dispatcher;
 import ua.org.algoritm.terminal.ConnectTo1c.SOAP_Objects;
+import ua.org.algoritm.terminal.ConnectTo1c.UIManager;
 import ua.org.algoritm.terminal.DataBase.SharedData;
 import ua.org.algoritm.terminal.Objects.CarDataOutfit;
 import ua.org.algoritm.terminal.Objects.OrderOutfit;
@@ -54,10 +61,23 @@ public class DetailOrderOutfit extends AppCompatActivity {
 
     private static final int REQUEST_CODE_SCAN = 0x0000c0de;
 
+    public static final int ACTION_SET_Outfit = 26;
+    public static final int ACTION_ConnectionError = 0;
+
+    public static UIManager uiManager;
+    public static SoapFault responseFault;
+
+    public static SoapObject soapParam_Response;
+    public static Handler soapHandler;
+    ;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_order_outfit);
+
+        uiManager = new UIManager(this);
+        soapHandler = new incomingHandler(this);
 
         String id = getIntent().getStringExtra("OrderOutfit");
         orderOutfit = SharedData.getOrderOutfit(id);
@@ -209,8 +229,6 @@ public class DetailOrderOutfit extends AppCompatActivity {
             }
         } else if (requestCode == 1) {
             updateLists();
-        } else if (requestCode == SAVE_FTP && resultCode == RESULT_OK) {
-            sendStatusCB();
         } else if (requestCode == IntentServiceDataBase.REQUEST_CODE_GET_PHOTO_OUTFIT && resultCode == RESULT_OK) {
             ArrayList<Photo> mPhotos = data.getParcelableArrayListExtra("photos");
             mTaskPhotoFTP = new SaveTaskPhotoFTP(DetailOrderOutfit.this, orderOutfit.getID());
@@ -228,23 +246,24 @@ public class DetailOrderOutfit extends AppCompatActivity {
         String login = preferences.getString("Login", "");
         String password = preferences.getString("Password", "");
 
-//        String stringCarData = SOAP_Objects.getCarDataOutfit(orderID, carDataOutfit);
-//
-//        SOAP_Dispatcher dispatcher = new SOAP_Dispatcher(ACTION_SET_CAR_Outfit, login, password, getApplicationContext());
-//        dispatcher.string_Inquiry = stringCarData;
+        String string = SOAP_Objects.getOrderOutfit(orderOutfit);
 
-//        dispatcher.start();
+        SOAP_Dispatcher dispatcher = new SOAP_Dispatcher(ACTION_SET_Outfit, login, password, getApplicationContext());
+        dispatcher.string_Inquiry = string;
 
+        dispatcher.start();
     }
 
     public class SaveTaskPhotoFTP extends AsyncTask<ArrayList<Photo>, Integer, Boolean> {
         private Context mContext;
         private ProgressDialog mDialog;
         private String orderID;
+        private boolean error;
 
         public SaveTaskPhotoFTP(Context context, String orderID) {
             this.mContext = context;
             this.orderID = orderID;
+            this.error = false;
         }
 
         @Override
@@ -257,6 +276,7 @@ public class DetailOrderOutfit extends AppCompatActivity {
                     if (sendPhoto(photo)) {
                         //SharedData.deletePhoto(photo.getCurrentPhotoPath());
                     } else {
+                        error = true;
                         break;
                     }
                 }
@@ -304,12 +324,77 @@ public class DetailOrderOutfit extends AppCompatActivity {
             if (mDialog != null && mDialog.isShowing()) {
                 mDialog.dismiss();
             }
-            Toast.makeText(mContext, R.string.ok_ftp, Toast.LENGTH_LONG).show();
 
-            setResult(SAVE_FTP);
-
+            if (error) {
+                Toast.makeText(mContext, R.string.error_ftp, Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(mContext, R.string.ok_ftp, Toast.LENGTH_LONG).show();
+                sendStatusCB();
+            }
+            //setResult(SAVE_FTP);
             //finish();
         }
     }
+
+    class incomingHandler extends Handler {
+        private final WeakReference<DetailOrderOutfit> mTarget;
+
+        public incomingHandler(DetailOrderOutfit context) {
+            mTarget = new WeakReference<>(context);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            DetailOrderOutfit target = mTarget.get();
+
+            if (mDialog != null && mDialog.isShowing()) {
+                mDialog.dismiss();
+            }
+
+            switch (msg.what) {
+                case ACTION_ConnectionError:
+                    uiManager.showToast(getString(R.string.errorConnection) + getSoapErrorMessage());
+                    break;
+                case ACTION_SET_Outfit: {
+                    target.checkSetStatus();
+                }
+                break;
+            }
+        }
+    }
+
+    private void checkSetStatus() {
+        Boolean isSaveSuccess = Boolean.parseBoolean(soapParam_Response.getPropertyAsString("Result"));
+
+        if (isSaveSuccess) {
+
+            uiManager.showToast(getString(R.string.success));
+
+            finish();
+
+
+        } else {
+            uiManager.showToast(soapParam_Response.getPropertyAsString("Description"));
+        }
+
+    }
+
+    private String getSoapErrorMessage() {
+
+        String errorMessage;
+
+        if (responseFault == null)
+            errorMessage = getString(R.string.textNoInternet);
+        else {
+            try {
+                errorMessage = responseFault.faultstring;
+            } catch (Exception e) {
+                e.printStackTrace();
+                errorMessage = getString(R.string.unknownError);
+            }
+        }
+        return errorMessage;
+    }
+
 
 }
