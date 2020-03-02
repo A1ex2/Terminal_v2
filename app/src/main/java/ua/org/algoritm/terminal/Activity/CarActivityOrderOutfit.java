@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.os.PersistableBundle;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Adapter;
@@ -78,8 +79,8 @@ public class CarActivityOrderOutfit extends AppCompatActivity {
     private RecyclerView recyclerViewPhoto;
     private RecyclerAdapterPhoto adapterPhoto;
 
-    private Uri photoURI;
     private String mCurrentPhotoPath;
+    private int tabHostSelect = 0;
 
     private ProgressDialog mDialog;
     private SaveTaskPhotoFTP mTaskPhotoFTP;
@@ -256,12 +257,29 @@ public class CarActivityOrderOutfit extends AppCompatActivity {
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("mCurrentPhotoPath", mCurrentPhotoPath);
+
+        tabHostSelect = tabHost.getCurrentTab();
+        outState.putInt("tabHostSelect", tabHostSelect);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mCurrentPhotoPath = savedInstanceState.getString("mCurrentPhotoPath");
+
+        tabHostSelect = savedInstanceState.getInt("tabHostSelect", 0);
+        tabHost.setCurrentTab(tabHostSelect);
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
             Photo photo = new Photo();
-//            photo.setUri(photoURI);
             String fileName = new File(mCurrentPhotoPath).getName();
             photo.setName(fileName);
             photo.setCurrentPhotoPath(mCurrentPhotoPath);
@@ -273,7 +291,6 @@ public class CarActivityOrderOutfit extends AppCompatActivity {
 
             IntentServiceDataBase.startInsertPhotoCarDataOutfit(CarActivityOrderOutfit.this, orderID, carID, mCurrentPhotoPath);
 
-            photoURI = null;
             mCurrentPhotoPath = "";
         } else if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_CANCELED) {
             SharedData.deletePhoto(mCurrentPhotoPath);
@@ -319,10 +336,12 @@ public class CarActivityOrderOutfit extends AppCompatActivity {
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {
+                Uri photoURI;
                 photoURI = FileProvider.getUriForFile(this,
                         "com.example.android.provider",
                         photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+
                 startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
             }
         }
