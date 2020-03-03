@@ -272,10 +272,19 @@ public class Password extends AppCompatActivity {
         Boolean isLoginSuccess = Boolean.parseBoolean(soapParam_Response.getPropertyAsString("Result"));
 
         if (isLoginSuccess) {
-            String hostFTP = soapParam_Response.getPropertyAsString("host");
-            int portFTP = Integer.parseInt(soapParam_Response.getPropertyAsString("port"));
-            String usernameFTP = soapParam_Response.getPropertyAsString("username");
-            String passwordFTP = soapParam_Response.getPropertyAsString("password");
+            String hostFTP = "";
+            int portFTP = 21;
+            String usernameFTP = "";
+            String passwordFTP = "";
+
+            try {
+                hostFTP = soapParam_Response.getPropertyAsString("host");
+                portFTP = Integer.parseInt(soapParam_Response.getPropertyAsString("port"));
+                usernameFTP = soapParam_Response.getPropertyAsString("username");
+                passwordFTP = soapParam_Response.getPropertyAsString("password");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             SharedData.LOGIN = mLogin;
             SharedData.PASSWORD = mPassword;
