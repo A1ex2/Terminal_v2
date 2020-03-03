@@ -438,11 +438,13 @@ public class CarActivityOrderOutfit extends AppCompatActivity {
         private ProgressDialog mDialog;
         private String orderID;
         private String carID;
+        private boolean error;
 
         public SaveTaskPhotoFTP(Context context, String orderID, String carID) {
             this.mContext = context;
             this.orderID = orderID;
             this.carID = carID;
+            this.error = false;
         }
 
         @Override
@@ -455,6 +457,7 @@ public class CarActivityOrderOutfit extends AppCompatActivity {
                     if (sendPhoto(photo)) {
                         //SharedData.deletePhoto(photo.getCurrentPhotoPath());
                     } else {
+                        error = true;
                         break;
                     }
                 }
@@ -503,10 +506,14 @@ public class CarActivityOrderOutfit extends AppCompatActivity {
             if (mDialog != null && mDialog.isShowing()) {
                 mDialog.dismiss();
             }
-            Toast.makeText(mContext, R.string.ok_ftp, Toast.LENGTH_LONG).show();
 
-            setResult(RESULT_OK);
-            finish();
+            if (error) {
+                Toast.makeText(mContext, R.string.error_ftp, Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(mContext, R.string.ok_ftp, Toast.LENGTH_LONG).show();
+                setResult(RESULT_OK);
+                finish();
+            }
         }
     }
 }
