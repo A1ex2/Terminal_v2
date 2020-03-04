@@ -276,9 +276,11 @@ public class Password extends AppCompatActivity {
             int portFTP = 21;
             String usernameFTP = "";
             String passwordFTP = "";
+            boolean thisSFTP = false;
 
             try {
                 hostFTP = soapParam_Response.getPropertyAsString("host");
+                thisSFTP = Integer.parseInt(soapParam_Response.getPropertyAsString("thisSFTP")) == 1;
                 portFTP = Integer.parseInt(soapParam_Response.getPropertyAsString("port"));
                 usernameFTP = soapParam_Response.getPropertyAsString("username");
                 passwordFTP = soapParam_Response.getPropertyAsString("password");
@@ -290,6 +292,7 @@ public class Password extends AppCompatActivity {
             SharedData.PASSWORD = mPassword;
 
             SharedData.hostFTP = hostFTP;
+            SharedData.thisSFTP = thisSFTP;
             SharedData.portFTP = portFTP;
             SharedData.usernameFTP = usernameFTP;
             SharedData.passwordFTP = passwordFTP;
@@ -299,6 +302,7 @@ public class Password extends AppCompatActivity {
             editor.putString("Password", mPassword);
 
             editor.putString("hostFTP", hostFTP);
+            editor.putBoolean("thisSFTP", thisSFTP);
             editor.putInt("portFTP", portFTP);
             editor.putString("usernameFTP", usernameFTP);
             editor.putString("passwordFTP", passwordFTP);

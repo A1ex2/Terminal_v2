@@ -2,9 +2,11 @@ package ua.org.algoritm.terminal.ConnectTo1c;
 
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPClientConfig;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
 import org.apache.commons.net.ftp.FTPSClient;
+import org.apache.commons.net.ftp.parser.MVSFTPEntryParser;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -13,6 +15,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.SocketException;
 import java.security.NoSuchAlgorithmException;
 
 public class FtpUtil {
@@ -35,64 +38,65 @@ public class FtpUtil {
         boolean result = false;
 
 //        try {
-            FTPClient ftp = null;
-            ftp = new FTPClient();
-            try {
-                int reply;
-                ftp.connect(host, port);// 连接FTP服务器
-                // 如果采用默认端口，可以使用ftp.connect(host)的方式直接连接FTP服务器
-                ftp.login(username, password);// 登录
-                reply = ftp.getReplyCode();
-                if (!FTPReply.isPositiveCompletion(reply)) {
-                    ftp.disconnect();
-                    return result;
+        FTPClient ftp = null;
+        ftp = new FTPClient();
+        ftp.setDataTimeout(300000);
+        try {
+            int reply;
+            ftp.connect(host, port);// 连接FTP服务器
+            // 如果采用默认端口，可以使用ftp.connect(host)的方式直接连接FTP服务器
+            ftp.login(username, password);// 登录
+            reply = ftp.getReplyCode();
+            if (!FTPReply.isPositiveCompletion(reply)) {
+                ftp.disconnect();
+                return result;
+            }
+            //切换到上传目录
+            if (!ftp.changeWorkingDirectory(basePath + filePath)) {
+                //去掉前面的/
+                if (filePath.startsWith("/")) {
+                    filePath = filePath.substring(1);
                 }
-                //切换到上传目录
-                if (!ftp.changeWorkingDirectory(basePath + filePath)) {
-                    //去掉前面的/
-                    if (filePath.startsWith("/")) {
-                        filePath = filePath.substring(1);
+                //如果目录不存在创建目录
+                String[] dirs = filePath.split("/");
+                String tempPath = basePath;
+                int i = 0;
+                for (String dir : dirs) {
+                    if (null == dir || "".equals(dir)) continue;
+                    if (i == 0) {
+                        tempPath += dir;
+                    } else {
+                        tempPath = dir;
                     }
-                    //如果目录不存在创建目录
-                    String[] dirs = filePath.split("/");
-                    String tempPath = basePath;
-                    int i = 0;
-                    for (String dir : dirs) {
-                        if (null == dir || "".equals(dir)) continue;
-                        if (i == 0) {
-                            tempPath += dir;
+                    if (!ftp.changeWorkingDirectory(tempPath)) {
+                        if (!ftp.makeDirectory(tempPath)) {
+                            return result;
                         } else {
-                            tempPath = dir;
+                            ftp.changeWorkingDirectory(tempPath);
                         }
-                        if (!ftp.changeWorkingDirectory(tempPath)) {
-                            if (!ftp.makeDirectory(tempPath)) {
-                                return result;
-                            } else {
-                                ftp.changeWorkingDirectory(tempPath);
-                            }
-                        }
-                        i++;
                     }
-                }
-                //设置上传文件的类型为二进制类型
-                ftp.setFileType(FTP.BINARY_FILE_TYPE);
-                //上传文件
-                if (!ftp.storeFile(filename, input)) {
-                    return result;
-                }
-                input.close();
-                ftp.logout();
-                result = true;
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                if (ftp.isConnected()) {
-                    try {
-                        ftp.disconnect();
-                    } catch (IOException ioe) {
-                    }
+                    i++;
                 }
             }
+            //设置上传文件的类型为二进制类型
+            ftp.setFileType(FTP.BINARY_FILE_TYPE);
+            //上传文件
+            if (!ftp.storeFile(filename, input)) {
+                return result;
+            }
+            input.close();
+            ftp.logout();
+            result = true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (ftp.isConnected()) {
+                try {
+                    ftp.disconnect();
+                } catch (IOException ioe) {
+                }
+            }
+        }
 
 //        } catch (NoSuchAlgorithmException e) {
 //            e.printStackTrace();

@@ -38,6 +38,7 @@ public class SharedData {
     public static int portFTP;
     public static String usernameFTP;
     public static String passwordFTP;
+    public static boolean thisSFTP;
 
     public static void updateReception(CarData carData) {
         boolean mFinish = false;

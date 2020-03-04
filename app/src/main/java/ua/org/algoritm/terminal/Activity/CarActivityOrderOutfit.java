@@ -48,6 +48,7 @@ import java.util.Formatter;
 import ua.org.algoritm.terminal.Adapters.RecyclerAdapterOperation;
 import ua.org.algoritm.terminal.Adapters.RecyclerAdapterPhoto;
 import ua.org.algoritm.terminal.ConnectTo1c.FtpUtil;
+import ua.org.algoritm.terminal.ConnectTo1c.SFTPClient;
 import ua.org.algoritm.terminal.ConnectTo1c.SOAP_Dispatcher;
 import ua.org.algoritm.terminal.ConnectTo1c.SOAP_Objects;
 import ua.org.algoritm.terminal.ConnectTo1c.UIManager;
@@ -156,7 +157,7 @@ public class CarActivityOrderOutfit extends AppCompatActivity {
 
         carDataOutfit = SharedData.getCarOrderOutfit(orderID, carID);
 
-        for (int i = 0; i <carDataOutfit.getOperations().size(); i++) {
+        for (int i = 0; i < carDataOutfit.getOperations().size(); i++) {
             mOperations.add(new OperationOutfits(carDataOutfit.getOperations().get(i)));
         }
 
@@ -474,12 +475,27 @@ public class CarActivityOrderOutfit extends AppCompatActivity {
                 int port = SharedData.portFTP;
                 String username = SharedData.usernameFTP;
                 String password = SharedData.passwordFTP;
+                boolean thisSFTP = SharedData.thisSFTP;
 
                 String basePath = "";
                 String filePath = "" + orderID + "/" + carID;
                 String filename = photo.getName();
-                InputStream input = new FileInputStream(new File(photo.getCurrentPhotoPath()));
-                uploadFile = FtpUtil.uploadFile(host, port, username, password, basePath, filePath, filename, input);
+
+                if (thisSFTP) {
+                    SFTPClient sftpClient = new SFTPClient(host, username, password, port);
+                    sftpClient.connect();
+                    try {
+                        sftpClient.upload(photo.getCurrentPhotoPath(), "foto/" + filePath, photo.getName());
+                        uploadFile = true;
+                    } catch (Exception e) {
+                        uploadFile = false;
+                    } finally {
+                        sftpClient.disconnect();
+                    }
+                } else {
+                    InputStream input = new FileInputStream(new File(photo.getCurrentPhotoPath()));
+                    uploadFile = FtpUtil.uploadFile(host, port, username, password, basePath, filePath, filename, input);
+                }
             } catch (Exception e) {
                 uploadFile = false;
             }
