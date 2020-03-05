@@ -52,8 +52,8 @@ public class IntentServiceDataBase extends IntentService {
         PendingIntent pendingIntent = activity.createPendingResult(REQUEST_CODE_CAR_DATA, intent, 0);
         intent.putExtra(EXTRA_PENDING_INTENT, pendingIntent);
 
-        intent.setAction(ACTION_INSERT_PHOTO);
-        intent.putExtra(EXTRA_INSERT_PHOTO, carData);
+        intent.setAction(ACTION_INSERT_CAR_DATA);
+        intent.putExtra(EXTRA_INSERT_CAR_DATA, carData);
 
         activity.startService(intent);
     }
