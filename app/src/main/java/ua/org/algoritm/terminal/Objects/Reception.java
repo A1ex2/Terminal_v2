@@ -15,7 +15,7 @@ public class Reception implements Parcelable {
     private String Driver;
     private String DriverPhone;
     private String InvoiceNumber;
-    private ArrayList<CarData> CarData;
+    private ArrayList<CarData> CarData = new ArrayList<>();
 
     public Reception() {
     }

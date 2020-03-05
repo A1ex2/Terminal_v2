@@ -14,7 +14,7 @@ public class Issuance implements Parcelable {
     private String Driver;
     private String DriverPhone;
     private String InvoiceNumber;
-    private ArrayList<CarDataIssuance> CarData;
+    private ArrayList<CarDataIssuance> CarData = new ArrayList<>();
 
     public Issuance() {
     }
