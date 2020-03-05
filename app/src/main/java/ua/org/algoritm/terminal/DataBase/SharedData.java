@@ -68,16 +68,18 @@ public class SharedData {
     }
 
     public static void updateReceptionsDB() {
-        DataBaseHelper helper = new DataBaseHelper(app);
-        ArrayList<CarData> carDataArrayList = helper.getCarDataList();
+        try {
+            DataBaseHelper helper = new DataBaseHelper(app);
+            ArrayList<CarData> carDataArrayList = helper.getCarDataList();
 
-        for (int i = 0; i < carDataArrayList.size(); i++) {
-            CarData carData = carDataArrayList.get(i);
-            if (!updateReceptionDB(carData)) {
-                // delete
-                helper.deleteCarData(carData);
+            for (int i = 0; i < carDataArrayList.size(); i++) {
+                CarData carData = carDataArrayList.get(i);
+                if (!updateReceptionDB(carData)) {
+                    // delete
+                    helper.deleteCarData(carData);
+                }
             }
-
+        } catch (Exception e) {
         }
     }
 
@@ -106,7 +108,6 @@ public class SharedData {
                 break;
             }
         }
-
         return mFinish;
     }
 
