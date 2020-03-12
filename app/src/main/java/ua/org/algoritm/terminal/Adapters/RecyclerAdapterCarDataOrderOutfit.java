@@ -130,10 +130,21 @@ public class RecyclerAdapterCarDataOrderOutfit extends RecyclerView.Adapter<Recy
                 ;
             }
             int progress = Math.round(performed * 100 / carData.getOperations().size());
-            postProgress(progress, performed, carData.getOperations().size(), carData.getPhoto().size());
+            int quantityPhotoPlan = getQuantityPhoto(carData.getOperations());
+            postProgress(progress, performed, carData.getOperations().size(), carData.getPhoto().size(), quantityPhotoPlan);
         }
 
-        private void postProgress(int progress, int performed, int quantity, int quantityPhoto) {
+        private int getQuantityPhoto(ArrayList<OperationOutfits> mOperationOutfits) {
+            int quantityPhoto = 0;
+
+            for (int i = 0; i < mOperationOutfits.size(); i++) {
+                quantityPhoto += mOperationOutfits.get(i).getQuantityPhoto();
+            }
+
+            return quantityPhoto;
+        }
+
+        private void postProgress(int progress, int performed, int quantity, int quantityPhoto, int quantityPhotoPlan) {
             pbHorizontal.setProgress(progress);
 
             if (progress == 0) {
@@ -141,8 +152,15 @@ public class RecyclerAdapterCarDataOrderOutfit extends RecyclerView.Adapter<Recy
             } else {
                 pbHorizontal.setSecondaryProgress(progress + 5);
             }
-            tvProgressHorizontal.setText("" + performed + " / " + quantity
-                    + " (" + quantityPhoto + " " + mContext.getResources().getString(R.string.photo) + ")");
+
+            String textPhoto = "";
+            if (quantityPhotoPlan == 0) {
+                textPhoto = "" + quantityPhoto + " " + mContext.getResources().getString(R.string.photo);
+            } else {
+                textPhoto = "" + mContext.getResources().getString(R.string.photo) + " " + quantityPhoto + " / " + quantityPhotoPlan;
+            }
+
+            tvProgressHorizontal.setText("" + performed + " / " + quantity + " (" + textPhoto + ")");
         }
     }
 }

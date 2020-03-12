@@ -22,11 +22,13 @@ public class RecyclerAdapterOperation extends RecyclerView.Adapter<RecyclerAdapt
     private int mResourse;
     private ArrayList<OperationOutfits> mOperation = new ArrayList<>();
     private LayoutInflater mInflater;
+    private Context mContext;
 
     public RecyclerAdapterOperation(Context context, int resourse, ArrayList<OperationOutfits> operation) {
         mResourse = resourse;
         mOperation.addAll(operation);
         mInflater = LayoutInflater.from(context);
+        mContext = context;
     }
 
     public interface ActionListener {
@@ -85,17 +87,21 @@ public class RecyclerAdapterOperation extends RecyclerView.Adapter<RecyclerAdapt
 
     public class OperationViewHolder extends RecyclerView.ViewHolder {
         private TextView itemOperation;
+        private TextView itemQuantityPhoto;
         private CheckBox checkBox_select;
 
         public OperationViewHolder(View itemView) {
             super(itemView);
 
             itemOperation = itemView.findViewById(R.id.itemOperation);
+            itemQuantityPhoto = itemView.findViewById(R.id.itemQuantityPhoto);
             checkBox_select = itemView.findViewById(R.id.checkBox_select);
         }
 
         public void set(OperationOutfits operation) {
             itemOperation.setText(operation.getOperation());
+            itemQuantityPhoto.setText("" + operation.getQuantityPhoto() + " " + mContext.getResources().getString(R.string.photo));
+
             checkBox_select.setChecked(operation.getPerformed());
             checkBox_select.setTag(operation);
             checkBox_select.setOnClickListener(new View.OnClickListener() {

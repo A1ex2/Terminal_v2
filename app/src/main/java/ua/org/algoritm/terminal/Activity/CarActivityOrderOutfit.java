@@ -203,6 +203,22 @@ public class CarActivityOrderOutfit extends AppCompatActivity {
         itemTouchHelper.attachToRecyclerView(recyclerViewPhoto);
     }
 
+    private boolean NumberPhotosMatches() {
+        boolean matches = false;
+        int quantityPhoto = 0;
+
+        for (int i = 0; i < mOperations.size(); i++) {
+            if (mOperations.get(i).getPerformed()) {
+                quantityPhoto += mOperations.get(i).getQuantityPhoto();
+            }
+        }
+        if (quantityPhoto <= carDataOutfit.getPhoto().size()) {
+            matches = true;
+        }
+
+        return matches;
+    }
+
     private void setCB() {
         mDialog = new ProgressDialog(this);
         mDialog.setMessage(getString(R.string.wait_sending));
@@ -380,9 +396,24 @@ public class CarActivityOrderOutfit extends AppCompatActivity {
 
         if (isSaveSuccess) {
 
-            uiManager.showToast(getString(R.string.success));
+            if (!NumberPhotosMatches()) {
+                String message = getString(R.string.send_photo_error);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage(message)
+                        .setCancelable(true)
+                        .setPositiveButton(getString(R.string.butt_OK), new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+
+                            }
+                        });
+                AlertDialog alert = builder.create();
+                alert.show();
+                return;
+            }
 
             if (carDataOutfit.getPhoto().size() != 0) {
+                uiManager.showToast(getString(R.string.success));
                 String message = getString(R.string.send_photo);
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);

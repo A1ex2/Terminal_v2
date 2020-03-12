@@ -73,6 +73,7 @@
     <string name="operation">Операции</string>
     <string name="photo">Фото</string>
     <string name="send_photo">Отправить фото?</string>
+    <string name="send_photo_error">Не все фотографии сделаны по операциям!</string>
     <string name="completed_outfit">По Заказ-наряду будут отправлены фотографии и отметка о выполении. Продолжить?</string>
     <string name="view_photo">Фото</string>
 

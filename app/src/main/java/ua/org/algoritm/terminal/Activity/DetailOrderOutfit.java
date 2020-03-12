@@ -43,7 +43,9 @@ import ua.org.algoritm.terminal.ConnectTo1c.SOAP_Dispatcher;
 import ua.org.algoritm.terminal.ConnectTo1c.SOAP_Objects;
 import ua.org.algoritm.terminal.ConnectTo1c.UIManager;
 import ua.org.algoritm.terminal.DataBase.SharedData;
+import ua.org.algoritm.terminal.Objects.CarData;
 import ua.org.algoritm.terminal.Objects.CarDataOutfit;
+import ua.org.algoritm.terminal.Objects.OperationOutfits;
 import ua.org.algoritm.terminal.Objects.OrderOutfit;
 import ua.org.algoritm.terminal.Objects.Photo;
 import ua.org.algoritm.terminal.R;
@@ -154,6 +156,22 @@ public class DetailOrderOutfit extends AppCompatActivity {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
 
+                        if (!NumberPhotosMatches()) {
+                            String message = getString(R.string.send_photo_error);
+
+                            AlertDialog.Builder builder = new AlertDialog.Builder(DetailOrderOutfit.this);
+                            builder.setMessage(message)
+                                    .setCancelable(true)
+                                    .setPositiveButton(getString(R.string.butt_OK), new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+
+                                        }
+                                    });
+                            AlertDialog alert = builder.create();
+                            alert.show();
+                            return false;
+                        }
+
                         String message = getString(R.string.completed_outfit);
 
                         AlertDialog.Builder builder = new AlertDialog.Builder(DetailOrderOutfit.this);
@@ -178,6 +196,29 @@ public class DetailOrderOutfit extends AppCompatActivity {
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
         return true;
+    }
+
+    private boolean NumberPhotosMatches() {
+        boolean matches = false;
+        int quantityPhoto = 0;
+
+        ArrayList<CarDataOutfit> mCarDataOutfits = orderOutfit.getCarDataOutfit();
+        for (int i = 0; i < mCarDataOutfits.size(); i++) {
+            CarDataOutfit mCar = mCarDataOutfits.get(i);
+
+            ArrayList<OperationOutfits> mOperations = mCar.getOperations();
+            for (int j = 0; j < mOperations.size(); j++) {
+                if (mOperations.get(j).getPerformed()) {
+                    quantityPhoto += mOperations.get(j).getQuantityPhoto();
+                }
+            }
+            if (quantityPhoto <= mCar.getPhoto().size()) {
+                matches = true;
+                break;
+            }
+        }
+
+        return matches;
     }
 
     @Override

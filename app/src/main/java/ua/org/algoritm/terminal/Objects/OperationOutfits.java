@@ -12,6 +12,9 @@ public class OperationOutfits {
     @SerializedName("Performed")
     private Boolean Performed = false;
 
+    @SerializedName("QuantityPhoto")
+    private int QuantityPhoto = 0;
+
     public OperationOutfits() {
     }
 
@@ -19,6 +22,7 @@ public class OperationOutfits {
         this.OperationID = mOperationOutfits.getOperationID();
         this.Operation = mOperationOutfits.getOperation();
         this.Performed = mOperationOutfits.getPerformed();
+        this.QuantityPhoto = mOperationOutfits.getQuantityPhoto();
     }
 
     public String getOperationID() {
@@ -43,5 +47,13 @@ public class OperationOutfits {
 
     public void setPerformed(Boolean performed) {
         Performed = performed;
+    }
+
+    public int getQuantityPhoto() {
+        return QuantityPhoto;
+    }
+
+    public void setQuantityPhoto(int quantityPhoto) {
+        QuantityPhoto = quantityPhoto;
     }
 }
