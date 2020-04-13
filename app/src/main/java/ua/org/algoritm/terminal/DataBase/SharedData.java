@@ -254,7 +254,31 @@ public class SharedData {
         ArrayList<CarDataOutfit> mCarDataOutfits = orderOutfit.getCarDataOutfit();
         for (int i = 0; i < mCarDataOutfits.size(); i++) {
             CarDataOutfit mCar = mCarDataOutfits.get(i);
-            mCar.setPhoto(helper.getPhotoList(orderOutfit.getID(), mCar.getCarID()));
+
+            ArrayList<Photo> mPhotos = helper.getPhotoList(orderOutfit.getID(), mCar.getCarID());
+
+            for (int j = 0; j < mPhotos.size(); j++) {
+                boolean addPhoto = true;
+
+                for (int k = 0; k < mCar.getPhoto().size(); k++) {
+                    if (mPhotos.get(j).getName().equals(mCar.getPhoto().get(k).getName())) {
+                        addPhoto = false;
+                        mCar.getPhoto().get(k).setCurrentPhotoPath(mPhotos.get(j).getCurrentPhotoPath());
+                        break;
+                    }
+                }
+
+                if (addPhoto) {
+                    Photo newPhoto = new Photo();
+                    newPhoto.setName(mPhotos.get(j).getName());
+                    newPhoto.setCurrentPhotoPath(mPhotos.get(j).getCurrentPhotoPath());
+                    newPhoto.setCarID(mPhotos.get(j).getCarID());
+                    newPhoto.setOrderID(mPhotos.get(j).getOrderID());
+
+                    mCar.getPhoto().add(newPhoto);
+                }
+            }
+
         }
     }
 

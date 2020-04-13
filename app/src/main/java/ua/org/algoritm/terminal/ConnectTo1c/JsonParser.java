@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import ua.org.algoritm.terminal.Objects.CarDataOutfit;
 import ua.org.algoritm.terminal.Objects.OperationOutfits;
 import ua.org.algoritm.terminal.Objects.OrderOutfit;
+import ua.org.algoritm.terminal.Objects.Photo;
 
 public class JsonParser {
 
@@ -53,8 +54,22 @@ public class JsonParser {
 
                     mOperation.add(mOperationOutfits);
                 }
-
                 mCar.setOperations(mOperation);
+
+                JSONArray photoJSON = new JSONArray(car.getString("Photo"));
+                ArrayList<Photo> mPhotos = new ArrayList<>();
+                for (int k = 0; k < photoJSON.length(); k++) {
+                    JSONObject photo = new JSONObject(photoJSON.get(k).toString());
+
+                    Photo mPhoto = new Photo();
+                    mPhoto.setOrderID(photo.getString("orderID"));
+                    mPhoto.setCarID(photo.getString("carID"));
+                    mPhoto.setName(photo.getString("name"));
+                    mPhoto.setCurrentPhotoPathFTP(photo.getString("currentPhotoPathFTP"));
+
+                    mPhotos.add(mPhoto);
+                }
+                mCar.setPhoto(mPhotos);
 
                 mCarDataOutfits.add(mCar);
             }

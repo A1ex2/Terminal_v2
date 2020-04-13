@@ -11,8 +11,11 @@ public class Photo implements Parcelable {
 
     private String name;
     private String currentPhotoPath;
+    private String currentPhotoPathFTP;
 
     public Photo() {
+        this.currentPhotoPath = "";
+        this.currentPhotoPathFTP = "";
     }
 
     public String getName() {
@@ -47,6 +50,13 @@ public class Photo implements Parcelable {
         this.carID = carID;
     }
 
+    public String getCurrentPhotoPathFTP() {
+        return currentPhotoPathFTP;
+    }
+
+    public void setCurrentPhotoPathFTP(String currentPhotoPathFTP) {
+        this.currentPhotoPathFTP = currentPhotoPathFTP;
+    }
 
     @Override
     public int describeContents() {

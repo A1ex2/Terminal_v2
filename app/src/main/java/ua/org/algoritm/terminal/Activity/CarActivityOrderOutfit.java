@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -37,6 +39,7 @@ import org.ksoap2.serialization.SoapObject;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
@@ -85,6 +88,7 @@ public class CarActivityOrderOutfit extends AppCompatActivity {
 
     private ProgressDialog mDialog;
     private SaveTaskPhotoFTP mTaskPhotoFTP;
+    private DownloadTaskPhotoFTP mDownloadmTaskPhotoFTP;
 
     public static final int REQUEST_TAKE_PHOTO = 1;
 
@@ -201,6 +205,40 @@ public class CarActivityOrderOutfit extends AppCompatActivity {
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemTouchCallback);
         itemTouchHelper.attachToRecyclerView(recyclerViewPhoto);
+
+        checkPhoto();
+    }
+
+    private void checkPhoto() {
+        boolean downloadPhoto = false;
+
+        for (int i = 0; i < carDataOutfit.getPhoto().size(); i++) {
+            if (!carDataOutfit.getPhoto().get(i).getCurrentPhotoPathFTP().equals("") & carDataOutfit.getPhoto().get(i).getCurrentPhotoPath().equals("")) {
+                downloadPhoto = true;
+                break;
+            }
+        }
+
+        if (downloadPhoto) {
+            String message = getString(R.string.download_photo);
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage(message)
+                    .setCancelable(true)
+                    .setPositiveButton(getString(R.string.butt_Yes), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            mDownloadmTaskPhotoFTP = new DownloadTaskPhotoFTP(CarActivityOrderOutfit.this, orderID, carID);
+                            mDownloadmTaskPhotoFTP.execute(carDataOutfit.getPhoto());
+                        }
+                    })
+                    .setNegativeButton(getString(R.string.butt_Not), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+
+                        }
+                    });
+            AlertDialog alert = builder.create();
+            alert.show();
+        }
     }
 
     private boolean NumberPhotosMatches() {
@@ -307,6 +345,20 @@ public class CarActivityOrderOutfit extends AppCompatActivity {
             adapterPhoto.setPhoto(carDataOutfit.getPhoto());
 
             IntentServiceDataBase.startInsertPhotoCarDataOutfit(CarActivityOrderOutfit.this, orderID, carID, mCurrentPhotoPath);
+
+            try {
+                Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath);
+                FileOutputStream fos = null;
+                try {
+                    File file = new File(mCurrentPhotoPath);
+                    fos = new FileOutputStream(file);
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 50, fos);
+                } finally {
+                    if (fos != null) fos.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             mCurrentPhotoPath = "";
         } else if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_CANCELED) {
@@ -499,6 +551,10 @@ public class CarActivityOrderOutfit extends AppCompatActivity {
 
         private boolean sendPhoto(Photo photo) {
             boolean uploadFile = false;
+            if (!photo.getCurrentPhotoPathFTP().equals("")){
+                uploadFile = true;
+                return uploadFile;
+            }
 
             try {
 
@@ -560,6 +616,105 @@ public class CarActivityOrderOutfit extends AppCompatActivity {
                 Toast.makeText(mContext, R.string.ok_ftp, Toast.LENGTH_LONG).show();
                 setResult(RESULT_OK);
                 finish();
+            }
+        }
+    }
+
+    public class DownloadTaskPhotoFTP extends AsyncTask<ArrayList<Photo>, Integer, Boolean> {
+        private Context mContext;
+        private ProgressDialog mDialog;
+        private String orderID;
+        private String carID;
+        private boolean error;
+
+        public DownloadTaskPhotoFTP(Context context, String orderID, String carID) {
+            this.mContext = context;
+            this.orderID = orderID;
+            this.carID = carID;
+            this.error = false;
+        }
+
+        @Override
+        protected Boolean doInBackground(ArrayList<Photo>... arrayLists) {
+            for (ArrayList<Photo> mPhotos : arrayLists) {
+                for (int i = 0; i < mPhotos.size(); i++) {
+                    Photo photo = mPhotos.get(i);
+                    publishProgress(mPhotos.size(), i + 1);
+
+                    if (downloaddPhoto(photo)) {
+                        //SharedData.deletePhoto(photo.getCurrentPhotoPath());
+                    } else {
+                        error = true;
+                        break;
+                    }
+                }
+            }
+            return null;
+        }
+
+        private boolean downloaddPhoto(Photo photo) {
+            boolean uploadFile = false;
+
+            try {
+
+                String host = SharedData.hostFTP;
+                int port = SharedData.portFTP;
+                String username = SharedData.usernameFTP;
+                String password = SharedData.passwordFTP;
+                boolean thisSFTP = SharedData.thisSFTP;
+
+                File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+                String localPath = storageDir.getPath();
+                String remotePath = "" + photo.getOrderID() + "/" + photo.getCarID();
+                String fileName = photo.getName();
+
+                if (thisSFTP) {
+                    SFTPClient sftpClient = new SFTPClient(host, username, password, port);
+                    sftpClient.connect();
+                    try {
+                        sftpClient.download("foto/" + remotePath + "/" + photo.getName(), localPath + "/" + photo.getName());
+                        photo.setCurrentPhotoPath(localPath + "/" + photo.getName());
+                        uploadFile = true;
+                        IntentServiceDataBase.startInsertPhotoCarDataOutfit(CarActivityOrderOutfit.this, orderID, carID, localPath + "/" + photo.getName());
+                    } catch (Exception e) {
+                        uploadFile = false;
+                    } finally {
+                        sftpClient.disconnect();
+                    }
+                } else {
+                    uploadFile = FtpUtil.downloadFile(host, port, username, password, remotePath, fileName, localPath);
+                }
+            } catch (Exception e) {
+                uploadFile = false;
+            }
+            return uploadFile;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            mDialog = new ProgressDialog(mContext);
+            mDialog.setMessage(mContext.getResources().getString(R.string.wait_ftp));
+            mDialog.setCancelable(false);
+            mDialog.show();
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            mDialog.setMessage(String.format(mContext.getResources().getString(R.string.send_ftp), values[1], values[0]));
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            if (mDialog != null && mDialog.isShowing()) {
+                mDialog.dismiss();
+            }
+
+            if (error) {
+                Toast.makeText(mContext, R.string.error_ftp, Toast.LENGTH_LONG).show();
+            } else {
+                updateListsPhoto();
             }
         }
     }
