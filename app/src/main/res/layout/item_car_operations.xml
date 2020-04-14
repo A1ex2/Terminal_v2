@@ -13,33 +13,52 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
-        <CheckBox
-            android:id="@+id/checkBox_select"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/checkBox_select"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:text="" />
+
+            <TextView
+                android:id="@+id/itemOperation"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/empName"
+                android:layout_toStartOf="@+id/checkBox"
+                android:layout_toLeftOf="@+id/checkBox"
+                android:layout_weight="1"
+                android:text="TextView"
+                android:textColor="#000" />
+
+            <TextView
+                android:id="@+id/itemQuantityPhoto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="10 фото" />
+
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:text=""/>
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/itemOperation"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/empName"
-            android:text="TextView"
-            android:layout_weight="1"
-            android:textColor="#000"
-            android:layout_toLeftOf="@+id/checkBox"
-            android:layout_toStartOf="@+id/checkBox" />
-
-        <TextView
-            android:id="@+id/itemQuantityPhoto"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="10 фото" />
-
+            <TextView
+                android:id="@+id/itemDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="описание работ" />
+        </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

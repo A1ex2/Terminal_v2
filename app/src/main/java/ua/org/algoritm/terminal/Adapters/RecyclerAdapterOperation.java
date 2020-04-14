@@ -89,6 +89,7 @@ public class RecyclerAdapterOperation extends RecyclerView.Adapter<RecyclerAdapt
         private TextView itemOperation;
         private TextView itemQuantityPhoto;
         private CheckBox checkBox_select;
+        private TextView itemDescription;
 
         public OperationViewHolder(View itemView) {
             super(itemView);
@@ -96,11 +97,14 @@ public class RecyclerAdapterOperation extends RecyclerView.Adapter<RecyclerAdapt
             itemOperation = itemView.findViewById(R.id.itemOperation);
             itemQuantityPhoto = itemView.findViewById(R.id.itemQuantityPhoto);
             checkBox_select = itemView.findViewById(R.id.checkBox_select);
+            itemDescription = itemView.findViewById(R.id.itemDescription);
         }
 
         public void set(OperationOutfits operation) {
             itemOperation.setText(operation.getOperation());
             itemQuantityPhoto.setText("" + operation.getQuantityPhoto() + " " + mContext.getResources().getString(R.string.photo));
+
+            itemDescription.setText(operation.getDescription());
 
             checkBox_select.setChecked(operation.getPerformed());
             checkBox_select.setTag(operation);

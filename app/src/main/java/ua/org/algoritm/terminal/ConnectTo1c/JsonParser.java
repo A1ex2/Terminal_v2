@@ -51,6 +51,10 @@ public class JsonParser {
                     mOperationOutfits.setOperation(operation.getString("Operation"));
                     mOperationOutfits.setPerformed(operation.getBoolean("Performed"));
                     mOperationOutfits.setQuantityPhoto(operation.getInt("QuantityPhoto"));
+                    try {
+                        mOperationOutfits.setDescription(operation.getString("Description"));
+                    } catch (Exception e) {
+                    }
 
                     mOperation.add(mOperationOutfits);
                 }
