@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Terminal</string>
 
-    <string name="nav_header_version">2.8.0</string>
+    <string name="nav_header_version">2.8.1</string>
 
     <string name="nav_header_title">Terminal</string>
     <string name="nav_header_subtitle">v. 1.0.0</string>
@@ -77,6 +77,10 @@
     <string name="send_photo_error">Не все фотографии сделаны по операциям!</string>
     <string name="completed_outfit">По Заказ-наряду будут отправлены фотографии и отметка о выполении. Продолжить?</string>
     <string name="view_photo">Фото</string>
-
+    <string name="act_inspection">Акт осмотра</string>
+    <string name="menu_act_inspection">Акты осмотра</string>
+    <string name="text_form">Вид акта осмотра:</string>
+    <string name="text_date_plan">Дата омотра план</string>
+    <string name="state_text">Статус</string>
 
 </resources>

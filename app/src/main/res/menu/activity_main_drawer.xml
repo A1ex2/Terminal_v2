@@ -17,6 +17,10 @@
             android:id="@+id/nav_order_outfit"
             android:icon="@drawable/ic_menu_manage"
             android:title="@string/menu_order_outfit" />
+
+        <item
+            android:id="@+id/nav_act_inspection"
+            android:title="@string/menu_act_inspection" />
     </group>
 
 <!--    <item android:title="Communicate">-->

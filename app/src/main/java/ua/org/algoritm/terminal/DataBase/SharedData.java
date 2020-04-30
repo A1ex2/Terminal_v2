@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import ua.org.algoritm.terminal.MainActivity;
+import ua.org.algoritm.terminal.Objects.ActInspection;
 import ua.org.algoritm.terminal.Objects.CarData;
 import ua.org.algoritm.terminal.Objects.CarDataIssuance;
 import ua.org.algoritm.terminal.Objects.CarDataOutfit;
@@ -28,6 +29,7 @@ public class SharedData {
     public static ArrayList<Reception> RECEPTION = new ArrayList<>();
     public static ArrayList<Issuance> ISSUANCE = new ArrayList<>();
     public static ArrayList<OrderOutfit> ORDER_OUTFIT = new ArrayList<>();
+    public static ArrayList<ActInspection> ACT_INSPECTION = new ArrayList<>();
     public static MainActivity app;
     public static String LOGIN;
     public static String PASSWORD;
@@ -248,6 +250,18 @@ public class SharedData {
 //
 //        }
 //    }
+
+    public static ActInspection getActInspection(String id) {
+        ActInspection actInspection = new ActInspection();
+        for (int i = 0; i < ACT_INSPECTION.size(); i++) {
+            ActInspection mActInspection = ACT_INSPECTION.get(i);
+            if (mActInspection.getID().equals(id)) {
+                actInspection = mActInspection;
+                break;
+            }
+        }
+        return actInspection;
+    }
 
     public static void setPhoto(OrderOutfit orderOutfit) {
         DataBaseHelper helper = new DataBaseHelper(app);

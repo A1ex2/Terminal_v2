@@ -55,6 +55,7 @@ import ua.org.algoritm.terminal.ConnectTo1c.UIManager;
 import ua.org.algoritm.terminal.DataBase.SharedData;
 import ua.org.algoritm.terminal.ui.acceptance.AcceptanceFragment;
 import ua.org.algoritm.terminal.ui.issuance.IssuanceFragment;
+import ua.org.algoritm.terminal.ui.order.OrderOutfitFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -102,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
         drawer = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_acceptance, R.id.nav_moving, R.id.nav_issue, R.id.nav_order_outfit)
+                R.id.nav_acceptance, R.id.nav_moving, R.id.nav_issue, R.id.nav_order_outfit, R.id.nav_act_inspection)
                 .setDrawerLayout(drawer)
                 .build();
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -135,6 +136,7 @@ public class MainActivity extends AppCompatActivity {
             int issuance = R.id.nav_issue; // выдача
             int moving = R.id.nav_moving; // перемещение
             int orderOutfit = R.id.nav_order_outfit; // перемещение
+            int actInspection = R.id.nav_act_inspection; // акт осмотра
 
             if (value) {
 
@@ -142,18 +144,36 @@ public class MainActivity extends AppCompatActivity {
 
                 if (navController.getCurrentDestination().getId() == acceptance) {
                     AcceptanceFragment.soapHandler.sendEmptyMessage(AcceptanceFragment.ACTION_Connection);
+
                 } else if (navController.getCurrentDestination().getId() == issuance) {
                     IssuanceFragment.soapHandler.sendEmptyMessage(IssuanceFragment.ACTION_Connection);
+
                 } else if (navController.getCurrentDestination().getId() == moving) {
                     CarDataList.soapHandler.sendEmptyMessage(CarDataList.ACTION_Connection);
+
+                } else if (navController.getCurrentDestination().getId() == orderOutfit) {
+                    OrderOutfitFragment.soapHandler.sendEmptyMessage(OrderOutfitFragment.ACTION_Connection);
+
+                } else if (navController.getCurrentDestination().getId() == actInspection) {
+                    CarDataList.soapHandler.sendEmptyMessage(CarDataList.ACTION_Connection);
+
                 }
             } else {
                 if (navController.getCurrentDestination().getId() == acceptance) {
                     AcceptanceFragment.soapHandler.sendEmptyMessage(AcceptanceFragment.ACTION_Connection_Lost);
+
                 } else if (navController.getCurrentDestination().getId() == issuance) {
                     IssuanceFragment.soapHandler.sendEmptyMessage(IssuanceFragment.ACTION_Connection_Lost);
+
                 } else if (navController.getCurrentDestination().getId() == moving) {
                     CarDataList.soapHandler.sendEmptyMessage(CarDataList.ACTION_Connection_Lost);
+
+                } else if (navController.getCurrentDestination().getId() == orderOutfit) {
+                    OrderOutfitFragment.soapHandler.sendEmptyMessage(OrderOutfitFragment.ACTION_Connection_Lost);
+
+                } else if (navController.getCurrentDestination().getId() == actInspection) {
+                    CarDataList.soapHandler.sendEmptyMessage(CarDataList.ACTION_Connection_Lost);
+
                 }
             }
         } catch (Exception e) {

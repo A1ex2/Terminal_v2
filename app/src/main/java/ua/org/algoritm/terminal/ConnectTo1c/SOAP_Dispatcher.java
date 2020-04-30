@@ -30,6 +30,7 @@ import ua.org.algoritm.terminal.Activity.DetailReception;
 import ua.org.algoritm.terminal.Activity.Password;
 import ua.org.algoritm.terminal.DataBase.SharedData;
 import ua.org.algoritm.terminal.MainActivity;
+import ua.org.algoritm.terminal.Objects.ActInspection;
 import ua.org.algoritm.terminal.Objects.CarData;
 import ua.org.algoritm.terminal.Objects.CarDataIssuance;
 import ua.org.algoritm.terminal.Objects.CarDataOutfit;
@@ -40,6 +41,7 @@ import ua.org.algoritm.terminal.Objects.Reception;
 import ua.org.algoritm.terminal.Objects.Sector;
 import ua.org.algoritm.terminal.Objects.User;
 import ua.org.algoritm.terminal.ui.acceptance.AcceptanceFragment;
+import ua.org.algoritm.terminal.ui.act.ActInspectionFragment;
 import ua.org.algoritm.terminal.ui.issuance.IssuanceFragment;
 import ua.org.algoritm.terminal.ui.order.OrderOutfitFragment;
 
@@ -176,6 +178,9 @@ public class SOAP_Dispatcher extends Thread {
             case DetailOrderOutfit.ACTION_SET_Outfit:
                 setStatusOutfit();
                 break;
+            case ActInspectionFragment.ACTION_LIST:
+                GetActInspection();
+                break;
         }
 
         if (ACTION == Password.ACTION_VERIFY | ACTION == Password.ACTION_LOGIN_LIST
@@ -229,7 +234,7 @@ public class SOAP_Dispatcher extends Thread {
                 CarDataList.soapParam_Response = soap_Response;
                 CarDataList.soapHandler.sendEmptyMessage(ACTION);
             } else {
-                CarDataList.soapHandler.sendEmptyMessage(DetailReception.ACTION_ConnectionError);
+                CarDataList.soapHandler.sendEmptyMessage(CarDataList.ACTION_ConnectionError);
             }
 
         } else if (ACTION == CarActivityMoving.ACTION_SET_MOVING_CAR) {
@@ -237,41 +242,47 @@ public class SOAP_Dispatcher extends Thread {
                 CarActivityMoving.soapParam_Response = soap_Response;
                 CarActivityMoving.soapHandler.sendEmptyMessage(ACTION);
             } else {
-                CarActivityMoving.soapHandler.sendEmptyMessage(DetailReception.ACTION_ConnectionError);
+                CarActivityMoving.soapHandler.sendEmptyMessage(CarActivityMoving.ACTION_ConnectionError);
             }
         } else if (ACTION == IssuanceFragment.ACTION_LIST) {
             if (soap_Response != null) {
                 IssuanceFragment.soapParam_Response = soap_Response;
                 IssuanceFragment.soapHandler.sendEmptyMessage(ACTION);
             } else {
-                IssuanceFragment.soapHandler.sendEmptyMessage(DetailReception.ACTION_ConnectionError);
+                IssuanceFragment.soapHandler.sendEmptyMessage(IssuanceFragment.ACTION_ConnectionError);
             }
         } else if (ACTION == CarActivityIssuance.ACTION_SET_ISSUANCE_CAR) {
             if (soap_Response != null) {
                 CarActivityIssuance.soapParam_Response = soap_Response;
                 CarActivityIssuance.soapHandler.sendEmptyMessage(ACTION);
             } else {
-                CarActivityIssuance.soapHandler.sendEmptyMessage(DetailReception.ACTION_ConnectionError);
+                CarActivityIssuance.soapHandler.sendEmptyMessage(CarActivityIssuance.ACTION_ConnectionError);
             }
         } else if (ACTION == OrderOutfitFragment.ACTION_LIST) {
             if (!soap_ResponseString.equals("")) {
                 OrderOutfitFragment.soapHandler.sendEmptyMessage(ACTION);
             } else {
-                OrderOutfitFragment.soapHandler.sendEmptyMessage(DetailReception.ACTION_ConnectionError);
+                OrderOutfitFragment.soapHandler.sendEmptyMessage(OrderOutfitFragment.ACTION_ConnectionError);
             }
-        }else if (ACTION == CarActivityOrderOutfit.ACTION_SET_CAR_Outfit) {
+        } else if (ACTION == CarActivityOrderOutfit.ACTION_SET_CAR_Outfit) {
             if (soap_Response != null) {
                 CarActivityOrderOutfit.soapParam_Response = soap_Response;
                 CarActivityOrderOutfit.soapHandler.sendEmptyMessage(ACTION);
             } else {
-                CarActivityOrderOutfit.soapHandler.sendEmptyMessage(DetailReception.ACTION_ConnectionError);
+                CarActivityOrderOutfit.soapHandler.sendEmptyMessage(CarActivityOrderOutfit.ACTION_ConnectionError);
             }
         } else if (ACTION == DetailOrderOutfit.ACTION_SET_Outfit) {
             if (soap_Response != null) {
                 DetailOrderOutfit.soapParam_Response = soap_Response;
                 DetailOrderOutfit.soapHandler.sendEmptyMessage(ACTION);
             } else {
-                DetailOrderOutfit.soapHandler.sendEmptyMessage(DetailReception.ACTION_ConnectionError);
+                DetailOrderOutfit.soapHandler.sendEmptyMessage(DetailOrderOutfit.ACTION_ConnectionError);
+            }
+        } else if (ACTION == ActInspectionFragment.ACTION_LIST) {
+            if (!soap_ResponseString.equals("")) {
+                ActInspectionFragment.soapHandler.sendEmptyMessage(ACTION);
+            } else {
+                ActInspectionFragment.soapHandler.sendEmptyMessage(ActInspectionFragment.ACTION_ConnectionError);
             }
         }
     }
@@ -451,6 +462,30 @@ public class SOAP_Dispatcher extends Thread {
 //            _mOrderOutfits.addAll(mOrderOutfits);
 //        }
 
+    }
+
+    private void GetActInspection() {
+        thisGet = true;
+
+        String method = "GetActInspection";
+        String action = NAMESPACE + "#GetActInspection:" + method;
+        SoapObject request = new SoapObject(NAMESPACE, method);
+        soap_ResponseString = callWebServiceString(request, action);
+
+        try {
+
+            ArrayList<ActInspection> mActInspections = SharedData.ACT_INSPECTION;
+            mActInspections.clear();
+            mActInspections.addAll(JsonParser.getActInspection(soap_ResponseString));
+
+//            SharedData.checkPhoto(mOrderOutfits);
+
+//            for (int i = 0; i < mOrderOutfits.size(); i++) {
+//                SharedData.setPhoto(mOrderOutfits.get(i));
+//            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void setMovingCB() {

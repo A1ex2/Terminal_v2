@@ -5,7 +5,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Date;
 
+import ua.org.algoritm.terminal.Objects.ActInspection;
 import ua.org.algoritm.terminal.Objects.CarDataOutfit;
 import ua.org.algoritm.terminal.Objects.OperationOutfits;
 import ua.org.algoritm.terminal.Objects.OrderOutfit;
@@ -84,4 +86,42 @@ public class JsonParser {
         return mOrderOutfits;
     }
 
+    public static ArrayList<ActInspection> getActInspection(String response) throws JSONException {
+        ArrayList<ActInspection> mActInspection = new ArrayList<>();
+        JSONArray ordersJSON = new JSONArray(response);
+
+        for (int i = 0; i < ordersJSON.length(); i++) {
+            ActInspection actInspection = new ActInspection();
+            JSONObject actJSON = new JSONObject(ordersJSON.get(i).toString());
+
+            actInspection.setID(actJSON.getString("ID"));
+            actInspection.setDescription(actJSON.getString("Description"));
+
+            actInspection.setStateID(actJSON.getString("StateID"));
+            actInspection.setState(actJSON.getString("State"));
+
+            actInspection.setFormID(actJSON.getString("FormID"));
+            actInspection.setForm(actJSON.getString("Form"));
+
+            actInspection.setStorageID(actJSON.getString("StorageID"));
+            actInspection.setStorage(actJSON.getString("Storage"));
+
+            actInspection.setInspectionDatePlan(actJSON.getString("InspectionDatePlan"));
+            actInspection.setInspectionDateFact(actJSON.getString("InspectionDateFact"));
+
+            actInspection.setCarID(actJSON.getString("CarID"));
+            actInspection.setCar(actJSON.getString("Car"));
+            actInspection.setProductionDate(actJSON.getString("ProductionDate"));
+
+            actInspection.setBarCode(actJSON.getString("BarCode"));
+
+            actInspection.setSectorID(actJSON.getString("SectorID"));
+            actInspection.setSector(actJSON.getString("Sector"));
+            actInspection.setRow(actJSON.getString("Row"));
+
+
+            mActInspection.add(actInspection);
+        }
+        return mActInspection;
+    }
 }
