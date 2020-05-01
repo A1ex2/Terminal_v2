@@ -208,13 +208,13 @@ public class ActInspectionActivity extends AppCompatActivity {
 
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
 
-            if (!mEquipment.getCurrentPhotoPath().equals("")){
-                SharedData.deletePhoto(mEquipment.getCurrentPhotoPath());
+            if (!mEquipment.getPhotoActInspection().getCurrentPhotoPath().equals("")){
+                SharedData.deletePhoto(mEquipment.getPhotoActInspection().getCurrentPhotoPath());
             }
 
             String fileName = new File(mCurrentPhotoPath).getName();
-            mEquipment.setNamePhoto(fileName);
-            mEquipment.setCurrentPhotoPath(mCurrentPhotoPath);
+            mEquipment.getPhotoActInspection().setName(fileName);
+            mEquipment.getPhotoActInspection().setCurrentPhotoPath(mCurrentPhotoPath);
 
 //            IntentServiceDataBase.startInsertPhotoCarDataOutfit(ActInspectionActivity.this, mActInspection.getID(), mActInspection., mCurrentPhotoPath);
 
