@@ -5,11 +5,21 @@ public class Equipment {
     private String equipment;
     private int quantityPlan = 0;
     private int quantityFact = 0;
-    private String namePhoto = "";
-    private String currentPhotoPathFTP = "";
-    private String currentPhotoPath = "";
+//    private String namePhoto = "";
+//    private String currentPhotoPathFTP = "";
+//    private String currentPhotoPath = "";
+
+    private PhotoActInspection mPhotoActInspection = new PhotoActInspection();
 
     public Equipment() {
+    }
+
+    public PhotoActInspection getPhotoActInspection() {
+        return mPhotoActInspection;
+    }
+
+    public void setPhotoActInspection(PhotoActInspection photoActInspection) {
+        mPhotoActInspection = photoActInspection;
     }
 
     public String getEquipmentID() {
@@ -44,27 +54,27 @@ public class Equipment {
         this.quantityFact = quantityFact;
     }
 
-    public String getNamePhoto() {
-        return namePhoto;
-    }
-
-    public void setNamePhoto(String namePhoto) {
-        this.namePhoto = namePhoto;
-    }
-
-    public String getCurrentPhotoPathFTP() {
-        return currentPhotoPathFTP;
-    }
-
-    public void setCurrentPhotoPathFTP(String currentPhotoPathFTP) {
-        this.currentPhotoPathFTP = currentPhotoPathFTP;
-    }
-
-    public String getCurrentPhotoPath() {
-        return currentPhotoPath;
-    }
-
-    public void setCurrentPhotoPath(String currentPhotoPath) {
-        this.currentPhotoPath = currentPhotoPath;
-    }
+//    public String getNamePhoto() {
+//        return namePhoto;
+//    }
+//
+//    public void setNamePhoto(String namePhoto) {
+//        this.namePhoto = namePhoto;
+//    }
+//
+//    public String getCurrentPhotoPathFTP() {
+//        return currentPhotoPathFTP;
+//    }
+//
+//    public void setCurrentPhotoPathFTP(String currentPhotoPathFTP) {
+//        this.currentPhotoPathFTP = currentPhotoPathFTP;
+//    }
+//
+//    public String getCurrentPhotoPath() {
+//        return currentPhotoPath;
+//    }
+//
+//    public void setCurrentPhotoPath(String currentPhotoPath) {
+//        this.currentPhotoPath = currentPhotoPath;
+//    }
 }

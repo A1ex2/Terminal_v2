@@ -145,8 +145,8 @@ public class JsonParser {
                 mEquipment.setEquipment(equipmentJSON.getString("Equipment"));
                 mEquipment.setQuantityPlan(equipmentJSON.getInt("QuantityPlan"));
                 mEquipment.setQuantityFact(equipmentJSON.getInt("QuantityFact"));
-                mEquipment.setNamePhoto(equipmentJSON.getString("namePhoto"));
-                mEquipment.setCurrentPhotoPathFTP(equipmentJSON.getString("currentPhotoPathFTP"));
+//                mEquipment.setNamePhoto(equipmentJSON.getString("namePhoto"));
+//                mEquipment.setCurrentPhotoPathFTP(equipmentJSON.getString("currentPhotoPathFTP"));
 
                 mEquipmentsList.add(mEquipment);
             }

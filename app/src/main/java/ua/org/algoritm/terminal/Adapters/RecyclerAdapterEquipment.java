@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -36,7 +37,10 @@ public class RecyclerAdapterEquipment extends RecyclerView.Adapter<RecyclerAdapt
     }
 
     public interface ActionListener {
-        void onClick(Equipment equipment);
+        void onClicViewPhoto(Equipment equipment);
+        void onClicBtnAdd(Equipment equipment);
+        void onClicBtnSub(Equipment equipment);
+        void onClicBtnEqually(Equipment equipment);
     }
 
     private ActionListener mListener;
@@ -57,10 +61,31 @@ public class RecyclerAdapterEquipment extends RecyclerView.Adapter<RecyclerAdapt
         groupViewHolder.set(equipment);
 
         if (mListener != null) {
-            groupViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            groupViewHolder.btnAdd.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mListener.onClick(equipment);
+                    mListener.onClicBtnAdd(equipment);
+                }
+            });
+
+            groupViewHolder.btnSub.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mListener.onClicBtnSub(equipment);
+                }
+            });
+
+            groupViewHolder.btnEqually.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mListener.onClicBtnEqually(equipment);
+                }
+            });
+
+            groupViewHolder.viewPhoto.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mListener.onClicViewPhoto(equipment);
                 }
             });
         }
@@ -77,6 +102,9 @@ public class RecyclerAdapterEquipment extends RecyclerView.Adapter<RecyclerAdapt
         private TextView quantityPlan;
         private EditText quantityFact;
 
+        private Button btnAdd;
+        private Button btnSub;
+        private Button btnEqually;
 
         public EquipmentViewHolder(View itemView) {
             super(itemView);
@@ -85,10 +113,14 @@ public class RecyclerAdapterEquipment extends RecyclerView.Adapter<RecyclerAdapt
             viewPhoto = itemView.findViewById(R.id.viewPhoto);
             quantityPlan = itemView.findViewById(R.id.quantityPlan);
             quantityFact = itemView.findViewById(R.id.quantityFact);
+
+            btnAdd = itemView.findViewById(R.id.btnAdd);
+            btnSub = itemView.findViewById(R.id.btnSub);
+            btnEqually = itemView.findViewById(R.id.btnEqually);
         }
 
         public void set(Equipment equipment) {
-            setPic(equipment.getCurrentPhotoPath());
+            setPic(equipment.getPhotoActInspection().getCurrentPhotoPath());
             description.setText(equipment.getEquipment());
             quantityPlan.setText(String.valueOf(equipment.getQuantityPlan()));
             if (equipment.getQuantityFact() != 0){

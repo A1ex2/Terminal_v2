@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import ua.org.algoritm.terminal.Objects.CarData;
 import ua.org.algoritm.terminal.Objects.CarDataOutfit;
 import ua.org.algoritm.terminal.Objects.Photo;
+import ua.org.algoritm.terminal.Objects.PhotoActInspection;
 import ua.org.algoritm.terminal.Objects.Sector;
 import ua.org.algoritm.terminal.Objects.User;
 
@@ -19,7 +20,7 @@ import java.util.ArrayList;
 public class DataBaseHelper extends SQLiteOpenHelper {
 
     public DataBaseHelper(Context context) {
-        super(context, "MyBD.db", null, 2);
+        super(context, "MyBD.db", null, 3);
     }
 
     @Override
@@ -39,6 +40,12 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 + "carID TEXT NOT NULL,"
                 + "currentPhotoPath TEXT NOT NULL)");
 
+        db.execSQL("CREATE TABLE ActInspectionPhoto ("
+                + "_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + "actID TEXT NOT NULL,"
+                + "listObject TEXT NOT NULL,"
+                + "objectID TEXT NOT NULL,"
+                + "currentPhotoPath TEXT NOT NULL)");
     }
 
     @Override
@@ -50,6 +57,15 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                     + "carID TEXT NOT NULL,"
                     + "currentPhotoPath TEXT NOT NULL)");
         }
+        if (newVersion == 3) {
+            db.execSQL("CREATE TABLE ActInspectionPhoto ("
+                    + "_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + "actID TEXT NOT NULL,"
+                    + "listObject TEXT NOT NULL,"
+                    + "objectID TEXT NOT NULL,"
+                    + "currentPhotoPath TEXT NOT NULL)");
+        }
+
     }
 
     public void insertCarData(CarData carData) {
@@ -370,6 +386,146 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
                     cursor.moveToNext();
 
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return mPhotos;
+    }
+
+
+    public long insertPhotoActInspection(String actID, String listObject, String objectID, String currentPhotoPath) {
+        SQLiteDatabase db = getReadableDatabase();
+        long id = 0;
+
+        try {
+            ContentValues values = new ContentValues();
+            values.put("actID", actID);
+            values.put("listObject", listObject);
+            values.put("objectID", objectID);
+            values.put("currentPhotoPath", currentPhotoPath);
+
+            id = db.insert("ActInspectionPhoto", null, values);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return id;
+    }
+
+    public ArrayList<PhotoActInspection> getPhotoListActInspection(String actID, String listObject, String objectID) {
+        ArrayList<PhotoActInspection> mPhotoArrayList = new ArrayList<>();
+        SQLiteDatabase db = getWritableDatabase();
+        Cursor cursor = null;
+
+        try {
+            String select = "actID = '" + actID + "' and listObject = '" + listObject + "' and objectID = '" + objectID +  "'";
+            cursor = db.query("ActInspectionPhoto", null, select, null, null, null, null);
+            //cursor = db.query("ActInspectionPhoto", null, null, null, null, null, null);
+
+            if (cursor.moveToNext()) {
+                while (!cursor.isAfterLast()) {
+                    PhotoActInspection photo = new PhotoActInspection();
+
+                    String fileName = new File(cursor.getString(cursor.getColumnIndex("currentPhotoPath"))).getName();
+                    photo.setName(fileName);
+
+                    photo.setCurrentPhotoPath(cursor.getString(cursor.getColumnIndex("currentPhotoPath")));
+
+                    photo.setActID(cursor.getString(cursor.getColumnIndex("actID")));
+                    photo.setListObject(cursor.getString(cursor.getColumnIndex("listObject")));
+                    photo.setObjectID(cursor.getString(cursor.getColumnIndex("objectID")));
+
+                    mPhotoArrayList.add(photo);
+
+                    cursor.moveToNext();
+
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+
+        return mPhotoArrayList;
+    }
+
+    public ArrayList<PhotoActInspection> getPhotoActInspectionAll() {
+        ArrayList<PhotoActInspection> mPhotoArrayList = new ArrayList<>();
+        SQLiteDatabase db = getWritableDatabase();
+        Cursor cursor = null;
+
+        try {
+            cursor = db.query("ActInspectionPhoto", null, null, null, null, null, null);
+
+            if (cursor.moveToNext()) {
+                while (!cursor.isAfterLast()) {
+                    PhotoActInspection photo = new PhotoActInspection();
+
+                    String fileName = new File(cursor.getString(cursor.getColumnIndex("currentPhotoPath"))).getName();
+                    photo.setName(fileName);
+
+                    photo.setCurrentPhotoPath(cursor.getString(cursor.getColumnIndex("currentPhotoPath")));
+
+                    photo.setActID(cursor.getString(cursor.getColumnIndex("actID")));
+                    photo.setListObject(cursor.getString(cursor.getColumnIndex("listObject")));
+                    photo.setObjectID(cursor.getString(cursor.getColumnIndex("objectID")));
+
+                    mPhotoArrayList.add(photo);
+
+                    cursor.moveToNext();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+
+        return mPhotoArrayList;
+    }
+
+    public void deletePhotoActInspection(String currentPhotoPath) {
+        SQLiteDatabase db = getWritableDatabase();
+
+        db.delete("ActInspectionPhoto", "currentPhotoPath='" + currentPhotoPath + "'", null);
+    }
+
+    public ArrayList<PhotoActInspection> getPhotoActInspection(String orderID) {
+        ArrayList<PhotoActInspection> mPhotos = new ArrayList<>();
+        SQLiteDatabase db = getWritableDatabase();
+        Cursor cursor = null;
+
+        try {
+            String select = "orderID = '" + orderID + "'";
+            cursor = db.query("ActInspectionPhoto", null, select, null, null, null, null);
+            //cursor = db.query("ActInspectionPhoto", null, null, null, null, null, null);
+
+            if (cursor.moveToNext()) {
+                while (!cursor.isAfterLast()) {
+                    PhotoActInspection photo = new PhotoActInspection();
+
+                    String fileName = new File(cursor.getString(cursor.getColumnIndex("currentPhotoPath"))).getName();
+                    photo.setName(fileName);
+
+                    photo.setCurrentPhotoPath(cursor.getString(cursor.getColumnIndex("currentPhotoPath")));
+
+                    photo.setActID(cursor.getString(cursor.getColumnIndex("actID")));
+                    photo.setListObject(cursor.getString(cursor.getColumnIndex("listObject")));
+                    photo.setObjectID(cursor.getString(cursor.getColumnIndex("objectID")));
+
+                    mPhotos.add(photo);
+
+                    cursor.moveToNext();
                 }
             }
         } catch (Exception e) {
