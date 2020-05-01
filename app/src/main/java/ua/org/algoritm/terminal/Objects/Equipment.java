@@ -3,10 +3,11 @@ package ua.org.algoritm.terminal.Objects;
 public class Equipment {
     private String equipmentID;
     private String equipment;
-    private int quantityPlan;
-    private int quantityFact;
-    private String namePhoto;
-    private String currentPhotoPathFTP;
+    private int quantityPlan = 0;
+    private int quantityFact = 0;
+    private String namePhoto = "";
+    private String currentPhotoPathFTP = "";
+    private String currentPhotoPath = "";
 
     public Equipment() {
     }
@@ -57,5 +58,13 @@ public class Equipment {
 
     public void setCurrentPhotoPathFTP(String currentPhotoPathFTP) {
         this.currentPhotoPathFTP = currentPhotoPathFTP;
+    }
+
+    public String getCurrentPhotoPath() {
+        return currentPhotoPath;
+    }
+
+    public void setCurrentPhotoPath(String currentPhotoPath) {
+        this.currentPhotoPath = currentPhotoPath;
     }
 }

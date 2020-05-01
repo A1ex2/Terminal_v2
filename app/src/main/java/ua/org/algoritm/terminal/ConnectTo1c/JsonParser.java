@@ -9,6 +9,8 @@ import java.util.Date;
 
 import ua.org.algoritm.terminal.Objects.ActInspection;
 import ua.org.algoritm.terminal.Objects.CarDataOutfit;
+import ua.org.algoritm.terminal.Objects.Equipment;
+import ua.org.algoritm.terminal.Objects.Inspection;
 import ua.org.algoritm.terminal.Objects.OperationOutfits;
 import ua.org.algoritm.terminal.Objects.OrderOutfit;
 import ua.org.algoritm.terminal.Objects.Photo;
@@ -119,6 +121,36 @@ public class JsonParser {
             actInspection.setSector(actJSON.getString("Sector"));
             actInspection.setRow(actJSON.getString("Row"));
 
+            JSONArray inspectionsJSON = new JSONArray(actJSON.getString("Inspections"));
+            ArrayList<Inspection> mInspectionsList = new ArrayList<>();
+            for (int j = 0; j < inspectionsJSON.length(); j++) {
+                JSONObject inspectionJSON = new JSONObject(inspectionsJSON.get(j).toString());
+                Inspection mInspection = new Inspection();
+
+                mInspection.setID(inspectionJSON.getString("ID"));
+                mInspection.setName(inspectionJSON.getString("name"));
+                mInspection.setPerformed(inspectionJSON.getBoolean("Performed"));
+
+                mInspectionsList.add(mInspection);
+            }
+            actInspection.setInspections(mInspectionsList);
+
+            JSONArray equipmentsJSON = new JSONArray(actJSON.getString("Equipments"));
+            ArrayList<Equipment> mEquipmentsList = new ArrayList<>();
+            for (int j = 0; j < equipmentsJSON.length(); j++) {
+                JSONObject equipmentJSON = new JSONObject(equipmentsJSON.get(j).toString());
+                Equipment mEquipment = new Equipment();
+
+                mEquipment.setEquipmentID(equipmentJSON.getString("EquipmentID"));
+                mEquipment.setEquipment(equipmentJSON.getString("Equipment"));
+                mEquipment.setQuantityPlan(equipmentJSON.getInt("QuantityPlan"));
+                mEquipment.setQuantityFact(equipmentJSON.getInt("QuantityFact"));
+                mEquipment.setNamePhoto(equipmentJSON.getString("namePhoto"));
+                mEquipment.setCurrentPhotoPathFTP(equipmentJSON.getString("currentPhotoPathFTP"));
+
+                mEquipmentsList.add(mEquipment);
+            }
+            actInspection.setEquipments(mEquipmentsList);
 
             mActInspection.add(actInspection);
         }

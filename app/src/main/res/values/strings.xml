@@ -80,7 +80,12 @@
     <string name="act_inspection">Акт осмотра</string>
     <string name="menu_act_inspection">Акты осмотра</string>
     <string name="text_form">Вид акта осмотра:</string>
-    <string name="text_date_plan">Дата омотра план</string>
-    <string name="state_text">Статус</string>
+    <string name="text_date_plan">Дата омотра план:</string>
+    <string name="state_text">Статус:</string>
+    <string name="text_info">Инфо</string>
+    <string name="text_inspection">Осмотр</string>
+    <string name="text_photo">Фото</string>
+    <string name="text_complete">Комплектация</string>
+    <string name="text_damage">Повреждения</string>
 
 </resources>

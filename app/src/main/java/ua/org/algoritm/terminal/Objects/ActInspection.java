@@ -36,6 +36,7 @@ public class ActInspection {
     private String row;
 
     private ArrayList<Equipment> Equipments = new ArrayList<>();
+    private ArrayList<Inspection> mInspections = new ArrayList<>();
 
     public ActInspection() {
     }
@@ -222,5 +223,13 @@ public class ActInspection {
 
     public void setProductionDate(String productionDate) {
         this.productionDate = productionDate;
+    }
+
+    public ArrayList<Inspection> getInspections() {
+        return mInspections;
+    }
+
+    public void setInspections(ArrayList<Inspection> inspections) {
+        mInspections = inspections;
     }
 }

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    app:cardCornerRadius="10dp"
+    app:cardUseCompatPadding="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/description"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="left"
+                    android:textSize="20sp"
+                    tools:text="ключи">
+                </TextView>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/viewPhoto"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:src="@android:drawable/ic_menu_camera" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/quantityFact"
+                        android:layout_width="50dp"
+                        android:layout_height="match_parent"
+                        android:ems="10"
+                        android:gravity="center"
+                        android:inputType="number"
+                        tools:text="1"/>
+
+                    <TextView
+                        android:layout_width="10dp"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="/">
+
+                    </TextView>
+
+                    <TextView
+                        android:id="@+id/quantityPlan"
+                        android:layout_width="50dp"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:textSize="20sp"
+                        tools:text="1">
+
+                    </TextView>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_weight="1">
+
+                        <Button
+                            android:layout_height="match_parent"
+                            android:layout_width="match_parent"
+                            android:layout_weight="1"
+                            android:text="+"
+                            android:textSize="8pt"
+                            android:id="@+id/btnAdd">
+                        </Button>
+
+                        <Button
+                            android:layout_height="match_parent"
+                            android:layout_width="match_parent"
+                            android:layout_weight="1"
+                            android:text="-"
+                            android:textSize="8pt"
+                            android:id="@+id/btnSub">
+                        </Button>
+
+                        <Button
+                            android:layout_height="match_parent"
+                            android:layout_width="match_parent"
+                            android:layout_weight="1"
+                            android:text="✓"
+                            android:textSize="8pt"
+                            android:id="@+id/btnEqually">
+                        </Button>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</androidx.cardview.widget.CardView>
