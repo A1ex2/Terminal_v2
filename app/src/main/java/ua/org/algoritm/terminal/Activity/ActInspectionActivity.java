@@ -39,6 +39,7 @@ import ua.org.algoritm.terminal.Service.IntentServiceDataBase;
 public class ActInspectionActivity extends AppCompatActivity {
     public static final int REQUEST_TAKE_PHOTO_Equipment = 1;
     public static final int REQUEST_TAKE_PHOTO_TypesPhoto = 2;
+    public static final int REQUEST_UPDATE_PHOTO_TypesPhoto = 3;
 
     private ActInspection mActInspection;
     private TextView itemForm;
@@ -122,6 +123,10 @@ public class ActInspectionActivity extends AppCompatActivity {
             mAdapterTypesPhoto.setActionListener(new RecyclerAdapterTypesPhoto.ActionListener() {
                 @Override
                 public void onClicViewPhotos(TypesPhoto typesPhoto) {
+                    Intent i = new Intent(getApplicationContext(), ListActPhoto.class);
+                    i.putExtra("actInspectionID", mActInspection.getID());
+                    i.putExtra("typesPhotoID", typesPhoto.getTypePhotoID());
+                    startActivityForResult(i, REQUEST_UPDATE_PHOTO_TypesPhoto);
                 }
 
                 @Override
@@ -289,14 +294,9 @@ public class ActInspectionActivity extends AppCompatActivity {
         } else if ((requestCode == REQUEST_TAKE_PHOTO_Equipment | requestCode == REQUEST_TAKE_PHOTO_TypesPhoto) && resultCode == RESULT_CANCELED) {
             SharedData.deletePhotoActInspection(mCurrentPhotoPath);
 
-        } else if (requestCode == IntentServiceDataBase.REQUEST_CODE_DELETE_PHOTO) {
-//
-//            adapterPhoto.setPhoto(carDataOutfit.getPhoto());
-//            updateListsPhoto();
-//
-//            if (mDialog != null && mDialog.isShowing()) {
-//                mDialog.dismiss();
-//            }
+        } else if (requestCode == REQUEST_UPDATE_PHOTO_TypesPhoto) {
+            updateListTypesPhoto();
+
         }
     }
 

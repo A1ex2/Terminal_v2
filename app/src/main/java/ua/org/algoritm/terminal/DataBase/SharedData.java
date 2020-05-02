@@ -381,9 +381,7 @@ public class SharedData {
             fis.close();
 
         } catch (IOException e) {
-
             e.printStackTrace();
-
         }
 
         return bytesArray;
@@ -414,5 +412,24 @@ public class SharedData {
                 typesPhoto.getPhotoActInspections().add(mPhotos.get(j));
             }
         }
+    }
+
+
+    public static TypesPhoto getTypesPhoto(String actInspectionID, String typesPhotoID) {
+        TypesPhoto mTypesPhoto = new TypesPhoto();
+
+        for (int i = 0; i < ACT_INSPECTION.size(); i++) {
+            if (ACT_INSPECTION.get(i).getID().equals(actInspectionID)){
+
+                for (int j = 0; j < ACT_INSPECTION.get(i).getTypesPhotos().size(); j++) {
+                    TypesPhoto typesPhoto = ACT_INSPECTION.get(i).getTypesPhotos().get(j);
+                    if (typesPhoto.getTypePhotoID().equals(typesPhotoID)){
+                        mTypesPhoto = typesPhoto;
+                        break;
+                    }
+                }
+            }
+        }
+        return mTypesPhoto;
     }
 }

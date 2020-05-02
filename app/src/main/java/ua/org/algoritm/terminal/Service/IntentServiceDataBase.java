@@ -132,6 +132,18 @@ public class IntentServiceDataBase extends IntentService {
         activity.startService(intent);
     }
 
+    public static void startDeletePhotoActInspection(AppCompatActivity activity, String currentPhotoPath) {
+
+        Intent intent = new Intent(activity, IntentServiceDataBase.class);
+        PendingIntent pendingIntent = activity.createPendingResult(REQUEST_CODE_DELETE_PHOTO_ACT_INSPECTION, intent, 0);
+        intent.putExtra(EXTRA_PENDING_INTENT, pendingIntent);
+        intent.putExtra(EXTRA_DELETE_PHOTO_ACT_INSPECTION, currentPhotoPath);
+
+        intent.setAction(ACTION_DELETE_PHOTO_ACT_INSPECTION);
+
+        activity.startService(intent);
+    }
+
     @Override
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
@@ -176,6 +188,16 @@ public class IntentServiceDataBase extends IntentService {
                 if (mFile.delete()) {
 
                 }
+            } else if (ACTION_DELETE_PHOTO_ACT_INSPECTION.equals(action)) {
+
+                String currentPhotoPath = intent.getStringExtra(EXTRA_DELETE_PHOTO_ACT_INSPECTION);
+
+                helper.deletePhotoActInspection(currentPhotoPath);
+                File mFile = new File(currentPhotoPath);
+                if (mFile.delete()) {
+
+                }
+
             } else if (ACTION_GET_PHOTO_OUTFIT.equals(action)) {
                 String orderID = intent.getStringExtra(EXTRA_GET_PHOTO_OUTFIT);
                 ArrayList<Photo> mPhotos = helper.getPhotoOutfit(orderID);
