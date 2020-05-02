@@ -1,12 +1,14 @@
 package ua.org.algoritm.terminal.Objects;
 
+import java.util.ArrayList;
+
 public class TypesPhoto {
     private String typePhotoID;
     private String typePhoto;
 
     private String listObject = "Photo";
 
-    private PhotoActInspection mPhotoActInspection = new PhotoActInspection();
+    private ArrayList<PhotoActInspection> mPhotoActInspections = new ArrayList<>();
 
     public TypesPhoto() {
     }
@@ -35,11 +37,11 @@ public class TypesPhoto {
         this.listObject = listObject;
     }
 
-    public PhotoActInspection getPhotoActInspection() {
-        return mPhotoActInspection;
+    public ArrayList<PhotoActInspection> getPhotoActInspections() {
+        return mPhotoActInspections;
     }
 
-    public void setPhotoActInspection(PhotoActInspection photoActInspection) {
-        mPhotoActInspection = photoActInspection;
+    public void setPhotoActInspections(ArrayList<PhotoActInspection> photoActInspections) {
+        mPhotoActInspections = photoActInspections;
     }
 }

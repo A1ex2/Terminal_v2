@@ -25,17 +25,20 @@ import java.util.Date;
 
 import ua.org.algoritm.terminal.Adapters.RecyclerAdapterEquipment;
 import ua.org.algoritm.terminal.Adapters.RecyclerAdapterInspection;
+import ua.org.algoritm.terminal.Adapters.RecyclerAdapterTypesPhoto;
 import ua.org.algoritm.terminal.DataBase.SharedData;
 import ua.org.algoritm.terminal.Objects.ActInspection;
 import ua.org.algoritm.terminal.Objects.Equipment;
 import ua.org.algoritm.terminal.Objects.Inspection;
 import ua.org.algoritm.terminal.Objects.Photo;
+import ua.org.algoritm.terminal.Objects.PhotoActInspection;
+import ua.org.algoritm.terminal.Objects.TypesPhoto;
 import ua.org.algoritm.terminal.R;
 import ua.org.algoritm.terminal.Service.IntentServiceDataBase;
 
 public class ActInspectionActivity extends AppCompatActivity {
     public static final int REQUEST_TAKE_PHOTO_Equipment = 1;
-    public static final int REQUEST_TAKE_PHOTO_ = 2;
+    public static final int REQUEST_TAKE_PHOTO_TypesPhoto = 2;
 
     private ActInspection mActInspection;
     private TextView itemForm;
@@ -50,6 +53,7 @@ public class ActInspectionActivity extends AppCompatActivity {
 
     private String mCurrentPhotoPath;
     private Equipment mEquipment;
+    private TypesPhoto mTypesPhoto;
     private int tabHostSelect = 0;
 
     private RecyclerView listInspection;
@@ -57,6 +61,9 @@ public class ActInspectionActivity extends AppCompatActivity {
 
     private RecyclerView listEquipment;
     private RecyclerAdapterEquipment mAdapterEquipment;
+
+    private RecyclerView listTypesPhoto;
+    private RecyclerAdapterTypesPhoto mAdapterTypesPhoto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +90,10 @@ public class ActInspectionActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager2 = new LinearLayoutManager(this);
         listEquipment.setLayoutManager(layoutManager2);
 
+        listTypesPhoto = findViewById(R.id.list_type_photo);
+        LinearLayoutManager layoutManager3 = new LinearLayoutManager(this);
+        listTypesPhoto.setLayoutManager(layoutManager3);
+
         itemForm.setText(mActInspection.getForm());
         itemDatePlan.setText(mActInspection.getInspectionDatePlanString());
         itemState.setText(mActInspection.getState());
@@ -101,7 +112,27 @@ public class ActInspectionActivity extends AppCompatActivity {
 
         updateListInspections();
         updateListEquipments();
+        updateListTypesPhoto();
+    }
 
+    private void updateListTypesPhoto() {
+        if (mAdapterTypesPhoto == null) {
+            mAdapterTypesPhoto = new RecyclerAdapterTypesPhoto(this, R.layout.item_photo_act, mActInspection.getTypesPhotos());
+            listTypesPhoto.setAdapter(mAdapterTypesPhoto);
+            mAdapterTypesPhoto.setActionListener(new RecyclerAdapterTypesPhoto.ActionListener() {
+                @Override
+                public void onClicViewPhotos(TypesPhoto typesPhoto) {
+                }
+
+                @Override
+                public void onClicBtnAdd(TypesPhoto typesPhoto) {
+                    mTypesPhoto = typesPhoto;
+                    dispatchTakePictureIntent(REQUEST_TAKE_PHOTO_TypesPhoto);
+                }
+            });
+        } else {
+            mAdapterTypesPhoto.notifyDataSetChanged();
+        }
     }
 
     private void updateListInspections() {
@@ -127,7 +158,8 @@ public class ActInspectionActivity extends AppCompatActivity {
             mAdapterEquipment.setActionListener(new RecyclerAdapterEquipment.ActionListener() {
                 @Override
                 public void onClicViewPhoto(Equipment equipment) {
-                    dispatchTakePictureIntent(equipment, REQUEST_TAKE_PHOTO_Equipment);
+                    mEquipment = equipment;
+                    dispatchTakePictureIntent(REQUEST_TAKE_PHOTO_Equipment);
                 }
 
                 @Override
@@ -214,30 +246,47 @@ public class ActInspectionActivity extends AppCompatActivity {
             }
 
             String fileName = new File(mCurrentPhotoPath).getName();
-            mEquipment.getPhotoActInspection().setName(fileName);
-            mEquipment.getPhotoActInspection().setCurrentPhotoPath(mCurrentPhotoPath);
+            PhotoActInspection photoActInspection = new PhotoActInspection();
+            photoActInspection.setActID(mActInspection.getID());
+            photoActInspection.setName(fileName);
+            photoActInspection.setObjectID(mEquipment.getEquipmentID());
+            photoActInspection.setListObject(mEquipment.getListObject());
+            photoActInspection.setCurrentPhotoPath(mCurrentPhotoPath);
+
+            mEquipment.setPhotoActInspection(photoActInspection);
 
             IntentServiceDataBase.startInsertPhotoActInspection(ActInspectionActivity.this,
-                                                mActInspection.getID(), mEquipment.getListObject(), mEquipment.getEquipmentID(), mCurrentPhotoPath);
+                    mActInspection.getID(), mEquipment.getListObject(), mEquipment.getEquipmentID(), mCurrentPhotoPath);
 
-            try {
-                Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath);
-                FileOutputStream fos = null;
-                try {
-                    File file = new File(mCurrentPhotoPath);
-                    fos = new FileOutputStream(file);
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 50, fos);
-                } finally {
-                    if (fos != null) fos.close();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            decodeFile();
 
             mCurrentPhotoPath = "";
             mEquipment = null;
             updateListEquipments();
-        } else if (requestCode == REQUEST_TAKE_PHOTO_Equipment && resultCode == RESULT_CANCELED) {
+
+        } else if (requestCode == REQUEST_TAKE_PHOTO_TypesPhoto && resultCode == RESULT_OK) {
+
+            String fileName = new File(mCurrentPhotoPath).getName();
+
+            PhotoActInspection photoActInspection = new PhotoActInspection();
+            photoActInspection.setActID(mActInspection.getID());
+            photoActInspection.setName(fileName);
+            photoActInspection.setObjectID(mTypesPhoto.getTypePhotoID());
+            photoActInspection.setListObject(mTypesPhoto.getListObject());
+            photoActInspection.setCurrentPhotoPath(mCurrentPhotoPath);
+
+            mTypesPhoto.getPhotoActInspections().add(photoActInspection);
+
+            IntentServiceDataBase.startInsertPhotoActInspection(ActInspectionActivity.this,
+                    mActInspection.getID(), mTypesPhoto.getListObject(), mTypesPhoto.getTypePhotoID(), mCurrentPhotoPath);
+
+            decodeFile();
+
+            mCurrentPhotoPath = "";
+            mTypesPhoto = null;
+            updateListTypesPhoto();
+
+        } else if ((requestCode == REQUEST_TAKE_PHOTO_Equipment | requestCode == REQUEST_TAKE_PHOTO_TypesPhoto) && resultCode == RESULT_CANCELED) {
             SharedData.deletePhotoActInspection(mCurrentPhotoPath);
 
         } else if (requestCode == IntentServiceDataBase.REQUEST_CODE_DELETE_PHOTO) {
@@ -267,9 +316,7 @@ public class ActInspectionActivity extends AppCompatActivity {
         return image;
     }
 
-    private void dispatchTakePictureIntent(Equipment equipment, int REQUEST) {
-        mEquipment = equipment;
-
+    private void dispatchTakePictureIntent(int REQUEST) {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
@@ -293,4 +340,22 @@ public class ActInspectionActivity extends AppCompatActivity {
             }
         }
     }
+
+    private void decodeFile() {
+        try {
+            Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath);
+            FileOutputStream fos = null;
+            try {
+                File file = new File(mCurrentPhotoPath);
+                fos = new FileOutputStream(file);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 50, fos);
+            } finally {
+                if (fos != null) fos.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }
+
