@@ -22,10 +22,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Activity.ActInspectionActivity"></activity>
+        <activity android:name=".Activity.ListActPhoto"></activity>
+        <activity android:name=".Activity.ActInspectionActivity" />
         <activity
             android:name=".Activity.ViewPhoto"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Activity.DetailOrderOutfit" />
         <activity
             android:name=".Activity.CarActivityOrderOutfit"

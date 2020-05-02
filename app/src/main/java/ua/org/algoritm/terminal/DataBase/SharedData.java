@@ -23,6 +23,7 @@ import ua.org.algoritm.terminal.Objects.Photo;
 import ua.org.algoritm.terminal.Objects.PhotoActInspection;
 import ua.org.algoritm.terminal.Objects.Reception;
 import ua.org.algoritm.terminal.Objects.Sector;
+import ua.org.algoritm.terminal.Objects.TypesPhoto;
 import ua.org.algoritm.terminal.Objects.User;
 
 public class SharedData {
@@ -400,7 +401,18 @@ public class SharedData {
             for (int j = 0; j < mPhotos.size(); j++) {
                 mEquipment.setPhotoActInspection(mPhotos.get(j));
             }
+        }
 
+        ArrayList<TypesPhoto> mTypesPhotos = actInspection.getTypesPhotos();
+        for (int i = 0; i < mTypesPhotos.size(); i++) {
+            TypesPhoto typesPhoto = mTypesPhotos.get(i);
+
+            ArrayList<PhotoActInspection> mPhotos = helper.getPhotoListActInspection(actInspection.getID(),
+                    typesPhoto.getListObject(), typesPhoto.getTypePhotoID());
+
+            for (int j = 0; j < mPhotos.size(); j++) {
+                typesPhoto.getPhotoActInspections().add(mPhotos.get(j));
+            }
         }
     }
 }

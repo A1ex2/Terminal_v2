@@ -356,6 +356,5 @@ public class ActInspectionActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-
 }
 
