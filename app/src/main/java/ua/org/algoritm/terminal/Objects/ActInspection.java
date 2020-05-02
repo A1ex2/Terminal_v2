@@ -37,6 +37,7 @@ public class ActInspection {
 
     private ArrayList<Equipment> Equipments = new ArrayList<>();
     private ArrayList<Inspection> mInspections = new ArrayList<>();
+    private ArrayList<TypesPhoto> mTypesPhotos = new ArrayList<>();
 
     public ActInspection() {
     }
@@ -231,5 +232,13 @@ public class ActInspection {
 
     public void setInspections(ArrayList<Inspection> inspections) {
         mInspections = inspections;
+    }
+
+    public ArrayList<TypesPhoto> getTypesPhotos() {
+        return mTypesPhotos;
+    }
+
+    public void setTypesPhotos(ArrayList<TypesPhoto> typesPhotos) {
+        mTypesPhotos = typesPhotos;
     }
 }

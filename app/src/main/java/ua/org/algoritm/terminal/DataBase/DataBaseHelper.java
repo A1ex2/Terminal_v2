@@ -431,7 +431,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 while (!cursor.isAfterLast()) {
                     PhotoActInspection photo = new PhotoActInspection();
 
-                    String fileName = new File(cursor.getString(cursor.getColumnIndex("currentPhotoPath"))).getName();
+                    File file = new File(cursor.getString(cursor.getColumnIndex("currentPhotoPath")));
+                    if(!file.isFile()){
+                        deletePhotoActInspection(cursor.getString(cursor.getColumnIndex("currentPhotoPath")));
+                    }
+                    String fileName = file.getName();
                     photo.setName(fileName);
 
                     photo.setCurrentPhotoPath(cursor.getString(cursor.getColumnIndex("currentPhotoPath")));
@@ -443,7 +447,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                     mPhotoArrayList.add(photo);
 
                     cursor.moveToNext();
-
                 }
             }
         } catch (Exception e) {

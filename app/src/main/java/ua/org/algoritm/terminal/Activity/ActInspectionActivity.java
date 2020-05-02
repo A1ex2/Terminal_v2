@@ -34,7 +34,8 @@ import ua.org.algoritm.terminal.R;
 import ua.org.algoritm.terminal.Service.IntentServiceDataBase;
 
 public class ActInspectionActivity extends AppCompatActivity {
-    public static final int REQUEST_TAKE_PHOTO = 1;
+    public static final int REQUEST_TAKE_PHOTO_Equipment = 1;
+    public static final int REQUEST_TAKE_PHOTO_ = 2;
 
     private ActInspection mActInspection;
     private TextView itemForm;
@@ -126,7 +127,7 @@ public class ActInspectionActivity extends AppCompatActivity {
             mAdapterEquipment.setActionListener(new RecyclerAdapterEquipment.ActionListener() {
                 @Override
                 public void onClicViewPhoto(Equipment equipment) {
-                    dispatchTakePictureIntent(equipment);
+                    dispatchTakePictureIntent(equipment, REQUEST_TAKE_PHOTO_Equipment);
                 }
 
                 @Override
@@ -206,17 +207,18 @@ public class ActInspectionActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
+        if (requestCode == REQUEST_TAKE_PHOTO_Equipment && resultCode == RESULT_OK) {
 
-            if (!mEquipment.getPhotoActInspection().getCurrentPhotoPath().equals("")){
-                SharedData.deletePhoto(mEquipment.getPhotoActInspection().getCurrentPhotoPath());
+            if (!mEquipment.getPhotoActInspection().getCurrentPhotoPath().equals("")) {
+                SharedData.deletePhotoActInspection(mEquipment.getPhotoActInspection().getCurrentPhotoPath());
             }
 
             String fileName = new File(mCurrentPhotoPath).getName();
             mEquipment.getPhotoActInspection().setName(fileName);
             mEquipment.getPhotoActInspection().setCurrentPhotoPath(mCurrentPhotoPath);
 
-//            IntentServiceDataBase.startInsertPhotoCarDataOutfit(ActInspectionActivity.this, mActInspection.getID(), mActInspection., mCurrentPhotoPath);
+            IntentServiceDataBase.startInsertPhotoActInspection(ActInspectionActivity.this,
+                                                mActInspection.getID(), mEquipment.getListObject(), mEquipment.getEquipmentID(), mCurrentPhotoPath);
 
             try {
                 Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath);
@@ -235,8 +237,8 @@ public class ActInspectionActivity extends AppCompatActivity {
             mCurrentPhotoPath = "";
             mEquipment = null;
             updateListEquipments();
-        } else if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_CANCELED) {
-            SharedData.deletePhoto(mCurrentPhotoPath);
+        } else if (requestCode == REQUEST_TAKE_PHOTO_Equipment && resultCode == RESULT_CANCELED) {
+            SharedData.deletePhotoActInspection(mCurrentPhotoPath);
 
         } else if (requestCode == IntentServiceDataBase.REQUEST_CODE_DELETE_PHOTO) {
 //
@@ -265,7 +267,7 @@ public class ActInspectionActivity extends AppCompatActivity {
         return image;
     }
 
-    private void dispatchTakePictureIntent(Equipment equipment) {
+    private void dispatchTakePictureIntent(Equipment equipment, int REQUEST) {
         mEquipment = equipment;
 
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -287,7 +289,7 @@ public class ActInspectionActivity extends AppCompatActivity {
                         photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
 
-                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+                startActivityForResult(takePictureIntent, REQUEST);
             }
         }
     }

@@ -480,9 +480,9 @@ public class SOAP_Dispatcher extends Thread {
 
 //            SharedData.checkPhoto(mOrderOutfits);
 
-//            for (int i = 0; i < mOrderOutfits.size(); i++) {
-//                SharedData.setPhoto(mOrderOutfits.get(i));
-//            }
+            for (int i = 0; i < mActInspections.size(); i++) {
+                SharedData.setPhotoActInspection(mActInspections.get(i));
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -5,6 +5,7 @@ public class Equipment {
     private String equipment;
     private int quantityPlan = 0;
     private int quantityFact = 0;
+    private String listObject = "Equipment";
 //    private String namePhoto = "";
 //    private String currentPhotoPathFTP = "";
 //    private String currentPhotoPath = "";
@@ -54,7 +55,15 @@ public class Equipment {
         this.quantityFact = quantityFact;
     }
 
-//    public String getNamePhoto() {
+    public String getListObject() {
+        return listObject;
+    }
+
+    public void setListObject(String listObject) {
+        this.listObject = listObject;
+    }
+
+    //    public String getNamePhoto() {
 //        return namePhoto;
 //    }
 //

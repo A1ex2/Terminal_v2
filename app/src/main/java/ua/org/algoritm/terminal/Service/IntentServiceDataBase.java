@@ -26,21 +26,36 @@ public class IntentServiceDataBase extends IntentService {
 
     private static final String EXTRA_PENDING_INTENT = "ua.org.algoritm.terminal.Service.extra.PENDING_INTENT";
     private static final String ACTION_INSERT_CAR_DATA = "ua.org.algoritm.terminal.Service.action.INSERT_CAR_DATA";
+
     private static final String ACTION_INSERT_PHOTO = "ua.org.algoritm.terminal.Service.action.INSERT_PHOTO";
     private static final String ACTION_DELETE_PHOTO = "ua.org.algoritm.terminal.Service.action.DELETE_PHOTO";
     private static final String ACTION_GET_PHOTO_OUTFIT = "ua.org.algoritm.terminal.Service.action.GET_PHOTO_OUTFIT";
 
+    private static final String ACTION_INSERT_PHOTO_ACT_INSPECTION = "ua.org.algoritm.terminal.Service.action.INSERT_PHOTO_ACT_INSPECTION";
+    private static final String ACTION_DELETE_PHOTO_ACT_INSPECTION = "ua.org.algoritm.terminal.Service.action.DELETE_PHOTO_ACT_INSPECTION";
+    private static final String ACTION_GET_PHOTO_ACT_INSPECTION = "ua.org.algoritm.terminal.Service.action.GET_PHOTO_ACT_INSPECTION";
+
     private static final String EXTRA_INSERT_CAR_DATA = "ua.org.algoritm.terminal.Service.extra.INSERT_CAR_DATA";
+
     private static final String EXTRA_INSERT_PHOTO = "ua.org.algoritm.terminal.Service.extra.INSERT_PHOTO";
     private static final String EXTRA_DELETE_PHOTO = "ua.org.algoritm.terminal.Service.extra.DELETE_PHOTO";
     private static final String EXTRA_GET_PHOTO_OUTFIT = "ua.org.algoritm.terminal.Service.extra.GET_PHOTO_OUTFIT";
 
+    private static final String EXTRA_INSERT_PHOTO_ACT_INSPECTION = "ua.org.algoritm.terminal.Service.extra.INSERT_PHOTO_ACT_INSPECTION";
+    private static final String EXTRA_DELETE_PHOTO_ACT_INSPECTION = "ua.org.algoritm.terminal.Service.extra.DELETE_PHOTO_ACT_INSPECTION";
+    private static final String EXTRA_GET_PHOTO_ACT_INSPECTION = "ua.org.algoritm.terminal.Service.extra.GET_PHOTO_ACT_INSPECTION";
+
     public static final String EXTRA_CAR_DATA = "ua.org.algoritm.terminal.Service.extra.EXTRA_CAR_DATA";
 
     public static final int REQUEST_CODE_CAR_DATA = 100;
+
     public static final int REQUEST_CODE_PHOTO = 200;
     public static final int REQUEST_CODE_DELETE_PHOTO = 300;
     public static final int REQUEST_CODE_GET_PHOTO_OUTFIT = 400;
+
+    public static final int REQUEST_CODE_PHOTO_ACT_INSPECTION = 500;
+    public static final int REQUEST_CODE_DELETE_PHOTO_ACT_INSPECTION = 600;
+    public static final int REQUEST_CODE_GET_PHOTO_ACT_INSPECTION = 700;
 
     public IntentServiceDataBase() {
         super("IntentServiceDataBase");
@@ -71,6 +86,24 @@ public class IntentServiceDataBase extends IntentService {
         map.put("currentPhotoPath", currentPhotoPath);
 
         intent.putExtra(EXTRA_INSERT_PHOTO, map);
+
+        activity.startService(intent);
+    }
+
+    public static void startInsertPhotoActInspection(AppCompatActivity activity, String actID, String listObject, String objectID, String currentPhotoPath) {
+
+        Intent intent = new Intent(activity, IntentServiceDataBase.class);
+        PendingIntent pendingIntent = activity.createPendingResult(REQUEST_CODE_PHOTO_ACT_INSPECTION, intent, 0);
+        intent.putExtra(EXTRA_PENDING_INTENT, pendingIntent);
+
+        intent.setAction(ACTION_INSERT_PHOTO_ACT_INSPECTION);
+        HashMap<String, String> map = new HashMap<>();
+        map.put("actID", actID);
+        map.put("listObject", listObject);
+        map.put("objectID", objectID);
+        map.put("currentPhotoPath", currentPhotoPath);
+
+        intent.putExtra(EXTRA_INSERT_PHOTO_ACT_INSPECTION, map);
 
         activity.startService(intent);
     }
@@ -120,6 +153,18 @@ public class IntentServiceDataBase extends IntentService {
                 String currentPhotoPath = map.get("currentPhotoPath");
 
                 helper.insertPhotoCarDataOutfit(orderID, carID, currentPhotoPath);
+                //result.putExtra(EXTRA_CAR_DATA, true);
+
+            } else if (ACTION_INSERT_PHOTO_ACT_INSPECTION.equals(action)) {
+
+                HashMap<String, String> map = (HashMap<String, String>) intent.getSerializableExtra(EXTRA_INSERT_PHOTO_ACT_INSPECTION);
+
+                String actID = map.get("actID");
+                String listObject = map.get("listObject");
+                String objectID = map.get("objectID");
+                String currentPhotoPath = map.get("currentPhotoPath");
+
+                helper.insertPhotoActInspection(actID, listObject, objectID, currentPhotoPath);
                 //result.putExtra(EXTRA_CAR_DATA, true);
 
             } else if (ACTION_DELETE_PHOTO.equals(action)) {

@@ -16,9 +16,11 @@ import ua.org.algoritm.terminal.Objects.ActInspection;
 import ua.org.algoritm.terminal.Objects.CarData;
 import ua.org.algoritm.terminal.Objects.CarDataIssuance;
 import ua.org.algoritm.terminal.Objects.CarDataOutfit;
+import ua.org.algoritm.terminal.Objects.Equipment;
 import ua.org.algoritm.terminal.Objects.Issuance;
 import ua.org.algoritm.terminal.Objects.OrderOutfit;
 import ua.org.algoritm.terminal.Objects.Photo;
+import ua.org.algoritm.terminal.Objects.PhotoActInspection;
 import ua.org.algoritm.terminal.Objects.Reception;
 import ua.org.algoritm.terminal.Objects.Sector;
 import ua.org.algoritm.terminal.Objects.User;
@@ -309,6 +311,19 @@ public class SharedData {
         }
     }
 
+    public static void deletePhotoActInspection(String currentPhotoPath) {
+        try {
+            DataBaseHelper helper = new DataBaseHelper(app);
+
+            helper.deletePhotoActInspection(currentPhotoPath);
+            File mFile = new File(currentPhotoPath);
+            if (mFile.delete()) {
+            }
+        } catch (Exception e) {
+
+        }
+    }
+
     public static void checkPhoto(ArrayList<OrderOutfit> orderOutfits) {
         DataBaseHelper helper = new DataBaseHelper(app);
         ArrayList<Photo> mPhotos = helper.getPhotoAll();
@@ -371,5 +386,21 @@ public class SharedData {
         }
 
         return bytesArray;
+    }
+
+    public static void setPhotoActInspection(ActInspection actInspection) {
+        DataBaseHelper helper = new DataBaseHelper(app);
+        ArrayList<Equipment> mEquipments = actInspection.getEquipments();
+        for (int i = 0; i < mEquipments.size(); i++) {
+            Equipment mEquipment = mEquipments.get(i);
+
+            ArrayList<PhotoActInspection> mPhotos = helper.getPhotoListActInspection(actInspection.getID(),
+                    mEquipment.getListObject(), mEquipment.getEquipmentID());
+
+            for (int j = 0; j < mPhotos.size(); j++) {
+                mEquipment.setPhotoActInspection(mPhotos.get(j));
+            }
+
+        }
     }
 }

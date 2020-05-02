@@ -14,6 +14,7 @@ import ua.org.algoritm.terminal.Objects.Inspection;
 import ua.org.algoritm.terminal.Objects.OperationOutfits;
 import ua.org.algoritm.terminal.Objects.OrderOutfit;
 import ua.org.algoritm.terminal.Objects.Photo;
+import ua.org.algoritm.terminal.Objects.TypesPhoto;
 
 public class JsonParser {
 
@@ -151,6 +152,19 @@ public class JsonParser {
                 mEquipmentsList.add(mEquipment);
             }
             actInspection.setEquipments(mEquipmentsList);
+
+            JSONArray typePhotosJSON = new JSONArray(actJSON.getString("TypePhotos"));
+            ArrayList<TypesPhoto> mTypesPhotoList = new ArrayList<>();
+            for (int j = 0; j < typePhotosJSON.length(); j++) {
+                JSONObject typePhotoJSON = new JSONObject(typePhotosJSON.get(j).toString());
+
+                TypesPhoto mTypesPhoto = new TypesPhoto();
+                mTypesPhoto.setTypePhotoID(typePhotoJSON.getString("typePhotoID"));
+                mTypesPhoto.setTypePhoto(typePhotoJSON.getString("typePhoto"));
+
+                mTypesPhotoList.add(mTypesPhoto);
+            }
+            actInspection.setTypesPhotos(mTypesPhotoList);
 
             mActInspection.add(actInspection);
         }
