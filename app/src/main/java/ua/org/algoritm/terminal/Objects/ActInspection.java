@@ -38,8 +38,10 @@ public class ActInspection {
 
     @Expose
     private ArrayList<Equipment> Equipments = new ArrayList<>();
+
     @Expose
     private ArrayList<Inspection> Inspections = new ArrayList<>();
+
     @Expose
     private ArrayList<TypesPhoto> TypesPhotos = new ArrayList<>();
 
