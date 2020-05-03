@@ -8,6 +8,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import ua.org.algoritm.terminal.DataBase.SharedData;
+import ua.org.algoritm.terminal.Objects.ActInspection;
 import ua.org.algoritm.terminal.Objects.CarData;
 import ua.org.algoritm.terminal.Objects.CarDataIssuance;
 import ua.org.algoritm.terminal.Objects.CarDataOutfit;
@@ -59,6 +60,12 @@ public class SOAP_Objects {
         String stringCarData = gson.toJson(jsonOutfit);
         return stringCarData;
 
+    }
+
+    public static String getActInspection(ActInspection actInspection) {
+        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+        String stringActInspection = gson.toJson(actInspection);
+        return stringActInspection;
     }
 
     private static class JSONReception {

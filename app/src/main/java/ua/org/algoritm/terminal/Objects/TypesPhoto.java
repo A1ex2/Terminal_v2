@@ -1,13 +1,19 @@
 package ua.org.algoritm.terminal.Objects;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 
 public class TypesPhoto {
+    @Expose
     private String typePhotoID;
     private String typePhoto;
 
+    @Expose
     private String listObject = "Photo";
 
+    @Expose
     private ArrayList<PhotoActInspection> mPhotoActInspections = new ArrayList<>();
 
     public TypesPhoto() {

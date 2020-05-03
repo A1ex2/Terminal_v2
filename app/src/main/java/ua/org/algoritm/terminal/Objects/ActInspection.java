@@ -1,6 +1,6 @@
 package ua.org.algoritm.terminal.Objects;
 
-import com.google.gson.annotations.SerializedName;
+import com.google.gson.annotations.Expose;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -9,35 +9,39 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class ActInspection {
+    @Expose
     private String ID;
     private String description;
-
+    @Expose
     private String stateID;
     private String state;
-
+    @Expose
     private String formID;
     private String form;
-
+    @Expose
     private String storageID;
     private String storage;
 
     private Date inspectionDatePlan;
     private Date inspectionDateFact;
 
+    @Expose
     private String carID;
     private String car;
 
     private String productionDate;
 
     private String barCode;
-
     private String sectorID;
     private String sector;
     private String row;
 
+    @Expose
     private ArrayList<Equipment> Equipments = new ArrayList<>();
-    private ArrayList<Inspection> mInspections = new ArrayList<>();
-    private ArrayList<TypesPhoto> mTypesPhotos = new ArrayList<>();
+    @Expose
+    private ArrayList<Inspection> Inspections = new ArrayList<>();
+    @Expose
+    private ArrayList<TypesPhoto> TypesPhotos = new ArrayList<>();
 
     public ActInspection() {
     }
@@ -227,18 +231,18 @@ public class ActInspection {
     }
 
     public ArrayList<Inspection> getInspections() {
-        return mInspections;
+        return Inspections;
     }
 
     public void setInspections(ArrayList<Inspection> inspections) {
-        mInspections = inspections;
+        Inspections = inspections;
     }
 
     public ArrayList<TypesPhoto> getTypesPhotos() {
-        return mTypesPhotos;
+        return TypesPhotos;
     }
 
     public void setTypesPhotos(ArrayList<TypesPhoto> typesPhotos) {
-        mTypesPhotos = typesPhotos;
+        TypesPhotos = typesPhotos;
     }
 }

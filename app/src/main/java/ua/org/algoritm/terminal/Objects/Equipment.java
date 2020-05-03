@@ -1,15 +1,26 @@
 package ua.org.algoritm.terminal.Objects;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 public class Equipment {
+    @Expose
     private String equipmentID;
+
     private String equipment;
+
     private int quantityPlan = 0;
+
+    @Expose
     private int quantityFact = 0;
+
+    @Expose
     private String listObject = "Equipment";
 //    private String namePhoto = "";
 //    private String currentPhotoPathFTP = "";
 //    private String currentPhotoPath = "";
 
+    @Expose
     private PhotoActInspection mPhotoActInspection = new PhotoActInspection();
 
     public Equipment() {

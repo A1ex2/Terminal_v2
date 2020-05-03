@@ -21,6 +21,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import ua.org.algoritm.terminal.Activity.ActInspectionActivity;
 import ua.org.algoritm.terminal.Activity.CarActivityIssuance;
 import ua.org.algoritm.terminal.Activity.CarActivityMoving;
 import ua.org.algoritm.terminal.Activity.CarActivityOrderOutfit;
@@ -181,6 +182,9 @@ public class SOAP_Dispatcher extends Thread {
             case ActInspectionFragment.ACTION_LIST:
                 GetActInspection();
                 break;
+            case ActInspectionActivity.ACTION_SET_ACT:
+                setActInspection();
+                break;
         }
 
         if (ACTION == Password.ACTION_VERIFY | ACTION == Password.ACTION_LOGIN_LIST
@@ -284,7 +288,23 @@ public class SOAP_Dispatcher extends Thread {
             } else {
                 ActInspectionFragment.soapHandler.sendEmptyMessage(ActInspectionFragment.ACTION_ConnectionError);
             }
+        } else if (ACTION == ActInspectionActivity.ACTION_SET_ACT) {
+            if (soap_Response != null) {
+                ActInspectionActivity.soapParam_Response = soap_Response;
+                ActInspectionActivity.soapHandler.sendEmptyMessage(ACTION);
+            } else {
+                ActInspectionActivity.soapHandler.sendEmptyMessage(ActInspectionActivity.ACTION_ConnectionError);
+            }
         }
+    }
+
+    private void setActInspection() {
+        String method = "setActInspection";
+        String action = NAMESPACE + "#setActInspection:" + method;
+        SoapObject request = new SoapObject(NAMESPACE, method);
+        request.addProperty("ActInspection", string_Inquiry);
+
+        soap_Response = callWebService(request, action);
     }
 
     private void setStatusOutfit() {

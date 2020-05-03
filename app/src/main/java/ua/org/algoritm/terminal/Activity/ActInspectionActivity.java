@@ -3,16 +3,23 @@ package ua.org.algoritm.terminal.Activity;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
-import androidx.core.view.GravityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,9 +27,15 @@ import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.ksoap2.SoapFault;
+import org.ksoap2.serialization.SoapObject;
+
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -30,11 +43,15 @@ import java.util.Date;
 import ua.org.algoritm.terminal.Adapters.RecyclerAdapterEquipment;
 import ua.org.algoritm.terminal.Adapters.RecyclerAdapterInspection;
 import ua.org.algoritm.terminal.Adapters.RecyclerAdapterTypesPhoto;
+import ua.org.algoritm.terminal.ConnectTo1c.FtpUtil;
+import ua.org.algoritm.terminal.ConnectTo1c.SFTPClient;
+import ua.org.algoritm.terminal.ConnectTo1c.SOAP_Dispatcher;
+import ua.org.algoritm.terminal.ConnectTo1c.SOAP_Objects;
+import ua.org.algoritm.terminal.ConnectTo1c.UIManager;
 import ua.org.algoritm.terminal.DataBase.SharedData;
 import ua.org.algoritm.terminal.Objects.ActInspection;
 import ua.org.algoritm.terminal.Objects.Equipment;
 import ua.org.algoritm.terminal.Objects.Inspection;
-import ua.org.algoritm.terminal.Objects.Photo;
 import ua.org.algoritm.terminal.Objects.PhotoActInspection;
 import ua.org.algoritm.terminal.Objects.TypesPhoto;
 import ua.org.algoritm.terminal.R;
@@ -70,10 +87,25 @@ public class ActInspectionActivity extends AppCompatActivity {
     private RecyclerView listTypesPhoto;
     private RecyclerAdapterTypesPhoto mAdapterTypesPhoto;
 
+    private ProgressDialog mDialog;
+    private SaveTaskPhotoFTP mTaskPhotoFTP;
+
+    public static final int ACTION_SET_ACT = 28;
+    public static final int ACTION_ConnectionError = 0;
+
+    public static UIManager uiManager;
+    public static SoapFault responseFault;
+
+    public static SoapObject soapParam_Response;
+    public static Handler soapHandler;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_act_inspection);
+
+        uiManager = new UIManager(this);
+        soapHandler = new incomingHandler(this);
 
         Intent intent = getIntent();
         mActInspection = SharedData.getActInspection(intent.getStringExtra("actInspection"));
@@ -130,10 +162,28 @@ public class ActInspectionActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.saveCB:
-
+                setCB();
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void setCB() {
+        mDialog = new ProgressDialog(this);
+        mDialog.setMessage(getString(R.string.wait_sending));
+        mDialog.setCancelable(false);
+        mDialog.show();
+
+        SharedPreferences preferences = getSharedPreferences("MyPref", MODE_PRIVATE);
+        String login = preferences.getString("Login", "");
+        String password = preferences.getString("Password", "");
+
+        String stringObject = SOAP_Objects.getActInspection(mActInspection);
+
+        SOAP_Dispatcher dispatcher = new SOAP_Dispatcher(ACTION_SET_ACT, login, password, getApplicationContext());
+        dispatcher.string_Inquiry = stringObject;
+
+        dispatcher.start();
     }
 
     private void updateListTypesPhoto() {
@@ -376,5 +426,204 @@ public class ActInspectionActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
+    class incomingHandler extends Handler {
+        private final WeakReference<ActInspectionActivity> mTarget;
+
+        public incomingHandler(ActInspectionActivity context) {
+            mTarget = new WeakReference<>(context);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            ActInspectionActivity target = mTarget.get();
+
+            if (mDialog != null && mDialog.isShowing()) {
+                mDialog.dismiss();
+            }
+
+            switch (msg.what) {
+                case ACTION_ConnectionError:
+                    uiManager.showToast(getString(R.string.errorConnection) + getSoapErrorMessage());
+                    break;
+                case ACTION_SET_ACT: {
+                    target.checkSetAct();
+                }
+                break;
+            }
+        }
+    }
+    private void checkSetAct() {
+        Boolean isSaveSuccess = Boolean.parseBoolean(soapParam_Response.getPropertyAsString("Result"));
+
+        if (isSaveSuccess) {
+            final ArrayList<PhotoActInspection> photoAll = new ArrayList<>();
+
+            for (int i = 0; i < mActInspection.getEquipments().size(); i++) {
+                if (!mActInspection.getEquipments().get(i).getPhotoActInspection().getCurrentPhotoPath().equals("")){
+                    photoAll.add(mActInspection.getEquipments().get(i).getPhotoActInspection());
+                }
+            }
+
+            for (int i = 0; i < mActInspection.getTypesPhotos().size(); i++) {
+                TypesPhoto typesPhoto = mActInspection.getTypesPhotos().get(i);
+                for (int j = 0; j < typesPhoto.getPhotoActInspections().size(); j++) {
+                    if (!typesPhoto.getPhotoActInspections().get(j).getCurrentPhotoPath().equals("")){
+                        photoAll.add(typesPhoto.getPhotoActInspections().get(j));
+                    }
+                }
+            }
+
+            if (photoAll.size() != 0) {
+                uiManager.showToast(getString(R.string.success));
+                String message = getString(R.string.send_photo);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage(message)
+                        .setCancelable(true)
+                        .setPositiveButton(getString(R.string.butt_Yes), new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                mTaskPhotoFTP = new SaveTaskPhotoFTP(ActInspectionActivity.this, mActInspection.getID());
+                                mTaskPhotoFTP.execute(photoAll);
+                            }
+                        })
+                        .setNegativeButton(getString(R.string.butt_Not), new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+
+                                dialog.cancel();
+                                finish();
+
+                            }
+                        });
+                AlertDialog alert = builder.create();
+                alert.show();
+
+            } else {
+                finish();
+            }
+
+        } else {
+            uiManager.showToast(soapParam_Response.getPropertyAsString("Description"));
+        }
+    }
+
+    private String getSoapErrorMessage() {
+
+        String errorMessage;
+
+        if (responseFault == null)
+            errorMessage = getString(R.string.textNoInternet);
+        else {
+            try {
+                errorMessage = responseFault.faultstring;
+            } catch (Exception e) {
+                e.printStackTrace();
+                errorMessage = getString(R.string.unknownError);
+            }
+        }
+        return errorMessage;
+    }
+
+    public class SaveTaskPhotoFTP extends AsyncTask<ArrayList<PhotoActInspection>, Integer, Boolean> {
+        private Context mContext;
+        private ProgressDialog mDialog;
+        private String actID;
+        private boolean error;
+
+        public SaveTaskPhotoFTP(Context context, String actID) {
+            this.mContext = context;
+            this.actID = actID;
+            this.error = false;
+        }
+
+        @Override
+        protected Boolean doInBackground(ArrayList<PhotoActInspection>... arrayLists) {
+            for (ArrayList<PhotoActInspection> mPhotos : arrayLists) {
+                for (int i = 0; i < mPhotos.size(); i++) {
+                    PhotoActInspection photo = mPhotos.get(i);
+                    publishProgress(mPhotos.size(), i + 1);
+
+                    if (sendPhoto(photo)) {
+                        //SharedData.deletePhoto(photo.getCurrentPhotoPath());
+                    } else {
+                        error = true;
+                        break;
+                    }
+                }
+            }
+            return null;
+        }
+
+        private boolean sendPhoto(PhotoActInspection photo) {
+            boolean uploadFile = false;
+            if (!photo.getCurrentPhotoPathFTP().equals("")){
+                uploadFile = true;
+                return uploadFile;
+            }
+
+            try {
+
+                String host = SharedData.hostFTP;
+                int port = SharedData.portFTP;
+                String username = SharedData.usernameFTP;
+                String password = SharedData.passwordFTP;
+                boolean thisSFTP = SharedData.thisSFTP;
+
+                String basePath = "";
+                String filePath = "" + actID + "/" + photo.getListObject();
+                String filename = photo.getName();
+
+                if (thisSFTP) {
+                    SFTPClient sftpClient = new SFTPClient(host, username, password, port);
+                    sftpClient.connect();
+                    try {
+                        sftpClient.upload(photo.getCurrentPhotoPath(), "foto/" + filePath, photo.getName());
+                        uploadFile = true;
+                    } catch (Exception e) {
+                        uploadFile = false;
+                    } finally {
+                        sftpClient.disconnect();
+                    }
+                } else {
+                    InputStream input = new FileInputStream(new File(photo.getCurrentPhotoPath()));
+                    uploadFile = FtpUtil.uploadFile(host, port, username, password, basePath, filePath, filename, input);
+                }
+            } catch (Exception e) {
+                uploadFile = false;
+            }
+            return uploadFile;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            mDialog = new ProgressDialog(mContext);
+            mDialog.setMessage(mContext.getResources().getString(R.string.wait_ftp));
+            mDialog.setCancelable(false);
+            mDialog.show();
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            mDialog.setMessage(String.format(mContext.getResources().getString(R.string.send_ftp), values[1], values[0]));
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            if (mDialog != null && mDialog.isShowing()) {
+                mDialog.dismiss();
+            }
+
+            if (error) {
+                Toast.makeText(mContext, R.string.error_ftp, Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(mContext, R.string.ok_ftp, Toast.LENGTH_LONG).show();
+                setResult(RESULT_OK);
+                finish();
+            }
+        }
+    }
+
 }
 

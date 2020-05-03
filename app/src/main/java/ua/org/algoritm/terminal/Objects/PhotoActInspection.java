@@ -3,13 +3,23 @@ package ua.org.algoritm.terminal.Objects;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 
 public class PhotoActInspection {
+    @Expose
     private String actID;
+
+    @Expose
     private String listObject;
+    @Expose
     private String objectID;
 
+    @Expose
     private String name;
+
+    @Expose
     private String currentPhotoPath;
     private String currentPhotoPathFTP;
 

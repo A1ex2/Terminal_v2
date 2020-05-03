@@ -1,8 +1,15 @@
 package ua.org.algoritm.terminal.Objects;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 public class Inspection {
+    @Expose
     private String ID;
+
     private String name;
+
+    @Expose
     private boolean performed;
 
     public Inspection() {
