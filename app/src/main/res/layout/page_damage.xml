@@ -20,14 +20,78 @@
     </androidx.recyclerview.widget.RecyclerView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabDetail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="40dp"
+        android:layout_marginBottom="170dp"
+        android:src="@drawable/add"
+        android:tint="#ffff"
+        app:backgroundTint="@color/colorAccent"
+        app:borderWidth="1dp"
+        app:elevation="10dp"
+        app:fabSize="mini"
+        app:layout_anchor="@id/list_equipment"
+        app:layout_anchorGravity="bottom|end"
+        app:rippleColor="#ffff" />
+
+    <TextView
+        android:id="@+id/textDetail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="100dp"
+        android:layout_marginBottom="180dp"
+        android:background="@color/colorAccent"
+        android:text="  Деталь  "
+        android:textColor="#ffff"
+        android:textAlignment="center"
+        android:textStyle="bold"
+        app:layout_anchor="@id/list_equipment"
+        app:layout_anchorGravity="bottom|end">
+
+    </TextView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabOther"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="40dp"
+        android:layout_marginBottom="110dp"
+        android:src="@drawable/add"
+        android:tint="#ffff"
+        app:backgroundTint="@color/colorAccent"
+        app:borderWidth="1dp"
+        app:elevation="10dp"
+        app:fabSize="mini"
+        app:layout_anchor="@id/list_equipment"
+        app:layout_anchorGravity="bottom|end"
+        app:rippleColor="#ffff" />
+
+    <TextView
+        android:id="@+id/textOther"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="100dp"
+        android:layout_marginBottom="120dp"
+        android:background="@color/colorAccent"
+        android:textColor="#ffff"
+        android:text="  Другое  "
+        android:textAlignment="center"
+        android:textStyle="bold"
+        app:layout_anchor="@id/list_equipment"
+        app:layout_anchorGravity="bottom|end">
+
+    </TextView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addDamage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="30dp"
-        app:layout_anchor="@id/list_equipment"
-        app:layout_anchorGravity="bottom|end"
+        android:src="@drawable/add"
         app:borderWidth="1dp"
         app:elevation="10dp"
-        android:src="@drawable/add" />
+        app:layout_anchor="@id/list_equipment"
+        app:layout_anchorGravity="bottom|end" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

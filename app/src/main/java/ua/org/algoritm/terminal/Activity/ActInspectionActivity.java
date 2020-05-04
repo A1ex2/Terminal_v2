@@ -78,6 +78,12 @@ public class ActInspectionActivity extends AppCompatActivity {
     private TabHost tabHost;
 
     private FloatingActionButton addDamage;
+    private FloatingActionButton fabDetail;
+    private FloatingActionButton fabOther;
+
+    private TextView textDetail;
+    private TextView textOther;
+
     private boolean isRotate = false;
 
     private String mCurrentPhotoPath;
@@ -126,12 +132,27 @@ public class ActInspectionActivity extends AppCompatActivity {
         itemSector = findViewById(R.id.itemSector);
         itemRow = findViewById(R.id.itemRow);
 
+        textDetail = findViewById(R.id.textDetail);
+        textOther = findViewById(R.id.textOther);
+
         addDamage = findViewById(R.id.addDamage);
+        fabDetail = findViewById(R.id.fabDetail);
+        fabOther = findViewById(R.id.fabOther);
+
+        ViewAnimation.init(fabDetail, textDetail);
+        ViewAnimation.init(fabOther, textOther);
+
         addDamage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                isRotate = !isRotate;
-                isRotate = ViewAnimation.rotateFab(v, isRotate);
+                isRotate = ViewAnimation.rotateFab(v, !isRotate);
+                if(isRotate){
+                    ViewAnimation.showIn(fabDetail, textDetail);
+                    ViewAnimation.showIn(fabOther, textOther);
+                }else{
+                    ViewAnimation.showOut(fabDetail, textDetail);
+                    ViewAnimation.showOut(fabOther, textOther);
+                }
             }
         });
 
