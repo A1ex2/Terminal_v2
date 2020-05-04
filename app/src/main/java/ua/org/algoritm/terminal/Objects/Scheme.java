@@ -1,5 +1,7 @@
 package ua.org.algoritm.terminal.Objects;
 
+import java.util.ArrayList;
+
 public class Scheme {
     private String ID;
     private String Name;
@@ -8,6 +10,8 @@ public class Scheme {
     private String ViewSchemesID;
     private String ViewSchemes;
     private String SVG;
+
+    private ArrayList<Detail> details = new ArrayList<>();
 
     public Scheme() {
     }
@@ -66,5 +70,13 @@ public class Scheme {
 
     public void setSVG(String SVG) {
         this.SVG = SVG;
+    }
+
+    public ArrayList<Detail> getDetails() {
+        return details;
+    }
+
+    public void setDetails(ArrayList<Detail> details) {
+        this.details = details;
     }
 }

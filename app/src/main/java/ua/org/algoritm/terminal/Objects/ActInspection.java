@@ -45,6 +45,10 @@ public class ActInspection {
     @Expose
     private ArrayList<TypesPhoto> TypesPhotos = new ArrayList<>();
 
+    @Expose
+    private String TypeMachineID;
+    private String TypeMachine;
+
     public ActInspection() {
     }
 
@@ -246,5 +250,21 @@ public class ActInspection {
 
     public void setTypesPhotos(ArrayList<TypesPhoto> typesPhotos) {
         TypesPhotos = typesPhotos;
+    }
+
+    public String getTypeMachineID() {
+        return TypeMachineID;
+    }
+
+    public void setTypeMachineID(String typeMachineID) {
+        TypeMachineID = typeMachineID;
+    }
+
+    public String getTypeMachine() {
+        return TypeMachine;
+    }
+
+    public void setTypeMachine(String typeMachine) {
+        TypeMachine = typeMachine;
     }
 }

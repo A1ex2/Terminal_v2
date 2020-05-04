@@ -62,6 +62,8 @@ import ua.org.algoritm.terminal.Service.IntentServiceDataBase;
 import ua.org.algoritm.terminal.ViewAnimation;
 
 public class ActInspectionActivity extends AppCompatActivity {
+    public static final int REQUEST_CODE_UPDATE = 20;
+
     public static final int REQUEST_TAKE_PHOTO_Equipment = 1;
     public static final int REQUEST_TAKE_PHOTO_TypesPhoto = 2;
     public static final int REQUEST_UPDATE_PHOTO_TypesPhoto = 3;
@@ -153,6 +155,22 @@ public class ActInspectionActivity extends AppCompatActivity {
                     ViewAnimation.showOut(fabDetail, textDetail);
                     ViewAnimation.showOut(fabOther, textOther);
                 }
+            }
+        });
+
+        fabDetail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), DamageDetailActivity.class);
+                intent.putExtra("actInspectionID", mActInspection.getID());
+                startActivityForResult(intent, REQUEST_CODE_UPDATE);
+            }
+        });
+
+        fabOther.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
 

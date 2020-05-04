@@ -10,6 +10,7 @@ import java.util.Date;
 import ua.org.algoritm.terminal.DataBase.SharedData;
 import ua.org.algoritm.terminal.Objects.ActInspection;
 import ua.org.algoritm.terminal.Objects.CarDataOutfit;
+import ua.org.algoritm.terminal.Objects.Detail;
 import ua.org.algoritm.terminal.Objects.Equipment;
 import ua.org.algoritm.terminal.Objects.Inspection;
 import ua.org.algoritm.terminal.Objects.OperationOutfits;
@@ -129,6 +130,9 @@ public class JsonParser {
             actInspection.setSector(actJSON.getString("Sector"));
             actInspection.setRow(actJSON.getString("Row"));
 
+            actInspection.setTypeMachineID(actJSON.getString("TypeMachineID"));
+            actInspection.setTypeMachine(actJSON.getString("TypeMachine"));
+
             JSONArray inspectionsJSON = new JSONArray(actJSON.getString("Inspections"));
             ArrayList<Inspection> mInspectionsList = new ArrayList<>();
             for (int j = 0; j < inspectionsJSON.length(); j++) {
@@ -184,11 +188,27 @@ public class JsonParser {
             JSONObject schemeJSON = new JSONObject(mSchemesJSON.get(i).toString());
 
             mScheme.setID(schemeJSON.getString("ID"));
-            mScheme.setID(schemeJSON.getString("Name"));
-            mScheme.setID(schemeJSON.getString("TypeMachineID"));
-            mScheme.setID(schemeJSON.getString("TypeMachine"));
-            mScheme.setID(schemeJSON.getString("ViewSchemesID"));
-            mScheme.setID(schemeJSON.getString("ViewSchemes"));
+            mScheme.setName(schemeJSON.getString("Name"));
+            mScheme.setTypeMachineID(schemeJSON.getString("TypeMachineID"));
+            mScheme.setTypeMachine(schemeJSON.getString("TypeMachine"));
+            mScheme.setViewSchemesID(schemeJSON.getString("ViewSchemesID"));
+            mScheme.setViewSchemes(schemeJSON.getString("ViewSchemes"));
+            mScheme.setSVG(schemeJSON.getString("SVG"));
+
+            JSONArray mDetailsJSON = new JSONArray(schemeJSON.getString("Details"));
+            ArrayList<Detail> mDetails = new ArrayList<>();
+            for (int j = 0; j < mDetailsJSON.length(); j++) {
+                Detail detail = new Detail();
+
+                JSONObject detailJSON = new JSONObject(mDetailsJSON.get(j).toString());
+
+                detail.setID(detailJSON.getString("ID"));
+                detail.setDetailID(detailJSON.getString("detailID"));
+                detail.setDetailName(detailJSON.getString("detailName"));
+
+                mDetails.add(detail);
+            }
+            mScheme.setDetails(mDetails);
 
             mSchemes.add(mScheme);
         }

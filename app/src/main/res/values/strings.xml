@@ -87,5 +87,9 @@
     <string name="text_photo">Фото</string>
     <string name="text_complete">Комплектация</string>
     <string name="text_damage">Повреждения</string>
+    <string name="text_general_form">Общий вид</string>
+    <string name="text_other">Другое</string>
+    <string name="text_salon">Салон</string>
+    <string name="text_gaskets">Уплотнители</string>
 
 </resources>

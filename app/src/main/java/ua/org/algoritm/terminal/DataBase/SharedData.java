@@ -435,4 +435,18 @@ public class SharedData {
         }
         return mTypesPhoto;
     }
+
+    public static ArrayList<Scheme> getSchemes(ActInspection actInspection) {
+        ArrayList<Scheme> mSchemes = new ArrayList<>();
+
+        for (int i = 0; i < SCHEMES.size(); i++) {
+            Scheme scheme = SCHEMES.get(i);
+
+            if (scheme.getTypeMachineID().equals(actInspection.getTypeMachineID())){
+                mSchemes.add(scheme);
+            }
+        }
+
+        return mSchemes;
+    }
 }
