@@ -89,9 +89,14 @@ public class JsonParser {
         return mOrderOutfits;
     }
 
-    public static ArrayList<ActInspection> getActInspection(String response) throws JSONException {
+    public static ArrayList<ActInspection> getActInspection(String root) throws JSONException {
+
+        JSONObject rootJSON = new JSONObject(root);
+        String actsJSON = rootJSON.getString("Act");
+        String schemesJSON = rootJSON.getString("Schemes");
+
         ArrayList<ActInspection> mActInspection = new ArrayList<>();
-        JSONArray ordersJSON = new JSONArray(response);
+        JSONArray ordersJSON = new JSONArray(actsJSON);
 
         for (int i = 0; i < ordersJSON.length(); i++) {
             ActInspection actInspection = new ActInspection();
