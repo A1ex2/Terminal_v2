@@ -37,8 +37,14 @@ public class SFTPClient {
 
         String path = "";
         for (String dir : absolutePath.split("/")) {
-            if (dir.equals("foto")){
-                path = dir;
+            if (dir.equals("foto")) {
+//                if (false) {
+//                    path = "LocalUser/Developer1C_1/" + dir;
+//                    absolutePath = "LocalUser/Developer1C_1/" + absolutePath;
+//                } else {
+                    path = dir;
+//                }
+
                 continue;
             }
             path = path + "/" + dir;
