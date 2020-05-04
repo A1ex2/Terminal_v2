@@ -190,7 +190,7 @@ public class DamageDetailActivity extends AppCompatActivity {
 
                 for (int j = 0; j < mSchemes.get(i).getDetails().size(); j++) {
                     Detail detail = mSchemes.get(i).getDetails().get(j);
-                    if (detail.getDetailID().equals(ID)){
+                    if (detail.getID().equals(ID)){
                         Toast.makeText(getApplicationContext(), detail.getID() + " - " + detail.getDetailName(), Toast.LENGTH_SHORT).show();
                         break;
                     }
