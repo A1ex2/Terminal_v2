@@ -23,9 +23,12 @@ import android.os.Message;
 import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.ksoap2.SoapFault;
 import org.ksoap2.serialization.SoapObject;
@@ -56,6 +59,7 @@ import ua.org.algoritm.terminal.Objects.PhotoActInspection;
 import ua.org.algoritm.terminal.Objects.TypesPhoto;
 import ua.org.algoritm.terminal.R;
 import ua.org.algoritm.terminal.Service.IntentServiceDataBase;
+import ua.org.algoritm.terminal.ViewAnimation;
 
 public class ActInspectionActivity extends AppCompatActivity {
     public static final int REQUEST_TAKE_PHOTO_Equipment = 1;
@@ -72,6 +76,9 @@ public class ActInspectionActivity extends AppCompatActivity {
     private TextView itemSector;
     private TextView itemRow;
     private TabHost tabHost;
+
+    private FloatingActionButton addDamage;
+    private boolean isRotate = false;
 
     private String mCurrentPhotoPath;
     private Equipment mEquipment;
@@ -118,6 +125,15 @@ public class ActInspectionActivity extends AppCompatActivity {
         itemProductionDate = findViewById(R.id.itemProductionDate);
         itemSector = findViewById(R.id.itemSector);
         itemRow = findViewById(R.id.itemRow);
+
+        addDamage = findViewById(R.id.addDamage);
+        addDamage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isRotate = !isRotate;
+                isRotate = ViewAnimation.rotateFab(v, isRotate);
+            }
+        });
 
         listInspection = findViewById(R.id.list_inspection);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);

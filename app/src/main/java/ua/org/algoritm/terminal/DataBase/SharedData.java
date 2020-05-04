@@ -22,6 +22,7 @@ import ua.org.algoritm.terminal.Objects.OrderOutfit;
 import ua.org.algoritm.terminal.Objects.Photo;
 import ua.org.algoritm.terminal.Objects.PhotoActInspection;
 import ua.org.algoritm.terminal.Objects.Reception;
+import ua.org.algoritm.terminal.Objects.Scheme;
 import ua.org.algoritm.terminal.Objects.Sector;
 import ua.org.algoritm.terminal.Objects.TypesPhoto;
 import ua.org.algoritm.terminal.Objects.User;
@@ -33,6 +34,8 @@ public class SharedData {
     public static ArrayList<Issuance> ISSUANCE = new ArrayList<>();
     public static ArrayList<OrderOutfit> ORDER_OUTFIT = new ArrayList<>();
     public static ArrayList<ActInspection> ACT_INSPECTION = new ArrayList<>();
+    public static ArrayList<Scheme> SCHEMES = new ArrayList<>();
+
     public static MainActivity app;
     public static String LOGIN;
     public static String PASSWORD;

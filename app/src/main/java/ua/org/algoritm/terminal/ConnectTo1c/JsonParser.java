@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Date;
 
+import ua.org.algoritm.terminal.DataBase.SharedData;
 import ua.org.algoritm.terminal.Objects.ActInspection;
 import ua.org.algoritm.terminal.Objects.CarDataOutfit;
 import ua.org.algoritm.terminal.Objects.Equipment;
@@ -14,6 +15,7 @@ import ua.org.algoritm.terminal.Objects.Inspection;
 import ua.org.algoritm.terminal.Objects.OperationOutfits;
 import ua.org.algoritm.terminal.Objects.OrderOutfit;
 import ua.org.algoritm.terminal.Objects.Photo;
+import ua.org.algoritm.terminal.Objects.Scheme;
 import ua.org.algoritm.terminal.Objects.TypesPhoto;
 
 public class JsonParser {
@@ -96,11 +98,11 @@ public class JsonParser {
         String schemesJSON = rootJSON.getString("Schemes");
 
         ArrayList<ActInspection> mActInspection = new ArrayList<>();
-        JSONArray ordersJSON = new JSONArray(actsJSON);
+        JSONArray mActJSON = new JSONArray(actsJSON);
 
-        for (int i = 0; i < ordersJSON.length(); i++) {
+        for (int i = 0; i < mActJSON.length(); i++) {
             ActInspection actInspection = new ActInspection();
-            JSONObject actJSON = new JSONObject(ordersJSON.get(i).toString());
+            JSONObject actJSON = new JSONObject(mActJSON.get(i).toString());
 
             actInspection.setID(actJSON.getString("ID"));
             actInspection.setDescription(actJSON.getString("Description"));
@@ -173,6 +175,26 @@ public class JsonParser {
 
             mActInspection.add(actInspection);
         }
+
+        ArrayList<Scheme> mSchemes = new ArrayList<>();
+        JSONArray mSchemesJSON = new JSONArray(schemesJSON);
+
+        for (int i = 0; i < mSchemesJSON.length(); i++) {
+            Scheme mScheme = new Scheme();
+            JSONObject schemeJSON = new JSONObject(mSchemesJSON.get(i).toString());
+
+            mScheme.setID(schemeJSON.getString("ID"));
+            mScheme.setID(schemeJSON.getString("Name"));
+            mScheme.setID(schemeJSON.getString("TypeMachineID"));
+            mScheme.setID(schemeJSON.getString("TypeMachine"));
+            mScheme.setID(schemeJSON.getString("ViewSchemesID"));
+            mScheme.setID(schemeJSON.getString("ViewSchemes"));
+
+            mSchemes.add(mScheme);
+        }
+
+        SharedData.SCHEMES = mSchemes;
+
         return mActInspection;
     }
 }
