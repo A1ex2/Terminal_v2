@@ -9,7 +9,13 @@ public class TypeDamagePhoto {
     private String ID;
     private String name;
 
-  public TypeDamagePhoto() {
+    @Expose
+    private String listObject = "Photo";
+
+    @Expose
+    private ArrayList<PhotoActInspection> mPhotoActInspections = new ArrayList<>();
+
+    public TypeDamagePhoto() {
     }
 
     public String getID() {
@@ -28,9 +34,19 @@ public class TypeDamagePhoto {
         this.name = name;
     }
 
-    @Override
-    public String toString() {
-        return "" + name;
+    public String getListObject() {
+        return listObject;
     }
 
+    public void setListObject(String listObject) {
+        this.listObject = listObject;
+    }
+
+    public ArrayList<PhotoActInspection> getPhotoActInspections() {
+        return mPhotoActInspections;
+    }
+
+    public void setPhotoActInspections(ArrayList<PhotoActInspection> photoActInspections) {
+        mPhotoActInspections = photoActInspections;
+    }
 }
