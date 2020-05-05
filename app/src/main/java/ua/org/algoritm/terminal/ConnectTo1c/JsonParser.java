@@ -10,13 +10,17 @@ import java.util.Date;
 import ua.org.algoritm.terminal.DataBase.SharedData;
 import ua.org.algoritm.terminal.Objects.ActInspection;
 import ua.org.algoritm.terminal.Objects.CarDataOutfit;
+import ua.org.algoritm.terminal.Objects.ClassificationDamage;
+import ua.org.algoritm.terminal.Objects.DegreesDamage;
 import ua.org.algoritm.terminal.Objects.Detail;
 import ua.org.algoritm.terminal.Objects.Equipment;
 import ua.org.algoritm.terminal.Objects.Inspection;
 import ua.org.algoritm.terminal.Objects.OperationOutfits;
 import ua.org.algoritm.terminal.Objects.OrderOutfit;
+import ua.org.algoritm.terminal.Objects.OriginDamage;
 import ua.org.algoritm.terminal.Objects.Photo;
 import ua.org.algoritm.terminal.Objects.Scheme;
+import ua.org.algoritm.terminal.Objects.TypeDamage;
 import ua.org.algoritm.terminal.Objects.TypesPhoto;
 
 public class JsonParser {
@@ -97,6 +101,11 @@ public class JsonParser {
         JSONObject rootJSON = new JSONObject(root);
         String actsJSON = rootJSON.getString("Act");
         String schemesJSON = rootJSON.getString("Schemes");
+
+        String typesDamageJSON = rootJSON.getString("TypesDamage");
+        String degreesDamageJSON = rootJSON.getString("DegreesDamage");
+        String classificationDamageJSON = rootJSON.getString("ClassificationDamage");
+        String originDamageJSON = rootJSON.getString("OriginDamage");
 
         ArrayList<ActInspection> mActInspection = new ArrayList<>();
         JSONArray mActJSON = new JSONArray(actsJSON);
@@ -215,6 +224,60 @@ public class JsonParser {
         }
 
         SharedData.SCHEMES = mSchemes;
+
+        ArrayList<TypeDamage> mTypesDamages = new ArrayList<>();
+        JSONArray mTypesDamagesJSON = new JSONArray(typesDamageJSON);
+        for (int i = 0; i < mTypesDamagesJSON.length(); i++) {
+            TypeDamage typeDamage = new TypeDamage();
+
+            JSONObject typeDamageJSON = new JSONObject(mTypesDamagesJSON.get(i).toString());
+            typeDamage.setID(typeDamageJSON.getString("ID"));
+            typeDamage.setName(typeDamageJSON.getString("name"));
+
+            mTypesDamages.add(typeDamage);
+
+        }
+        SharedData.TypesDamages = mTypesDamages;
+
+        ArrayList<DegreesDamage> mDegreesDamages = new ArrayList<>();
+        JSONArray mDegreesDamagesJSON = new JSONArray(degreesDamageJSON);
+        for (int i = 0; i < mDegreesDamagesJSON.length(); i++) {
+            DegreesDamage degreesDamage = new DegreesDamage();
+
+            JSONObject typeDamageJSON = new JSONObject(mDegreesDamagesJSON.get(i).toString());
+            degreesDamage.setID(typeDamageJSON.getString("ID"));
+            degreesDamage.setName(typeDamageJSON.getString("name"));
+
+            mDegreesDamages.add(degreesDamage);
+
+        }
+        SharedData.DegreesDamages = mDegreesDamages;
+
+        ArrayList<ClassificationDamage> mClassificationDamage = new ArrayList<>();
+        JSONArray mClassificationDamageJSON = new JSONArray(classificationDamageJSON);
+        for (int i = 0; i < mClassificationDamageJSON.length(); i++) {
+            ClassificationDamage classificationDamage = new ClassificationDamage();
+
+            JSONObject typeDamageJSON = new JSONObject(mClassificationDamageJSON.get(i).toString());
+            classificationDamage.setID(typeDamageJSON.getString("ID"));
+            classificationDamage.setName(typeDamageJSON.getString("name"));
+
+            mClassificationDamage.add(classificationDamage);
+        }
+        SharedData.ClassificationDamages = mClassificationDamage;
+
+        ArrayList<OriginDamage> mOriginDamage = new ArrayList<>();
+        JSONArray mOriginDamageJSON = new JSONArray(originDamageJSON);
+        for (int i = 0; i < mOriginDamageJSON.length(); i++) {
+            OriginDamage originDamage = new OriginDamage();
+
+            JSONObject typeDamageJSON = new JSONObject(mOriginDamageJSON.get(i).toString());
+            originDamage.setID(typeDamageJSON.getString("ID"));
+            originDamage.setName(typeDamageJSON.getString("name"));
+
+            mOriginDamage.add(originDamage);
+        }
+        SharedData.OriginDamages = mOriginDamage;
 
         return mActInspection;
     }

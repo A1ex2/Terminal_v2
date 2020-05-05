@@ -16,14 +16,18 @@ import ua.org.algoritm.terminal.Objects.ActInspection;
 import ua.org.algoritm.terminal.Objects.CarData;
 import ua.org.algoritm.terminal.Objects.CarDataIssuance;
 import ua.org.algoritm.terminal.Objects.CarDataOutfit;
+import ua.org.algoritm.terminal.Objects.ClassificationDamage;
+import ua.org.algoritm.terminal.Objects.DegreesDamage;
 import ua.org.algoritm.terminal.Objects.Equipment;
 import ua.org.algoritm.terminal.Objects.Issuance;
 import ua.org.algoritm.terminal.Objects.OrderOutfit;
+import ua.org.algoritm.terminal.Objects.OriginDamage;
 import ua.org.algoritm.terminal.Objects.Photo;
 import ua.org.algoritm.terminal.Objects.PhotoActInspection;
 import ua.org.algoritm.terminal.Objects.Reception;
 import ua.org.algoritm.terminal.Objects.Scheme;
 import ua.org.algoritm.terminal.Objects.Sector;
+import ua.org.algoritm.terminal.Objects.TypeDamage;
 import ua.org.algoritm.terminal.Objects.TypesPhoto;
 import ua.org.algoritm.terminal.Objects.User;
 
@@ -35,6 +39,11 @@ public class SharedData {
     public static ArrayList<OrderOutfit> ORDER_OUTFIT = new ArrayList<>();
     public static ArrayList<ActInspection> ACT_INSPECTION = new ArrayList<>();
     public static ArrayList<Scheme> SCHEMES = new ArrayList<>();
+
+    public static ArrayList<TypeDamage> TypesDamages = new ArrayList<>();
+    public static ArrayList<DegreesDamage> DegreesDamages = new ArrayList<>();
+    public static ArrayList<ClassificationDamage> ClassificationDamages = new ArrayList<>();
+    public static ArrayList<OriginDamage> OriginDamages = new ArrayList<>();
 
     public static MainActivity app;
     public static String LOGIN;

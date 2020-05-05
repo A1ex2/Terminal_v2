@@ -95,15 +95,23 @@
     <string name="part">Запчасть</string>
     <string name="select_part">Выбрать запчасть</string>
 
-    <string name="degrees_damage">Тип повреждения</string>
-    <string name="select_degrees_damage">Выбрать тип повреждения</string>
+    <string name="types_damage">Тип повреждения</string>
+    <string name="select_types_damage">Выбрать тип повреждения</string>
 
-    <string name="classification_damage">Степень повреждения</string>
-    <string name="select_classification_damage">Выбрать степень повреждения</string>
+    <string name="degrees_damage">Степень повреждения</string>
+    <string name="select_degrees_damage">Выбрать степень повреждения</string>
+
+    <string name="classification_damage">Класификация</string>
+    <string name="select_classification_damage">Выбрать класификацию</string>
 
     <string name="detail_damage">Детали степени повреждения</string>
 
-    <string name="origin_damage">Класификация</string>
-    <string name="select_origin_damage">Выбрать класификацию</string>
+    <string name="origin_damage">Происхождение</string>
+    <string name="select_origin_damage">Выбрать происхождение</string>
+
+    <string name="width">Ширина (мм)</string>
+    <string name="height">Высота (мм)</string>
+
+    <string name="comment">Комментарий</string>
 
 </resources>
