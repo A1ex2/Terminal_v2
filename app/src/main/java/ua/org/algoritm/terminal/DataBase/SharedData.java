@@ -28,6 +28,7 @@ import ua.org.algoritm.terminal.Objects.Reception;
 import ua.org.algoritm.terminal.Objects.Scheme;
 import ua.org.algoritm.terminal.Objects.Sector;
 import ua.org.algoritm.terminal.Objects.TypeDamage;
+import ua.org.algoritm.terminal.Objects.TypeDamagePhoto;
 import ua.org.algoritm.terminal.Objects.TypesPhoto;
 import ua.org.algoritm.terminal.Objects.User;
 
@@ -44,6 +45,7 @@ public class SharedData {
     public static ArrayList<DegreesDamage> DegreesDamages = new ArrayList<>();
     public static ArrayList<ClassificationDamage> ClassificationDamages = new ArrayList<>();
     public static ArrayList<OriginDamage> OriginDamages = new ArrayList<>();
+    public static ArrayList<TypeDamagePhoto> TypeDamagePhotos = new ArrayList<>();
 
     public static MainActivity app;
     public static String LOGIN;

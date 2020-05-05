@@ -21,6 +21,7 @@ import ua.org.algoritm.terminal.Objects.OriginDamage;
 import ua.org.algoritm.terminal.Objects.Photo;
 import ua.org.algoritm.terminal.Objects.Scheme;
 import ua.org.algoritm.terminal.Objects.TypeDamage;
+import ua.org.algoritm.terminal.Objects.TypeDamagePhoto;
 import ua.org.algoritm.terminal.Objects.TypesPhoto;
 
 public class JsonParser {
@@ -106,6 +107,7 @@ public class JsonParser {
         String degreesDamageJSON = rootJSON.getString("DegreesDamage");
         String classificationDamageJSON = rootJSON.getString("ClassificationDamage");
         String originDamageJSON = rootJSON.getString("OriginDamage");
+        String typeDamagePhotoJSON = rootJSON.getString("TypesDamagePhotos");
 
         ArrayList<ActInspection> mActInspection = new ArrayList<>();
         JSONArray mActJSON = new JSONArray(actsJSON);
@@ -278,6 +280,19 @@ public class JsonParser {
             mOriginDamage.add(originDamage);
         }
         SharedData.OriginDamages = mOriginDamage;
+
+        ArrayList<TypeDamagePhoto> mTypeDamagePhoto = new ArrayList<>();
+        JSONArray mTypeDamagePhotoJSON = new JSONArray(typesDamageJSON);
+        for (int i = 0; i < mTypeDamagePhotoJSON.length(); i++) {
+            TypeDamagePhoto typeDamagePhoto = new TypeDamagePhoto();
+
+            JSONObject typeDamageJSON = new JSONObject(mTypeDamagePhotoJSON.get(i).toString());
+            typeDamagePhoto.setID(typeDamageJSON.getString("ID"));
+            typeDamagePhoto.setName(typeDamageJSON.getString("name"));
+
+            mTypeDamagePhoto.add(typeDamagePhoto);
+        }
+        SharedData.TypeDamagePhotos = mTypeDamagePhoto;
 
         return mActInspection;
     }
