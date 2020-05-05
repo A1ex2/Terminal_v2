@@ -447,6 +447,28 @@ public class SharedData {
         return mTypesPhoto;
     }
 
+    public static TypeDamagePhoto getTypeDamagePhoto(String actInspectionID, String detailID, String typesPhotoID) {
+        TypeDamagePhoto mTypesPhoto = new TypeDamagePhoto();
+
+        for (int i = 0; i < ACT_INSPECTION.size(); i++) {
+            if (ACT_INSPECTION.get(i).getID().equals(actInspectionID)){
+
+                for (int j = 0; j < ACT_INSPECTION.get(i).getDamages().size(); j++) {
+                    if (ACT_INSPECTION.get(i).getDamages().get(j).getDetail().getID().equals(detailID)){
+
+                        for (int k = 0; k < ACT_INSPECTION.get(i).getDamages().get(j).getTypeDamagePhoto().size(); k++) {
+                            if (ACT_INSPECTION.get(i).getDamages().get(j).getTypeDamagePhoto().get(k).getID().equals(typesPhotoID)){
+                                mTypesPhoto = ACT_INSPECTION.get(i).getDamages().get(j).getTypeDamagePhoto().get(k);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return mTypesPhoto;
+    }
+
     public static ArrayList<Scheme> getSchemes(ActInspection actInspection) {
         ArrayList<Scheme> mSchemes = new ArrayList<>();
 

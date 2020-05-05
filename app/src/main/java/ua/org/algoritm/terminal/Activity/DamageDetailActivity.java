@@ -126,6 +126,10 @@ public class DamageDetailActivity extends AppCompatActivity {
             }
         }
 
+        if (newDamage){
+            actInspection.getDamages().add(mDamage);
+        }
+
         for (int i = 0; i < mSchemes.size(); i++) {
             addDetail(mSchemes.get(i).getDetails());
         }
@@ -285,7 +289,7 @@ public class DamageDetailActivity extends AppCompatActivity {
                 mDamage.setHeightDamage(height.getText().toString());
 
                 if (newDamage) {
-                    actInspection.getDamages().add(mDamage);
+//                    actInspection.getDamages().add(mDamage);
                 } else {
                     if (mDamage.getDetail() == null) {
                         for (int i = 0; i < actInspection.getDamages().size(); i++) {
@@ -304,7 +308,6 @@ public class DamageDetailActivity extends AppCompatActivity {
                             }
                         }
                     }
-
                 }
 
 //                Toast.makeText(getApplicationContext(), R.string.saveCB, Toast.LENGTH_LONG).show();
@@ -313,6 +316,10 @@ public class DamageDetailActivity extends AppCompatActivity {
                 return true;
 
             case R.id.butt_Cancel:
+
+                if (newDamage){
+                    actInspection.getDamages().remove(mDamage);
+                }
 
                 finish();
                 return true;
@@ -327,8 +334,26 @@ public class DamageDetailActivity extends AppCompatActivity {
             mAdapterTypesPhoto.setActionListener(new RecyclerAdapterTypesDamagePhoto.ActionListener() {
                 @Override
                 public void onClicViewPhotos(TypeDamagePhoto typesPhoto) {
-                    Intent i = new Intent(getApplicationContext(), ListActPhoto.class);
+                    if (mDamage.getDetail() == null) {
+                        String message = "Укажите деталь!";
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(DamageDetailActivity.this);
+                        builder.setMessage(message)
+                                .setCancelable(true)
+                                .setPositiveButton(getString(R.string.butt_OK), new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+
+                                    }
+                                });
+                        AlertDialog alert = builder.create();
+                        alert.show();
+
+                        return;
+                    }
+
+                    Intent i = new Intent(getApplicationContext(), ListActPhotoDamage.class);
                     i.putExtra("actInspectionID", actInspection.getID());
+                    i.putExtra("detailID", mDamage.getDetail().getID());
                     i.putExtra("typesPhotoID", typesPhoto.getID());
                     startActivityForResult(i, REQUEST_UPDATE_PHOTO_TypesPhoto);
                 }
