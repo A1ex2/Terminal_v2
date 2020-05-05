@@ -1,8 +1,11 @@
 package ua.org.algoritm.terminal.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,8 +41,11 @@ public class RecyclerAdapterEquipment extends RecyclerView.Adapter<RecyclerAdapt
 
     public interface ActionListener {
         void onClicViewPhoto(Equipment equipment);
+
         void onClicBtnAdd(Equipment equipment);
+
         void onClicBtnSub(Equipment equipment);
+
         void onClicBtnEqually(Equipment equipment);
     }
 
@@ -123,13 +129,13 @@ public class RecyclerAdapterEquipment extends RecyclerView.Adapter<RecyclerAdapt
             setPic(equipment.getPhotoActInspection().getCurrentPhotoPath());
             description.setText(equipment.getEquipment());
             quantityPlan.setText(String.valueOf(equipment.getQuantityPlan()));
-            if (equipment.getQuantityFact() != 0){
+//            if (equipment.getQuantityFact() != 0) {
                 quantityFact.setText(String.valueOf(equipment.getQuantityFact()));
-            }
+//            }
         }
 
         private void setPic(String mCurrentEquipmentPath) {
-            if (mCurrentEquipmentPath.equals("")){
+            if (mCurrentEquipmentPath.equals("")) {
                 return;
             }
             // Get the dimensions of the View
@@ -144,7 +150,7 @@ public class RecyclerAdapterEquipment extends RecyclerView.Adapter<RecyclerAdapt
             int photoH = bmOptions.outHeight;
 
             // Determine how much to scale down the image
-            int scaleFactor = Math.min(photoW/targetW, photoH/targetH);
+            int scaleFactor = Math.min(photoW / targetW, photoH / targetH);
 
             // Decode the image file into a Bitmap sized to fill the View
             bmOptions.inJustDecodeBounds = false;

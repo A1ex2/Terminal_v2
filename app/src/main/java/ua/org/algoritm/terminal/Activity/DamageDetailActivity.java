@@ -7,6 +7,8 @@ import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 
 import android.graphics.Bitmap;
@@ -34,7 +36,6 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import ua.org.algoritm.terminal.Adapters.RecyclerAdapterTypesDamagePhoto;
-import ua.org.algoritm.terminal.Adapters.RecyclerAdapterTypesPhoto;
 import ua.org.algoritm.terminal.DataBase.SharedData;
 import ua.org.algoritm.terminal.Objects.ActInspection;
 import ua.org.algoritm.terminal.Objects.ClassificationDamage;
@@ -45,7 +46,6 @@ import ua.org.algoritm.terminal.Objects.OriginDamage;
 import ua.org.algoritm.terminal.Objects.Scheme;
 import ua.org.algoritm.terminal.Objects.TypeDamage;
 import ua.org.algoritm.terminal.Objects.TypeDamagePhoto;
-import ua.org.algoritm.terminal.Objects.TypesPhoto;
 import ua.org.algoritm.terminal.R;
 
 public class DamageDetailActivity extends AppCompatActivity {
@@ -62,6 +62,7 @@ public class DamageDetailActivity extends AppCompatActivity {
 
     private ActInspection actInspection;
     private Damage mDamage;
+    private boolean newDamage = true;
 
     private ArrayList<Scheme> mSchemes = new ArrayList<>();
     private ArrayList<Detail> details = new ArrayList<>();
@@ -98,8 +99,30 @@ public class DamageDetailActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         actInspection = SharedData.getActInspection(intent.getStringExtra("actInspectionID"));
+        String idDamage = intent.getStringExtra("idDamage");
         mSchemes = SharedData.getSchemes(actInspection);
         mDamage = new Damage();
+        if (!idDamage.equals("")) {
+            if (idDamage.equals("null")) {
+                for (int i = 0; i < actInspection.getDamages().size(); i++) {
+                    if (actInspection.getDamages().get(i).getDetail() == null) {
+//                        mDamage = actInspection.getDamages().get(i);
+                        mDamage.copyDamage(actInspection.getDamages().get(i));
+                        newDamage = false;
+                        break;
+                    }
+                }
+            } else {
+                for (int i = 0; i < actInspection.getDamages().size(); i++) {
+                    if (idDamage.equals(actInspection.getDamages().get(i).getDetail().getDetailID())) {
+//                        mDamage = actInspection.getDamages().get(i);
+                        mDamage.copyDamage(actInspection.getDamages().get(i));
+                        newDamage = false;
+                        break;
+                    }
+                }
+            }
+        }
 
         for (int i = 0; i < mSchemes.size(); i++) {
             addDetail(mSchemes.get(i).getDetails());
@@ -213,6 +236,18 @@ public class DamageDetailActivity extends AppCompatActivity {
         listTypesPhoto.setLayoutManager(layoutManager3);
 
         updateListTypesPhoto();
+
+        if (!newDamage){
+            itemPart.setText(mDamage.getDetail() == null ? "" : mDamage.getDetail().toString() );
+            itemTypesDamage.setText(mDamage.getTypeDamage() == null ? "" : mDamage.getTypeDamage().toString() );
+            itemDegreesDamage.setText(mDamage.getDegreesDamage() == null ? "" : mDamage.getDegreesDamage().toString() );
+            detailDamage.setText(mDamage.getDetailDamage());
+            itemClassificationDamage.setText(mDamage.getClassificationDamage() == null ? "" : mDamage.getClassificationDamage().toString() );
+            itemOriginDamage.setText(mDamage.getOriginDamage() == null ? "" : mDamage.getOriginDamage().toString() );
+            width.setText(mDamage.getWidthDamage());
+            height.setText(mDamage.getHeightDamage());
+            comment.setText(mDamage.getCommentDamage());
+        }
     }
 
     @Override
@@ -225,11 +260,50 @@ public class DamageDetailActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.butt_OK:
+                if (mDamage.getDetail() == null) {
+                    String message = "Укажите деталь!";
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setMessage(message)
+                            .setCancelable(true)
+                            .setPositiveButton(getString(R.string.butt_OK), new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+
+                                }
+                            });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+
+                    return true;
+                }
+
                 mDamage.setDetailDamage(detailDamage.getText().toString());
                 mDamage.setCommentDamage(comment.getText().toString());
                 mDamage.setWidthDamage(width.getText().toString());
                 mDamage.setHeightDamage(height.getText().toString());
-                actInspection.getDamages().add(mDamage);
+
+                if (newDamage) {
+                    actInspection.getDamages().add(mDamage);
+                } else {
+                    if (mDamage.getDetail() == null) {
+                        for (int i = 0; i < actInspection.getDamages().size(); i++) {
+                            if (actInspection.getDamages().get(i).getDetail() == null) {
+
+                                actInspection.getDamages().get(i).copyDamage(mDamage);
+                                break;
+                            }
+                        }
+                    } else {
+                        for (int i = 0; i < actInspection.getDamages().size(); i++) {
+                            if (mDamage.getDetail().getDetailID().equals(actInspection.getDamages().get(i).getDetail().getDetailID())) {
+
+                                actInspection.getDamages().get(i).copyDamage(mDamage);
+                                break;
+                            }
+                        }
+                    }
+
+                }
 
 //                Toast.makeText(getApplicationContext(), R.string.saveCB, Toast.LENGTH_LONG).show();
                 setResult(RESULT_OK);

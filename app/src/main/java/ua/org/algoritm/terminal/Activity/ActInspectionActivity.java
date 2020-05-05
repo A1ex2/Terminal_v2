@@ -3,6 +3,7 @@ package ua.org.algoritm.terminal.Activity;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -43,6 +44,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import ua.org.algoritm.terminal.Adapters.RecyclerAdapterDamage;
 import ua.org.algoritm.terminal.Adapters.RecyclerAdapterEquipment;
 import ua.org.algoritm.terminal.Adapters.RecyclerAdapterInspection;
 import ua.org.algoritm.terminal.Adapters.RecyclerAdapterTypesPhoto;
@@ -53,6 +55,7 @@ import ua.org.algoritm.terminal.ConnectTo1c.SOAP_Objects;
 import ua.org.algoritm.terminal.ConnectTo1c.UIManager;
 import ua.org.algoritm.terminal.DataBase.SharedData;
 import ua.org.algoritm.terminal.Objects.ActInspection;
+import ua.org.algoritm.terminal.Objects.Damage;
 import ua.org.algoritm.terminal.Objects.Equipment;
 import ua.org.algoritm.terminal.Objects.Inspection;
 import ua.org.algoritm.terminal.Objects.PhotoActInspection;
@@ -62,7 +65,7 @@ import ua.org.algoritm.terminal.Service.IntentServiceDataBase;
 import ua.org.algoritm.terminal.ViewAnimation;
 
 public class ActInspectionActivity extends AppCompatActivity {
-    public static final int REQUEST_CODE_UPDATE = 20;
+    public static final int REQUEST_CODE_UPDATE_DAMAGE = 20;
 
     public static final int REQUEST_TAKE_PHOTO_Equipment = 1;
     public static final int REQUEST_TAKE_PHOTO_TypesPhoto = 2;
@@ -101,6 +104,9 @@ public class ActInspectionActivity extends AppCompatActivity {
 
     private RecyclerView listTypesPhoto;
     private RecyclerAdapterTypesPhoto mAdapterTypesPhoto;
+
+    private RecyclerView listDamage;
+    private RecyclerAdapterDamage mAdapterDamage;
 
     private ProgressDialog mDialog;
     private SaveTaskPhotoFTP mTaskPhotoFTP;
@@ -147,29 +153,26 @@ public class ActInspectionActivity extends AppCompatActivity {
         addDamage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                isRotate = ViewAnimation.rotateFab(v, !isRotate);
-                if(isRotate){
-                    ViewAnimation.showIn(fabDetail, textDetail);
-                    ViewAnimation.showIn(fabOther, textOther);
-                }else{
-                    ViewAnimation.showOut(fabDetail, textDetail);
-                    ViewAnimation.showOut(fabOther, textOther);
-                }
+                setRotate();
             }
         });
 
         fabDetail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                setRotate();
+
                 Intent intent = new Intent(getApplicationContext(), DamageDetailActivity.class);
                 intent.putExtra("actInspectionID", mActInspection.getID());
-                startActivityForResult(intent, REQUEST_CODE_UPDATE);
+                intent.putExtra("idDamage", "");
+                startActivityForResult(intent, REQUEST_CODE_UPDATE_DAMAGE);
             }
         });
 
         fabOther.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                setRotate();
 
             }
         });
@@ -185,6 +188,10 @@ public class ActInspectionActivity extends AppCompatActivity {
         listTypesPhoto = findViewById(R.id.list_type_photo);
         LinearLayoutManager layoutManager3 = new LinearLayoutManager(this);
         listTypesPhoto.setLayoutManager(layoutManager3);
+
+        listDamage = findViewById(R.id.list_damage);
+        LinearLayoutManager layoutManager4 = new LinearLayoutManager(this);
+        listDamage.setLayoutManager(layoutManager4);
 
         itemForm.setText(mActInspection.getForm());
         itemDatePlan.setText(mActInspection.getInspectionDatePlanString());
@@ -205,6 +212,45 @@ public class ActInspectionActivity extends AppCompatActivity {
         updateListInspections();
         updateListEquipments();
         updateListTypesPhoto();
+        updateListDamage();
+
+        ItemTouchHelper.SimpleCallback itemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                final int fromPos = viewHolder.getAdapterPosition();
+
+//                mDialog = new ProgressDialog(ActInspectionActivity.this);
+//                mDialog.setMessage(getString(R.string.wait));
+//                mDialog.setCancelable(false);
+//                mDialog.show();
+
+                Damage mDamage = mActInspection.getDamages().get(fromPos);
+
+                mActInspection.getDamages().remove(mDamage);
+                updateListDamage();
+//              IntentServiceDataBase.startDeletePhotoActInspection(ActInspectionActivity.this, mPhoto.getCurrentPhotoPath());
+            }
+        };
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemTouchCallback);
+        itemTouchHelper.attachToRecyclerView(listDamage);
+
+    }
+
+    private void setRotate() {
+        isRotate = ViewAnimation.rotateFab(addDamage, !isRotate);
+        if (isRotate) {
+            ViewAnimation.showIn(fabDetail, textDetail);
+            ViewAnimation.showIn(fabOther, textOther);
+        } else {
+            ViewAnimation.showOut(fabDetail, textDetail);
+            ViewAnimation.showOut(fabOther, textOther);
+        }
     }
 
     @Override
@@ -281,6 +327,31 @@ public class ActInspectionActivity extends AppCompatActivity {
         }
     }
 
+    private void updateListDamage() {
+        if (mAdapterDamage == null) {
+            mAdapterDamage = new RecyclerAdapterDamage(this, R.layout.item_damage, mActInspection.getDamages());
+            listDamage.setAdapter(mAdapterDamage);
+            mAdapterDamage.setActionListener(new RecyclerAdapterDamage.ActionListener() {
+                @Override
+                public void onClick(Damage damage) {
+                    Intent intent = new Intent(getApplicationContext(), DamageDetailActivity.class);
+                    intent.putExtra("actInspectionID", mActInspection.getID());
+
+                    if (damage.getDetail() == null) {
+                        intent.putExtra("idDamage", "null");
+                    } else {
+                        intent.putExtra("idDamage", damage.getDetail().getDetailID());
+                    }
+
+                    startActivityForResult(intent, REQUEST_CODE_UPDATE_DAMAGE);
+                }
+            });
+        } else {
+            mAdapterDamage.setDamage(mActInspection.getDamages());
+            mAdapterDamage.notifyDataSetChanged();
+        }
+    }
+
     private void updateListEquipments() {
         if (mAdapterEquipment == null) {
             mAdapterEquipment = new RecyclerAdapterEquipment(this, R.layout.item_equipment, mActInspection.getEquipments());
@@ -312,6 +383,15 @@ public class ActInspectionActivity extends AppCompatActivity {
             });
         } else {
             mAdapterEquipment.notifyDataSetChanged();
+        }
+    }
+
+    private void setQuantityFactEquipments(Equipment equipment) {
+        for (int i = 0; i < mActInspection.getEquipments().size(); i++) {
+            if (mActInspection.getEquipments().get(i).getEquipmentID().equals(equipment.getEquipmentID())) {
+                mActInspection.getEquipments().get(i).setQuantityFact(equipment.getQuantityFact());
+                break;
+            }
         }
     }
 
@@ -422,6 +502,9 @@ public class ActInspectionActivity extends AppCompatActivity {
         } else if (requestCode == REQUEST_UPDATE_PHOTO_TypesPhoto) {
             updateListTypesPhoto();
 
+        } else if (requestCode == REQUEST_CODE_UPDATE_DAMAGE) {
+            updateListDamage();
+
         }
     }
 
@@ -508,6 +591,7 @@ public class ActInspectionActivity extends AppCompatActivity {
             }
         }
     }
+
     private void checkSetAct() {
         Boolean isSaveSuccess = Boolean.parseBoolean(soapParam_Response.getPropertyAsString("Result"));
 
@@ -515,7 +599,7 @@ public class ActInspectionActivity extends AppCompatActivity {
             final ArrayList<PhotoActInspection> photoAll = new ArrayList<>();
 
             for (int i = 0; i < mActInspection.getEquipments().size(); i++) {
-                if (!mActInspection.getEquipments().get(i).getPhotoActInspection().getCurrentPhotoPath().equals("")){
+                if (!mActInspection.getEquipments().get(i).getPhotoActInspection().getCurrentPhotoPath().equals("")) {
                     photoAll.add(mActInspection.getEquipments().get(i).getPhotoActInspection());
                 }
             }
@@ -523,7 +607,7 @@ public class ActInspectionActivity extends AppCompatActivity {
             for (int i = 0; i < mActInspection.getTypesPhotos().size(); i++) {
                 TypesPhoto typesPhoto = mActInspection.getTypesPhotos().get(i);
                 for (int j = 0; j < typesPhoto.getPhotoActInspections().size(); j++) {
-                    if (!typesPhoto.getPhotoActInspections().get(j).getCurrentPhotoPath().equals("")){
+                    if (!typesPhoto.getPhotoActInspections().get(j).getCurrentPhotoPath().equals("")) {
                         photoAll.add(typesPhoto.getPhotoActInspections().get(j));
                     }
                 }
@@ -611,7 +695,7 @@ public class ActInspectionActivity extends AppCompatActivity {
 
         private boolean sendPhoto(PhotoActInspection photo) {
             boolean uploadFile = false;
-            if (!photo.getCurrentPhotoPathFTP().equals("")){
+            if (!photo.getCurrentPhotoPathFTP().equals("")) {
                 uploadFile = true;
                 return uploadFile;
             }

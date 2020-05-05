@@ -6,9 +6,6 @@ import java.util.ArrayList;
 
 public class Damage {
     @Expose
-    private String ID;
-
-    @Expose
     private Detail detail;
 
     @Expose
@@ -24,9 +21,6 @@ public class Damage {
     private OriginDamage mOriginDamage;
 
     @Expose
-    private TypeDamage typeDamage;
-
-    @Expose
     private String detailDamage;
 
     @Expose
@@ -40,6 +34,19 @@ public class Damage {
     private ArrayList<TypeDamagePhoto> TypeDamagePhoto = new ArrayList<>();
 
     public Damage() {
+    }
+
+    public void copyDamage(Damage mDamage) {
+        this.detail = mDamage.getDetail();
+        this.mTypeDamage = mDamage.getTypeDamage();
+        this.mDegreesDamage = mDamage.getDegreesDamage();
+        this.mClassificationDamage = mDamage.getClassificationDamage();
+        this.mOriginDamage = mDamage.getOriginDamage();
+        this.detailDamage = mDamage.getDetailDamage();
+        this.commentDamage = mDamage.getCommentDamage();
+        this.widthDamage = mDamage.getWidthDamage();
+        this.heightDamage = mDamage.getHeightDamage();
+        this.TypeDamagePhoto = mDamage.getTypeDamagePhoto();
     }
 
     public Detail getDetail() {
@@ -104,14 +111,6 @@ public class Damage {
 
     public void setOriginDamage(OriginDamage originDamage) {
         mOriginDamage = originDamage;
-    }
-
-    public String getID() {
-        return ID;
-    }
-
-    public void setID(String ID) {
-        this.ID = ID;
     }
 
     public String getWidthDamage() {
