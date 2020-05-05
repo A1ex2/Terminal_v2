@@ -282,7 +282,7 @@ public class JsonParser {
         SharedData.OriginDamages = mOriginDamage;
 
         ArrayList<TypeDamagePhoto> mTypeDamagePhoto = new ArrayList<>();
-        JSONArray mTypeDamagePhotoJSON = new JSONArray(typesDamageJSON);
+        JSONArray mTypeDamagePhotoJSON = new JSONArray(typeDamagePhotoJSON);
         for (int i = 0; i < mTypeDamagePhotoJSON.length(); i++) {
             TypeDamagePhoto typeDamagePhoto = new TypeDamagePhoto();
 

@@ -4,6 +4,8 @@ import com.google.gson.annotations.Expose;
 
 import java.util.ArrayList;
 
+import ua.org.algoritm.terminal.DataBase.SharedData;
+
 public class Damage {
     @Expose
     private Detail detail;
@@ -34,6 +36,9 @@ public class Damage {
     private ArrayList<TypeDamagePhoto> TypeDamagePhoto = new ArrayList<>();
 
     public Damage() {
+        for (int i = 0; i < SharedData.TypeDamagePhotos.size(); i++) {
+            getTypeDamagePhoto().add(new TypeDamagePhoto(SharedData.TypeDamagePhotos.get(i)));
+        }
     }
 
     public void copyDamage(Damage mDamage) {

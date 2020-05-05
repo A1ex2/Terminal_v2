@@ -43,10 +43,12 @@ import ua.org.algoritm.terminal.Objects.Damage;
 import ua.org.algoritm.terminal.Objects.DegreesDamage;
 import ua.org.algoritm.terminal.Objects.Detail;
 import ua.org.algoritm.terminal.Objects.OriginDamage;
+import ua.org.algoritm.terminal.Objects.PhotoActInspection;
 import ua.org.algoritm.terminal.Objects.Scheme;
 import ua.org.algoritm.terminal.Objects.TypeDamage;
 import ua.org.algoritm.terminal.Objects.TypeDamagePhoto;
 import ua.org.algoritm.terminal.R;
+import ua.org.algoritm.terminal.Service.IntentServiceDataBase;
 
 public class DamageDetailActivity extends AppCompatActivity {
     public static final int REQUEST_SET_DETAIL = 1;
@@ -237,13 +239,13 @@ public class DamageDetailActivity extends AppCompatActivity {
 
         updateListTypesPhoto();
 
-        if (!newDamage){
-            itemPart.setText(mDamage.getDetail() == null ? "" : mDamage.getDetail().toString() );
-            itemTypesDamage.setText(mDamage.getTypeDamage() == null ? "" : mDamage.getTypeDamage().toString() );
-            itemDegreesDamage.setText(mDamage.getDegreesDamage() == null ? "" : mDamage.getDegreesDamage().toString() );
+        if (!newDamage) {
+            itemPart.setText(mDamage.getDetail() == null ? "" : mDamage.getDetail().toString());
+            itemTypesDamage.setText(mDamage.getTypeDamage() == null ? "" : mDamage.getTypeDamage().toString());
+            itemDegreesDamage.setText(mDamage.getDegreesDamage() == null ? "" : mDamage.getDegreesDamage().toString());
             detailDamage.setText(mDamage.getDetailDamage());
-            itemClassificationDamage.setText(mDamage.getClassificationDamage() == null ? "" : mDamage.getClassificationDamage().toString() );
-            itemOriginDamage.setText(mDamage.getOriginDamage() == null ? "" : mDamage.getOriginDamage().toString() );
+            itemClassificationDamage.setText(mDamage.getClassificationDamage() == null ? "" : mDamage.getClassificationDamage().toString());
+            itemOriginDamage.setText(mDamage.getOriginDamage() == null ? "" : mDamage.getOriginDamage().toString());
             width.setText(mDamage.getWidthDamage());
             height.setText(mDamage.getHeightDamage());
             comment.setText(mDamage.getCommentDamage());
@@ -320,23 +322,23 @@ public class DamageDetailActivity extends AppCompatActivity {
 
     private void updateListTypesPhoto() {
         if (mAdapterTypesPhoto == null) {
-//            mAdapterTypesPhoto = new RecyclerAdapterTypesDamagePhoto(this, R.layout.item_photo_act, actInspection.getTypeDamagePhoto());
-//            listTypesPhoto.setAdapter(mAdapterTypesPhoto);
-//            mAdapterTypesPhoto.setActionListener(new RecyclerAdapterTypesDamagePhoto.ActionListener() {
-//                @Override
-//                public void onClicViewPhotos(TypeDamagePhoto typesPhoto) {
-////                    Intent i = new Intent(getApplicationContext(), ListActPhoto.class);
-////                    i.putExtra("actInspectionID", actInspection.getID());
-////                    i.putExtra("typesPhotoID", typesPhoto.getTypePhotoID());
-////                    startActivityForResult(i, REQUEST_UPDATE_PHOTO_TypesPhoto);
-//                }
-//
-//                @Override
-//                public void onClicBtnAdd(TypeDamagePhoto typesPhoto) {
-//                    mTypesPhoto = typesPhoto;
-//                    dispatchTakePictureIntent(REQUEST_TAKE_PHOTO_TypesPhoto);
-//                }
-//            });
+            mAdapterTypesPhoto = new RecyclerAdapterTypesDamagePhoto(this, R.layout.item_photo_act, mDamage.getTypeDamagePhoto());
+            listTypesPhoto.setAdapter(mAdapterTypesPhoto);
+            mAdapterTypesPhoto.setActionListener(new RecyclerAdapterTypesDamagePhoto.ActionListener() {
+                @Override
+                public void onClicViewPhotos(TypeDamagePhoto typesPhoto) {
+                    Intent i = new Intent(getApplicationContext(), ListActPhoto.class);
+                    i.putExtra("actInspectionID", actInspection.getID());
+                    i.putExtra("typesPhotoID", typesPhoto.getID());
+                    startActivityForResult(i, REQUEST_UPDATE_PHOTO_TypesPhoto);
+                }
+
+                @Override
+                public void onClicBtnAdd(TypeDamagePhoto typesPhoto) {
+                    mTypesPhoto = typesPhoto;
+                    dispatchTakePictureIntent(REQUEST_TAKE_PHOTO_TypesPhoto);
+                }
+            });
         } else {
             mAdapterTypesPhoto.notifyDataSetChanged();
         }
@@ -471,6 +473,32 @@ public class DamageDetailActivity extends AppCompatActivity {
                     break;
                 }
             }
+
+        } else if (requestCode == REQUEST_TAKE_PHOTO_TypesPhoto && resultCode == RESULT_OK) {
+
+            String fileName = new File(mCurrentPhotoPath).getName();
+
+            PhotoActInspection photoActInspection = new PhotoActInspection();
+            photoActInspection.setActID(actInspection.getID());
+            photoActInspection.setName(fileName);
+            photoActInspection.setObjectID(mTypesPhoto.getID());
+            photoActInspection.setListObject(mTypesPhoto.getListObject());
+            photoActInspection.setCurrentPhotoPath(mCurrentPhotoPath);
+
+            mTypesPhoto.getPhotoActInspections().add(photoActInspection);
+
+            IntentServiceDataBase.startInsertPhotoActInspection(DamageDetailActivity.this,
+                    actInspection.getID(), mTypesPhoto.getListObject(), mTypesPhoto.getID(), mCurrentPhotoPath);
+
+            decodeFile();
+
+            mCurrentPhotoPath = "";
+            mTypesPhoto = null;
+            updateListTypesPhoto();
+
+        } else if (requestCode == REQUEST_UPDATE_PHOTO_TypesPhoto) {
+            updateListTypesPhoto();
+
         }
     }
 }

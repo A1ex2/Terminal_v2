@@ -18,6 +18,11 @@ public class TypeDamagePhoto {
     public TypeDamagePhoto() {
     }
 
+    public TypeDamagePhoto(TypeDamagePhoto typeDamagePhoto) {
+        this.ID = typeDamagePhoto.getID();
+        this.name = typeDamagePhoto.getName();
+    }
+
     public String getID() {
         return ID;
     }
