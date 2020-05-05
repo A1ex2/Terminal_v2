@@ -10,8 +10,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.Toast;
 
@@ -36,6 +40,7 @@ public class DamageDetailActivity extends AppCompatActivity {
 
     private ActInspection actInspection;
     private ArrayList<Scheme> mSchemes = new ArrayList<>();
+    private ArrayList<Detail> details = new ArrayList<>();
 
     private WebView webViewGeneralForm;
     private WebView webViewDamageSalon;
@@ -43,6 +48,9 @@ public class DamageDetailActivity extends AppCompatActivity {
     private WebView webViewDamageOther;
 
     private String folderSVG;
+
+    AutoCompleteTextView itemPart;
+    ImageView imagePart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +60,16 @@ public class DamageDetailActivity extends AppCompatActivity {
         Intent intent = getIntent();
         actInspection = SharedData.getActInspection(intent.getStringExtra("actInspectionID"));
         mSchemes = SharedData.getSchemes(actInspection);
+
+        itemPart = findViewById(R.id.itemPart);
+
+        imagePart = findViewById(R.id.imagePart);
+        imagePart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                itemPart.showDropDown();
+            }
+        });
 
         folderSVG = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).getPath() + "/svg";
 
@@ -66,6 +84,8 @@ public class DamageDetailActivity extends AppCompatActivity {
             copyFolder("svg");
 
             for (int i = 0; i < mSchemes.size(); i++) {
+                addDetail(mSchemes.get(i).getDetails());
+
                 try {
                     String fileSVG = folderSVG + "/" + mSchemes.get(i).getName() + ".svg";
                     FileWriter writer = new FileWriter(fileSVG);
@@ -107,6 +127,46 @@ public class DamageDetailActivity extends AppCompatActivity {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+
+        setDetailAdapter();
+
+    }
+
+    private void addDetail(ArrayList<Detail> addDetails) {
+        for (int i = 0; i < addDetails.size(); i++) {
+            Detail detailAdd = addDetails.get(i);
+            boolean add = true;
+
+            for (int j = 0; j < details.size(); j++) {
+                if (details.get(j).getDetailID().equals(detailAdd.getDetailID())) {
+                    add = false;
+                    break;
+                }
+            }
+
+            if (add) {
+                details.add(detailAdd);
+            }
+        }
+    }
+
+    private void setDetailAdapter() {
+        sortDetails();
+
+        ArrayAdapter<Detail> adapter = new ArrayAdapter<Detail>(this, android.R.layout.simple_dropdown_item_1line, details);
+        itemPart.setAdapter(adapter);
+    }
+
+    private void sortDetails() {
+        for (int i = details.size()-1; i > 0; i--) {
+            for (int j = 0; j < i; j++) {
+                if (details.get(j).getTempID() > details.get(j + 1).getTempID()) {
+                    Detail tmp = details.get(j);
+                    details.set(j, details.get(j + 1));
+                    details.set(j + 1, tmp);
+                }
+            }
         }
     }
 
@@ -184,14 +244,16 @@ public class DamageDetailActivity extends AppCompatActivity {
         tabHost.setCurrentTab(0);
     }
 
-    public void setDeDetail(String viewSchemesID, String ID) {
+    public void setDetail(String viewSchemesID, String ID) {
         for (int i = 0; i < mSchemes.size(); i++) {
             if (mSchemes.get(i).getViewSchemesID().equals(viewSchemesID)) {
 
                 for (int j = 0; j < mSchemes.get(i).getDetails().size(); j++) {
                     Detail detail = mSchemes.get(i).getDetails().get(j);
-                    if (detail.getID().equals(ID)){
-                        Toast.makeText(getApplicationContext(), detail.getID() + " - " + detail.getDetailName(), Toast.LENGTH_SHORT).show();
+                    if (detail.getID().equals(ID)) {
+
+
+                        Toast.makeText(getApplicationContext(), "" + detail.getTempID() + " - " + detail.getDetailName(), Toast.LENGTH_SHORT).show();
                         break;
                     }
                 }
@@ -208,7 +270,7 @@ public class DamageDetailActivity extends AppCompatActivity {
 
         @JavascriptInterface
         public void clickAndroid(String[] toast) {
-            setDeDetail("ОбщийВид", toast[0]);
+            setDetail("ОбщийВид", toast[0]);
 //
 //            if (toast[0].equals("p311")) {
 //                Toast.makeText(mContext, "руль", Toast.LENGTH_SHORT).show();
@@ -233,7 +295,7 @@ public class DamageDetailActivity extends AppCompatActivity {
 
         @JavascriptInterface
         public void clickAndroid(String[] toast) {
-            setDeDetail("Салон", toast[0]);
+            setDetail("Салон", toast[0]);
 //            if (toast[0].equals("p311")) {
 //                Toast.makeText(mContext, "руль", Toast.LENGTH_SHORT).show();
 //
@@ -257,7 +319,7 @@ public class DamageDetailActivity extends AppCompatActivity {
 
         @JavascriptInterface
         public void clickAndroid(String[] toast) {
-            setDeDetail("Уплотнители", toast[0]);
+            setDetail("Уплотнители", toast[0]);
 
 //            if (toast[0].equals("p311")) {
 //                Toast.makeText(mContext, "руль", Toast.LENGTH_SHORT).show();
@@ -282,7 +344,7 @@ public class DamageDetailActivity extends AppCompatActivity {
 
         @JavascriptInterface
         public void clickAndroid(String[] toast) {
-            setDeDetail("Другое", toast[0]);
+            setDetail("Другое", toast[0]);
 //            if (toast[0].equals("p311")) {
 //                Toast.makeText(mContext, "руль", Toast.LENGTH_SHORT).show();
 //

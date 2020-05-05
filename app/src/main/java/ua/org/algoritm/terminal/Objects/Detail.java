@@ -5,6 +5,7 @@ import com.google.gson.annotations.Expose;
 public class Detail {
     @Expose
     private String ID;
+    private int tempID;
 
     @Expose
     private String detailID;
@@ -21,6 +22,14 @@ public class Detail {
         this.ID = ID;
     }
 
+    public int getTempID() {
+        return tempID;
+    }
+
+    public void setTempID(int tempID) {
+        this.tempID = tempID;
+    }
+
     public String getDetailID() {
         return detailID;
     }
@@ -35,5 +44,10 @@ public class Detail {
 
     public void setDetailName(String detailName) {
         this.detailName = detailName;
+    }
+
+    @Override
+    public String toString() {
+        return "" + tempID + " - " + detailName;
     }
 }

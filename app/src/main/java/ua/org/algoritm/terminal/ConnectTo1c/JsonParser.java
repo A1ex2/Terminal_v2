@@ -203,6 +203,7 @@ public class JsonParser {
                 JSONObject detailJSON = new JSONObject(mDetailsJSON.get(j).toString());
 
                 detail.setID(detailJSON.getString("ID"));
+                detail.setTempID(Integer.parseInt(detailJSON.getString("ID").replace("p", "")));
                 detail.setDetailID(detailJSON.getString("detailID"));
                 detail.setDetailName(detailJSON.getString("detailName"));
 
