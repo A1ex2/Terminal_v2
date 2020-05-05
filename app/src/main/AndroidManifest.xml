@@ -24,6 +24,7 @@
         android:usesCleartextTraffic="true">
         <activity android:name=".Activity.DamageOtherActivity"></activity>
         <activity android:name=".Activity.DamageDetailActivity" />
+        <activity android:name=".Activity.DamageDetailSchemeActivity" />
         <activity android:name=".Activity.ListActPhoto" />
         <activity android:name=".Activity.ActInspectionActivity" />
         <activity

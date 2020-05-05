@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activity.DamageDetailActivity">
+    tools:context=".Activity.DamageDetailSchemeActivity">
 
     <TabHost
         android:id="@+id/tabHost"
@@ -30,19 +30,6 @@
                 android:id="@android:id/tabcontent"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-
-                <LinearLayout
-                    android:id="@+id/linearLayoutInfo"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-
-                    android:orientation="vertical" >
-
-                    <include
-                        layout="@layout/page_damage_info"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
-                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/linearLayoutGeneralForm"
