@@ -263,6 +263,14 @@ public class DamageDetailActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (newDamage){
+            actInspection.getDamages().remove(mDamage);
+        }
+    }
+
+    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.butt_OK:
