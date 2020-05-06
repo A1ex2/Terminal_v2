@@ -115,6 +115,11 @@
     <string name="comment">Комментарий</string>
 
     <string name="select_detail">Деталь</string>
-    <string name="add_detail_damage">Повреждение</string>
+    <string name="select_defect">Выбрать дефект</string>
+
+    <string name="add_detail_damage">Деталь повреждение</string>
+    <string name="add_defect_damage">Дефект повреждение</string>
+
+    <string name="defect">Дефект</string>
 
 </resources>

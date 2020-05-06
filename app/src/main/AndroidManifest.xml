@@ -22,7 +22,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Activity.ListActPhotoDamage"></activity>
+        <activity android:name=".Activity.DamageDefectActivity"></activity>
+        <activity android:name=".Activity.ListActPhotoDamage" />
         <activity android:name=".Activity.DamageOtherActivity" />
         <activity android:name=".Activity.DamageDetailActivity" />
         <activity android:name=".Activity.DamageDetailSchemeActivity" />

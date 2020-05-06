@@ -311,6 +311,9 @@ public class JsonParser {
                 String commentDamage = damageJSON.getString("commentDamage");
                 String heightDamage = damageJSON.getString("heightDamage");
                 String widthDamage = damageJSON.getString("widthDamage");
+                String typeDetail = damageJSON.getString("typeDetail");
+
+                mDamage.setTypeDetail(typeDetail);
 
                 for (int k = 0; k < DetailsAll.size(); k++) {
                     if (detailID.equals(DetailsAll.get(k).getDetailID())){

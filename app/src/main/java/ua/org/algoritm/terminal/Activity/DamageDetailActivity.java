@@ -104,6 +104,7 @@ public class DamageDetailActivity extends AppCompatActivity {
         String idDamage = intent.getStringExtra("idDamage");
         mSchemes = SharedData.getSchemes(actInspection);
         mDamage = new Damage();
+        mDamage.setTypeDetail("detail");
         if (!idDamage.equals("")) {
             if (idDamage.equals("null")) {
                 for (int i = 0; i < actInspection.getDamages().size(); i++) {

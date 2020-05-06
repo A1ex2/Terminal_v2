@@ -14,6 +14,9 @@ public class Damage {
     private TypeDamage mTypeDamage;
 
     @Expose
+    private String typeDetail;
+
+    @Expose
     private DegreesDamage mDegreesDamage;
 
     @Expose
@@ -132,5 +135,13 @@ public class Damage {
 
     public void setHeightDamage(String heightDamage) {
         this.heightDamage = heightDamage;
+    }
+
+    public String getTypeDetail() {
+        return typeDetail;
+    }
+
+    public void setTypeDetail(String typeDetail) {
+        this.typeDetail = typeDetail;
     }
 }
