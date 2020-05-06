@@ -52,6 +52,9 @@ public class ActInspection {
     private String TypeMachineID;
     private String TypeMachine;
 
+    @Expose
+    private boolean performed;
+
     public ActInspection() {
     }
 
@@ -277,5 +280,13 @@ public class ActInspection {
 
     public void setDamages(ArrayList<Damage> damages) {
         Damages = damages;
+    }
+
+    public boolean isPerformed() {
+        return performed;
+    }
+
+    public void setPerformed(boolean performed) {
+        this.performed = performed;
     }
 }

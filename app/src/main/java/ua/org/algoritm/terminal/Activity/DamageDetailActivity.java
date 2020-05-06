@@ -369,6 +369,23 @@ public class DamageDetailActivity extends AppCompatActivity {
 
                 @Override
                 public void onClicBtnAdd(TypeDamagePhoto typesPhoto) {
+                    if (mDamage.getDetail() == null) {
+                        String message = "Укажите деталь!";
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(DamageDetailActivity.this);
+                        builder.setMessage(message)
+                                .setCancelable(true)
+                                .setPositiveButton(getString(R.string.butt_OK), new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+
+                                    }
+                                });
+                        AlertDialog alert = builder.create();
+                        alert.show();
+
+                        return;
+                    }
+
                     mTypesPhoto = typesPhoto;
                     dispatchTakePictureIntent(REQUEST_TAKE_PHOTO_TypesPhoto);
                 }

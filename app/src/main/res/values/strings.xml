@@ -121,5 +121,6 @@
     <string name="add_defect_damage">Дефект повреждение</string>
 
     <string name="defect">Дефект</string>
+    <string name="performed">Выполнено</string>
 
 </resources>

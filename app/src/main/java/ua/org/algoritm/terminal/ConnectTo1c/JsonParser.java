@@ -156,6 +156,8 @@ public class JsonParser {
             JSONObject typeDamageJSON = new JSONObject(mTypesDamageDefectJSON.get(i).toString());
             detail.setDetailID(typeDamageJSON.getString("ID"));
             detail.setDetailName(typeDamageJSON.getString("name"));
+            detail.setID(typeDamageJSON.getString("sortID"));
+            detail.setTempID(Integer.parseInt(typeDamageJSON.getString("sortID")));
 
             mDamageDefects.add(detail);
         }

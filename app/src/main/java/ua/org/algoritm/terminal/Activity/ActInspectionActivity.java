@@ -25,6 +25,7 @@ import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -91,6 +92,7 @@ public class ActInspectionActivity extends AppCompatActivity {
     private TextView textOther;
 
     private boolean isRotate = false;
+    private Button performed;
 
     private String mCurrentPhotoPath;
     private Equipment mEquipment;
@@ -140,6 +142,14 @@ public class ActInspectionActivity extends AppCompatActivity {
         itemProductionDate = findViewById(R.id.itemProductionDate);
         itemSector = findViewById(R.id.itemSector);
         itemRow = findViewById(R.id.itemRow);
+
+        performed = findViewById(R.id.performed);
+        performed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setCB(true);
+            }
+        });
 
         textDetail = findViewById(R.id.textDetail);
         textOther = findViewById(R.id.textOther);
@@ -271,13 +281,13 @@ public class ActInspectionActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.saveCB:
-                setCB();
+                setCB(false);
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void setCB() {
+    private void setCB(boolean performed) {
         mDialog = new ProgressDialog(this);
         mDialog.setMessage(getString(R.string.wait_sending));
         mDialog.setCancelable(false);
@@ -286,6 +296,8 @@ public class ActInspectionActivity extends AppCompatActivity {
         SharedPreferences preferences = getSharedPreferences("MyPref", MODE_PRIVATE);
         String login = preferences.getString("Login", "");
         String password = preferences.getString("Password", "");
+
+        mActInspection.setPerformed(performed);
 
         String stringObject = SOAP_Objects.getActInspection(mActInspection);
 
@@ -342,7 +354,12 @@ public class ActInspectionActivity extends AppCompatActivity {
             mAdapterDamage.setActionListener(new RecyclerAdapterDamage.ActionListener() {
                 @Override
                 public void onClick(Damage damage) {
+
                     Intent intent = new Intent(getApplicationContext(), DamageDetailActivity.class);
+                    if (damage.getTypeDetail().equals("defect")) {
+                        intent = new Intent(getApplicationContext(), DamageDefectActivity.class);
+                    }
+
                     intent.putExtra("actInspectionID", mActInspection.getID());
 
                     if (damage.getDetail() == null) {
@@ -730,7 +747,7 @@ public class ActInspectionActivity extends AppCompatActivity {
 
                 String basePath = "";
                 String filePath = "" + actID + "/" + photo.getListObject();
-                if (photo.getListObject().equals("DamagePhoto")){
+                if (photo.getListObject().equals("DamagePhoto")) {
                     filePath = filePath + "/" + photo.getObjectID();
                 }
                 String filename = photo.getName();

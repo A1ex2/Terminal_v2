@@ -98,7 +98,7 @@ public class DamageDefectActivity extends AppCompatActivity {
             actInspection.getDamages().add(mDamage);
         }
 
-        itemDefect = findViewById(R.id.itemPart);
+        itemDefect = findViewById(R.id.itemDefect);
         itemDefect.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -106,7 +106,7 @@ public class DamageDefectActivity extends AppCompatActivity {
             }
         });
 
-        imageDefect = findViewById(R.id.imageDegreesDamage);
+        imageDefect = findViewById(R.id.imageDefect);
         imageDefect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -154,7 +154,7 @@ public class DamageDefectActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.butt_OK:
                 if (mDamage.getDetail() == null) {
-                    String message = "Укажите деталь!";
+                    String message = "Укажите дефект!";
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
                     builder.setMessage(message)
@@ -219,7 +219,7 @@ public class DamageDefectActivity extends AppCompatActivity {
                 @Override
                 public void onClicViewPhotos(TypeDamagePhoto typesPhoto) {
                     if (mDamage.getDetail() == null) {
-                        String message = "Укажите деталь!";
+                        String message = "Укажите дефект!";
 
                         AlertDialog.Builder builder = new AlertDialog.Builder(DamageDefectActivity.this);
                         builder.setMessage(message)
@@ -244,6 +244,23 @@ public class DamageDefectActivity extends AppCompatActivity {
 
                 @Override
                 public void onClicBtnAdd(TypeDamagePhoto typesPhoto) {
+                    if (mDamage.getDetail() == null) {
+                        String message = "Укажите дефект!";
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(DamageDefectActivity.this);
+                        builder.setMessage(message)
+                                .setCancelable(true)
+                                .setPositiveButton(getString(R.string.butt_OK), new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+
+                                    }
+                                });
+                        AlertDialog alert = builder.create();
+                        alert.show();
+
+                        return;
+                    }
+
                     mTypesPhoto = typesPhoto;
                     dispatchTakePictureIntent(REQUEST_TAKE_PHOTO_TypesPhoto);
                 }
