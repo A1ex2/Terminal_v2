@@ -727,7 +727,7 @@ public class ActInspectionActivity extends AppCompatActivity {
                 String basePath = "";
                 String filePath = "" + actID + "/" + photo.getListObject();
                 if (photo.getListObject().equals("DamagePhoto")){
-                    filePath = filePath + photo.getObjectID();
+                    filePath = filePath + "/" + photo.getObjectID();
                 }
                 String filename = photo.getName();
 

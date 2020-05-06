@@ -20,7 +20,6 @@ import ua.org.algoritm.terminal.R;
 
 public class RecyclerAdapterCarData extends RecyclerView.Adapter<RecyclerAdapterCarData.CarDataViewHolder> {
     private int mResourse;
-    private ArrayList<CarData> mCarData;
     private ArrayList<CarData> mCarData = new ArrayList<>();
     private LayoutInflater mInflater;
 

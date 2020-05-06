@@ -434,7 +434,12 @@ public class SharedData {
             for (int j = 0; j < damage.getTypeDamagePhoto().size(); j++) {
                 TypeDamagePhoto typeDamagePhoto = damage.getTypeDamagePhoto().get(j);
 
+                ArrayList<PhotoActInspection> mPhotos = helper.getPhotoListActInspection(actInspection.getID(),
+                        typeDamagePhoto.getListObject(), damage.getDetail().getDetailID() + "/" + typeDamagePhoto.getID());
 
+                for (int k = 0; j < mPhotos.size(); k++) {
+                    typeDamagePhoto.getPhotoActInspections().add(mPhotos.get(k));
+                }
             }
         }
     }
