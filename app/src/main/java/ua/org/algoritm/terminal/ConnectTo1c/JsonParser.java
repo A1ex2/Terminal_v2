@@ -11,6 +11,7 @@ import ua.org.algoritm.terminal.DataBase.SharedData;
 import ua.org.algoritm.terminal.Objects.ActInspection;
 import ua.org.algoritm.terminal.Objects.CarDataOutfit;
 import ua.org.algoritm.terminal.Objects.ClassificationDamage;
+import ua.org.algoritm.terminal.Objects.Damage;
 import ua.org.algoritm.terminal.Objects.DegreesDamage;
 import ua.org.algoritm.terminal.Objects.Detail;
 import ua.org.algoritm.terminal.Objects.Equipment;
@@ -109,6 +110,111 @@ public class JsonParser {
         String originDamageJSON = rootJSON.getString("OriginDamage");
         String typeDamagePhotoJSON = rootJSON.getString("TypesDamagePhotos");
 
+        ArrayList<Scheme> mSchemes = new ArrayList<>();
+        JSONArray mSchemesJSON = new JSONArray(schemesJSON);
+        ArrayList<Detail> DetailsAll = new ArrayList<>();
+
+        for (int i = 0; i < mSchemesJSON.length(); i++) {
+            Scheme mScheme = new Scheme();
+            JSONObject schemeJSON = new JSONObject(mSchemesJSON.get(i).toString());
+
+            mScheme.setID(schemeJSON.getString("ID"));
+            mScheme.setName(schemeJSON.getString("Name"));
+            mScheme.setTypeMachineID(schemeJSON.getString("TypeMachineID"));
+            mScheme.setTypeMachine(schemeJSON.getString("TypeMachine"));
+            mScheme.setViewSchemesID(schemeJSON.getString("ViewSchemesID"));
+            mScheme.setViewSchemes(schemeJSON.getString("ViewSchemes"));
+            mScheme.setSVG(schemeJSON.getString("SVG"));
+
+            JSONArray mDetailsJSON = new JSONArray(schemeJSON.getString("Details"));
+            ArrayList<Detail> mDetails = new ArrayList<>();
+            for (int j = 0; j < mDetailsJSON.length(); j++) {
+                Detail detail = new Detail();
+
+                JSONObject detailJSON = new JSONObject(mDetailsJSON.get(j).toString());
+
+                detail.setID(detailJSON.getString("ID"));
+                detail.setTempID(Integer.parseInt(detailJSON.getString("ID").replace("p", "")));
+                detail.setDetailID(detailJSON.getString("detailID"));
+                detail.setDetailName(detailJSON.getString("detailName"));
+
+                mDetails.add(detail);
+                DetailsAll.add(detail);
+            }
+            mScheme.setDetails(mDetails);
+
+            mSchemes.add(mScheme);
+        }
+
+        SharedData.SCHEMES = mSchemes;
+
+        ArrayList<TypeDamage> mTypesDamages = new ArrayList<>();
+        JSONArray mTypesDamagesJSON = new JSONArray(typesDamageJSON);
+        for (int i = 0; i < mTypesDamagesJSON.length(); i++) {
+            TypeDamage typeDamage = new TypeDamage();
+
+            JSONObject typeDamageJSON = new JSONObject(mTypesDamagesJSON.get(i).toString());
+            typeDamage.setID(typeDamageJSON.getString("ID"));
+            typeDamage.setName(typeDamageJSON.getString("name"));
+
+            mTypesDamages.add(typeDamage);
+
+        }
+        SharedData.TypesDamages = mTypesDamages;
+
+        ArrayList<DegreesDamage> mDegreesDamages = new ArrayList<>();
+        JSONArray mDegreesDamagesJSON = new JSONArray(degreesDamageJSON);
+        for (int i = 0; i < mDegreesDamagesJSON.length(); i++) {
+            DegreesDamage degreesDamage = new DegreesDamage();
+
+            JSONObject typeDamageJSON = new JSONObject(mDegreesDamagesJSON.get(i).toString());
+            degreesDamage.setID(typeDamageJSON.getString("ID"));
+            degreesDamage.setName(typeDamageJSON.getString("name"));
+
+            mDegreesDamages.add(degreesDamage);
+
+        }
+        SharedData.DegreesDamages = mDegreesDamages;
+
+        ArrayList<ClassificationDamage> mClassificationDamage = new ArrayList<>();
+        JSONArray mClassificationDamageJSON = new JSONArray(classificationDamageJSON);
+        for (int i = 0; i < mClassificationDamageJSON.length(); i++) {
+            ClassificationDamage classificationDamage = new ClassificationDamage();
+
+            JSONObject typeDamageJSON = new JSONObject(mClassificationDamageJSON.get(i).toString());
+            classificationDamage.setID(typeDamageJSON.getString("ID"));
+            classificationDamage.setName(typeDamageJSON.getString("name"));
+
+            mClassificationDamage.add(classificationDamage);
+        }
+        SharedData.ClassificationDamages = mClassificationDamage;
+
+        ArrayList<OriginDamage> mOriginDamage = new ArrayList<>();
+        JSONArray mOriginDamageJSON = new JSONArray(originDamageJSON);
+        for (int i = 0; i < mOriginDamageJSON.length(); i++) {
+            OriginDamage originDamage = new OriginDamage();
+
+            JSONObject typeDamageJSON = new JSONObject(mOriginDamageJSON.get(i).toString());
+            originDamage.setID(typeDamageJSON.getString("ID"));
+            originDamage.setName(typeDamageJSON.getString("name"));
+
+            mOriginDamage.add(originDamage);
+        }
+        SharedData.OriginDamages = mOriginDamage;
+
+        ArrayList<TypeDamagePhoto> mTypeDamagePhoto = new ArrayList<>();
+        JSONArray mTypeDamagePhotoJSON = new JSONArray(typeDamagePhotoJSON);
+        for (int i = 0; i < mTypeDamagePhotoJSON.length(); i++) {
+            TypeDamagePhoto typeDamagePhoto = new TypeDamagePhoto();
+
+            JSONObject typeDamageJSON = new JSONObject(mTypeDamagePhotoJSON.get(i).toString());
+            typeDamagePhoto.setID(typeDamageJSON.getString("ID"));
+            typeDamagePhoto.setName(typeDamageJSON.getString("name"));
+
+            mTypeDamagePhoto.add(typeDamagePhoto);
+        }
+        SharedData.TypeDamagePhotos = mTypeDamagePhoto;
+
         ArrayList<ActInspection> mActInspection = new ArrayList<>();
         JSONArray mActJSON = new JSONArray(actsJSON);
 
@@ -188,111 +294,71 @@ public class JsonParser {
             }
             actInspection.setTypesPhotos(mTypesPhotoList);
 
+
+            JSONArray damagesJSON = new JSONArray(actJSON.getString("Damages"));
+            ArrayList<Damage> mDamages = new ArrayList<>();
+            for (int j = 0; j < damagesJSON.length(); j++) {
+                JSONObject damageJSON = new JSONObject(damagesJSON.get(j).toString());
+
+                Damage mDamage = new Damage();
+
+                String detailID = damageJSON.getString("detailID");
+                String typeDamageID = damageJSON.getString("typeDamageID");
+                String degreesDamageID = damageJSON.getString("degreesDamageID");
+                String detailDamage = damageJSON.getString("detailDamage");
+                String classificationDamageID = damageJSON.getString("classificationDamageID");
+                String originDamageID = damageJSON.getString("originDamageID");
+                String commentDamage = damageJSON.getString("commentDamage");
+                String heightDamage = damageJSON.getString("heightDamage");
+                String widthDamage = damageJSON.getString("widthDamage");
+
+                for (int k = 0; k < DetailsAll.size(); k++) {
+                    if (detailID.equals(DetailsAll.get(k).getDetailID())){
+                        mDamage.setDetail(DetailsAll.get(k));
+                        break;
+                    }
+                }
+
+                for (int k = 0; k < mTypesDamages.size(); k++) {
+                    if (typeDamageID.equals(mTypesDamages.get(k).getID())){
+                        mDamage.setTypeDamage(mTypesDamages.get(k));
+                        break;
+                    }
+                }
+
+                for (int k = 0; k < mDegreesDamages.size(); k++) {
+                    if (degreesDamageID.equals(mDegreesDamages.get(k).getID())){
+                        mDamage.setDegreesDamage(mDegreesDamages.get(k));
+                        break;
+                    }
+                }
+
+                mDamage.setDetailDamage(detailDamage);
+
+                for (int k = 0; k < mClassificationDamage.size(); k++) {
+                    if (classificationDamageID.equals(mClassificationDamage.get(k).getID())){
+                        mDamage.setClassificationDamage(mClassificationDamage.get(k));
+                        break;
+                    }
+                }
+
+                for (int k = 0; k < mOriginDamage.size(); k++) {
+                    if (originDamageID.equals(mOriginDamage.get(k).getID())){
+                        mDamage.setOriginDamage(mOriginDamage.get(k));
+                        break;
+                    }
+                }
+
+                mDamage.setCommentDamage(commentDamage);
+                mDamage.setHeightDamage(heightDamage);
+                mDamage.setWidthDamage(widthDamage);
+
+                mDamages.add(mDamage);
+            }
+            actInspection.setDamages(mDamages);
+
             mActInspection.add(actInspection);
         }
-
-        ArrayList<Scheme> mSchemes = new ArrayList<>();
-        JSONArray mSchemesJSON = new JSONArray(schemesJSON);
-
-        for (int i = 0; i < mSchemesJSON.length(); i++) {
-            Scheme mScheme = new Scheme();
-            JSONObject schemeJSON = new JSONObject(mSchemesJSON.get(i).toString());
-
-            mScheme.setID(schemeJSON.getString("ID"));
-            mScheme.setName(schemeJSON.getString("Name"));
-            mScheme.setTypeMachineID(schemeJSON.getString("TypeMachineID"));
-            mScheme.setTypeMachine(schemeJSON.getString("TypeMachine"));
-            mScheme.setViewSchemesID(schemeJSON.getString("ViewSchemesID"));
-            mScheme.setViewSchemes(schemeJSON.getString("ViewSchemes"));
-            mScheme.setSVG(schemeJSON.getString("SVG"));
-
-            JSONArray mDetailsJSON = new JSONArray(schemeJSON.getString("Details"));
-            ArrayList<Detail> mDetails = new ArrayList<>();
-            for (int j = 0; j < mDetailsJSON.length(); j++) {
-                Detail detail = new Detail();
-
-                JSONObject detailJSON = new JSONObject(mDetailsJSON.get(j).toString());
-
-                detail.setID(detailJSON.getString("ID"));
-                detail.setTempID(Integer.parseInt(detailJSON.getString("ID").replace("p", "")));
-                detail.setDetailID(detailJSON.getString("detailID"));
-                detail.setDetailName(detailJSON.getString("detailName"));
-
-                mDetails.add(detail);
-            }
-            mScheme.setDetails(mDetails);
-
-            mSchemes.add(mScheme);
-        }
-
-        SharedData.SCHEMES = mSchemes;
-
-        ArrayList<TypeDamage> mTypesDamages = new ArrayList<>();
-        JSONArray mTypesDamagesJSON = new JSONArray(typesDamageJSON);
-        for (int i = 0; i < mTypesDamagesJSON.length(); i++) {
-            TypeDamage typeDamage = new TypeDamage();
-
-            JSONObject typeDamageJSON = new JSONObject(mTypesDamagesJSON.get(i).toString());
-            typeDamage.setID(typeDamageJSON.getString("ID"));
-            typeDamage.setName(typeDamageJSON.getString("name"));
-
-            mTypesDamages.add(typeDamage);
-
-        }
-        SharedData.TypesDamages = mTypesDamages;
-
-        ArrayList<DegreesDamage> mDegreesDamages = new ArrayList<>();
-        JSONArray mDegreesDamagesJSON = new JSONArray(degreesDamageJSON);
-        for (int i = 0; i < mDegreesDamagesJSON.length(); i++) {
-            DegreesDamage degreesDamage = new DegreesDamage();
-
-            JSONObject typeDamageJSON = new JSONObject(mDegreesDamagesJSON.get(i).toString());
-            degreesDamage.setID(typeDamageJSON.getString("ID"));
-            degreesDamage.setName(typeDamageJSON.getString("name"));
-
-            mDegreesDamages.add(degreesDamage);
-
-        }
-        SharedData.DegreesDamages = mDegreesDamages;
-
-        ArrayList<ClassificationDamage> mClassificationDamage = new ArrayList<>();
-        JSONArray mClassificationDamageJSON = new JSONArray(classificationDamageJSON);
-        for (int i = 0; i < mClassificationDamageJSON.length(); i++) {
-            ClassificationDamage classificationDamage = new ClassificationDamage();
-
-            JSONObject typeDamageJSON = new JSONObject(mClassificationDamageJSON.get(i).toString());
-            classificationDamage.setID(typeDamageJSON.getString("ID"));
-            classificationDamage.setName(typeDamageJSON.getString("name"));
-
-            mClassificationDamage.add(classificationDamage);
-        }
-        SharedData.ClassificationDamages = mClassificationDamage;
-
-        ArrayList<OriginDamage> mOriginDamage = new ArrayList<>();
-        JSONArray mOriginDamageJSON = new JSONArray(originDamageJSON);
-        for (int i = 0; i < mOriginDamageJSON.length(); i++) {
-            OriginDamage originDamage = new OriginDamage();
-
-            JSONObject typeDamageJSON = new JSONObject(mOriginDamageJSON.get(i).toString());
-            originDamage.setID(typeDamageJSON.getString("ID"));
-            originDamage.setName(typeDamageJSON.getString("name"));
-
-            mOriginDamage.add(originDamage);
-        }
-        SharedData.OriginDamages = mOriginDamage;
-
-        ArrayList<TypeDamagePhoto> mTypeDamagePhoto = new ArrayList<>();
-        JSONArray mTypeDamagePhotoJSON = new JSONArray(typeDamagePhotoJSON);
-        for (int i = 0; i < mTypeDamagePhotoJSON.length(); i++) {
-            TypeDamagePhoto typeDamagePhoto = new TypeDamagePhoto();
-
-            JSONObject typeDamageJSON = new JSONObject(mTypeDamagePhotoJSON.get(i).toString());
-            typeDamagePhoto.setID(typeDamageJSON.getString("ID"));
-            typeDamagePhoto.setName(typeDamageJSON.getString("name"));
-
-            mTypeDamagePhoto.add(typeDamagePhoto);
-        }
-        SharedData.TypeDamagePhotos = mTypeDamagePhoto;
 
         return mActInspection;
     }

@@ -17,6 +17,7 @@ import ua.org.algoritm.terminal.Objects.CarData;
 import ua.org.algoritm.terminal.Objects.CarDataIssuance;
 import ua.org.algoritm.terminal.Objects.CarDataOutfit;
 import ua.org.algoritm.terminal.Objects.ClassificationDamage;
+import ua.org.algoritm.terminal.Objects.Damage;
 import ua.org.algoritm.terminal.Objects.DegreesDamage;
 import ua.org.algoritm.terminal.Objects.Equipment;
 import ua.org.algoritm.terminal.Objects.Issuance;
@@ -426,6 +427,16 @@ public class SharedData {
                 typesPhoto.getPhotoActInspections().add(mPhotos.get(j));
             }
         }
+
+        for (int i = 0; i < actInspection.getDamages().size(); i++) {
+            Damage damage = actInspection.getDamages().get(i);
+
+            for (int j = 0; j < damage.getTypeDamagePhoto().size(); j++) {
+                TypeDamagePhoto typeDamagePhoto = damage.getTypeDamagePhoto().get(j);
+
+
+            }
+        }
     }
 
 
@@ -433,11 +444,11 @@ public class SharedData {
         TypesPhoto mTypesPhoto = new TypesPhoto();
 
         for (int i = 0; i < ACT_INSPECTION.size(); i++) {
-            if (ACT_INSPECTION.get(i).getID().equals(actInspectionID)){
+            if (ACT_INSPECTION.get(i).getID().equals(actInspectionID)) {
 
                 for (int j = 0; j < ACT_INSPECTION.get(i).getTypesPhotos().size(); j++) {
                     TypesPhoto typesPhoto = ACT_INSPECTION.get(i).getTypesPhotos().get(j);
-                    if (typesPhoto.getTypePhotoID().equals(typesPhotoID)){
+                    if (typesPhoto.getTypePhotoID().equals(typesPhotoID)) {
                         mTypesPhoto = typesPhoto;
                         break;
                     }
@@ -447,17 +458,18 @@ public class SharedData {
         return mTypesPhoto;
     }
 
-    public static TypeDamagePhoto getTypeDamagePhoto(String actInspectionID, String detailID, String typesPhotoID) {
+    public static TypeDamagePhoto getTypeDamagePhoto(String actInspectionID, String
+            detailID, String typesPhotoID) {
         TypeDamagePhoto mTypesPhoto = new TypeDamagePhoto();
 
         for (int i = 0; i < ACT_INSPECTION.size(); i++) {
-            if (ACT_INSPECTION.get(i).getID().equals(actInspectionID)){
+            if (ACT_INSPECTION.get(i).getID().equals(actInspectionID)) {
 
                 for (int j = 0; j < ACT_INSPECTION.get(i).getDamages().size(); j++) {
-                    if (ACT_INSPECTION.get(i).getDamages().get(j).getDetail().getDetailID().equals(detailID)){
+                    if (ACT_INSPECTION.get(i).getDamages().get(j).getDetail().getDetailID().equals(detailID)) {
 
                         for (int k = 0; k < ACT_INSPECTION.get(i).getDamages().get(j).getTypeDamagePhoto().size(); k++) {
-                            if (ACT_INSPECTION.get(i).getDamages().get(j).getTypeDamagePhoto().get(k).getID().equals(typesPhotoID)){
+                            if (ACT_INSPECTION.get(i).getDamages().get(j).getTypeDamagePhoto().get(k).getID().equals(typesPhotoID)) {
                                 mTypesPhoto = ACT_INSPECTION.get(i).getDamages().get(j).getTypeDamagePhoto().get(k);
                                 break;
                             }
@@ -475,7 +487,7 @@ public class SharedData {
         for (int i = 0; i < SCHEMES.size(); i++) {
             Scheme scheme = SCHEMES.get(i);
 
-            if (scheme.getTypeMachineID().equals(actInspection.getTypeMachineID())){
+            if (scheme.getTypeMachineID().equals(actInspection.getTypeMachineID())) {
                 mSchemes.add(scheme);
             }
         }
