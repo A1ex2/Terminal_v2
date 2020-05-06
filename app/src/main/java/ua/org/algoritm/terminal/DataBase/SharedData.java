@@ -19,6 +19,7 @@ import ua.org.algoritm.terminal.Objects.CarDataOutfit;
 import ua.org.algoritm.terminal.Objects.ClassificationDamage;
 import ua.org.algoritm.terminal.Objects.Damage;
 import ua.org.algoritm.terminal.Objects.DegreesDamage;
+import ua.org.algoritm.terminal.Objects.Detail;
 import ua.org.algoritm.terminal.Objects.Equipment;
 import ua.org.algoritm.terminal.Objects.Issuance;
 import ua.org.algoritm.terminal.Objects.OrderOutfit;
@@ -47,6 +48,7 @@ public class SharedData {
     public static ArrayList<ClassificationDamage> ClassificationDamages = new ArrayList<>();
     public static ArrayList<OriginDamage> OriginDamages = new ArrayList<>();
     public static ArrayList<TypeDamagePhoto> TypeDamagePhotos = new ArrayList<>();
+    public static ArrayList<Detail> DamageDefect = new ArrayList<>();
 
     public static MainActivity app;
     public static String LOGIN;

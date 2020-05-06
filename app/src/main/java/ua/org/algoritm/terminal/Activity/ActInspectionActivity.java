@@ -175,6 +175,10 @@ public class ActInspectionActivity extends AppCompatActivity {
             public void onClick(View v) {
                 setRotate();
 
+                Intent intent = new Intent(getApplicationContext(), DamageDefectActivity.class);
+                intent.putExtra("actInspectionID", mActInspection.getID());
+                intent.putExtra("idDamage", "");
+                startActivityForResult(intent, REQUEST_CODE_UPDATE_DAMAGE);
             }
         });
 

@@ -34,7 +34,7 @@
                 android:hint="@string/select_defect" />
 
             <ImageView
-                android:id="@+id/imagePart"
+                android:id="@+id/imageDefect"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignTop="@id/itemDefect"

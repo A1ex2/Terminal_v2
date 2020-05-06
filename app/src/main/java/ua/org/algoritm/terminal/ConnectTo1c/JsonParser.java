@@ -109,6 +109,7 @@ public class JsonParser {
         String classificationDamageJSON = rootJSON.getString("ClassificationDamage");
         String originDamageJSON = rootJSON.getString("OriginDamage");
         String typeDamagePhotoJSON = rootJSON.getString("TypesDamagePhotos");
+        String typesDamageDefectJSON = rootJSON.getString("TypesDamageDefect");
 
         ArrayList<Scheme> mSchemes = new ArrayList<>();
         JSONArray mSchemesJSON = new JSONArray(schemesJSON);
@@ -145,8 +146,20 @@ public class JsonParser {
 
             mSchemes.add(mScheme);
         }
-
         SharedData.SCHEMES = mSchemes;
+
+        ArrayList<Detail> mDamageDefects = new ArrayList<>();
+        JSONArray mTypesDamageDefectJSON = new JSONArray(typesDamageDefectJSON);
+        for (int i = 0; i < mTypesDamageDefectJSON.length(); i++) {
+            Detail detail = new Detail();
+
+            JSONObject typeDamageJSON = new JSONObject(mTypesDamageDefectJSON.get(i).toString());
+            detail.setDetailID(typeDamageJSON.getString("ID"));
+            detail.setDetailName(typeDamageJSON.getString("name"));
+
+            mDamageDefects.add(detail);
+        }
+        SharedData.DamageDefect = mDamageDefects;
 
         ArrayList<TypeDamage> mTypesDamages = new ArrayList<>();
         JSONArray mTypesDamagesJSON = new JSONArray(typesDamageJSON);
@@ -294,7 +307,6 @@ public class JsonParser {
             }
             actInspection.setTypesPhotos(mTypesPhotoList);
 
-
             JSONArray damagesJSON = new JSONArray(actJSON.getString("Damages"));
             ArrayList<Damage> mDamages = new ArrayList<>();
             for (int j = 0; j < damagesJSON.length(); j++) {
@@ -315,22 +327,31 @@ public class JsonParser {
 
                 mDamage.setTypeDetail(typeDetail);
 
-                for (int k = 0; k < DetailsAll.size(); k++) {
-                    if (detailID.equals(DetailsAll.get(k).getDetailID())){
-                        mDamage.setDetail(DetailsAll.get(k));
-                        break;
+                if (typeDetail.equals("defect")) {
+                    for (int k = 0; k < SharedData.DamageDefect.size(); k++) {
+                        if (detailID.equals(SharedData.DamageDefect.get(k).getDetailID())) {
+                            mDamage.setDetail(SharedData.DamageDefect.get(k));
+                            break;
+                        }
+                    }
+                } else {
+                    for (int k = 0; k < DetailsAll.size(); k++) {
+                        if (detailID.equals(DetailsAll.get(k).getDetailID())) {
+                            mDamage.setDetail(DetailsAll.get(k));
+                            break;
+                        }
                     }
                 }
 
                 for (int k = 0; k < mTypesDamages.size(); k++) {
-                    if (typeDamageID.equals(mTypesDamages.get(k).getID())){
+                    if (typeDamageID.equals(mTypesDamages.get(k).getID())) {
                         mDamage.setTypeDamage(mTypesDamages.get(k));
                         break;
                     }
                 }
 
                 for (int k = 0; k < mDegreesDamages.size(); k++) {
-                    if (degreesDamageID.equals(mDegreesDamages.get(k).getID())){
+                    if (degreesDamageID.equals(mDegreesDamages.get(k).getID())) {
                         mDamage.setDegreesDamage(mDegreesDamages.get(k));
                         break;
                     }
@@ -339,14 +360,14 @@ public class JsonParser {
                 mDamage.setDetailDamage(detailDamage);
 
                 for (int k = 0; k < mClassificationDamage.size(); k++) {
-                    if (classificationDamageID.equals(mClassificationDamage.get(k).getID())){
+                    if (classificationDamageID.equals(mClassificationDamage.get(k).getID())) {
                         mDamage.setClassificationDamage(mClassificationDamage.get(k));
                         break;
                     }
                 }
 
                 for (int k = 0; k < mOriginDamage.size(); k++) {
-                    if (originDamageID.equals(mOriginDamage.get(k).getID())){
+                    if (originDamageID.equals(mOriginDamage.get(k).getID())) {
                         mDamage.setOriginDamage(mOriginDamage.get(k));
                         break;
                     }
