@@ -10,7 +10,7 @@ public class TypeDamagePhoto {
     private String name;
 
     @Expose
-    private String listObject = "Photo";
+    private String listObject = "DamagePhoto";
 
     @Expose
     private ArrayList<PhotoActInspection> mPhotoActInspections = new ArrayList<>();

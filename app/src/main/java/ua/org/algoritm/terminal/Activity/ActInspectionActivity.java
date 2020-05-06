@@ -59,6 +59,7 @@ import ua.org.algoritm.terminal.Objects.Damage;
 import ua.org.algoritm.terminal.Objects.Equipment;
 import ua.org.algoritm.terminal.Objects.Inspection;
 import ua.org.algoritm.terminal.Objects.PhotoActInspection;
+import ua.org.algoritm.terminal.Objects.TypeDamagePhoto;
 import ua.org.algoritm.terminal.Objects.TypesPhoto;
 import ua.org.algoritm.terminal.R;
 import ua.org.algoritm.terminal.Service.IntentServiceDataBase;
@@ -233,7 +234,10 @@ public class ActInspectionActivity extends AppCompatActivity {
 
                 mActInspection.getDamages().remove(mDamage);
                 updateListDamage();
-//              IntentServiceDataBase.startDeletePhotoActInspection(ActInspectionActivity.this, mPhoto.getCurrentPhotoPath());
+
+                if (mDamage.getDetail() != null) {
+                    IntentServiceDataBase.startDeletePhotoActInspectionDamage(ActInspectionActivity.this, mActInspection.getID(), mDamage.getDetail().getDetailID());
+                }
             }
         };
 
@@ -613,6 +617,18 @@ public class ActInspectionActivity extends AppCompatActivity {
                 }
             }
 
+            for (int i = 0; i < mActInspection.getDamages().size(); i++) {
+                for (int j = 0; j < mActInspection.getDamages().get(i).getTypeDamagePhoto().size(); j++) {
+                    TypeDamagePhoto typesPhoto = mActInspection.getDamages().get(i).getTypeDamagePhoto().get(j);
+
+                    for (int k = 0; k < typesPhoto.getPhotoActInspections().size(); k++) {
+                        if (!typesPhoto.getPhotoActInspections().get(k).getCurrentPhotoPath().equals("")) {
+                            photoAll.add(typesPhoto.getPhotoActInspections().get(k));
+                        }
+                    }
+                }
+            }
+
             if (photoAll.size() != 0) {
                 uiManager.showToast(getString(R.string.success));
                 String message = getString(R.string.send_photo);
@@ -710,6 +726,9 @@ public class ActInspectionActivity extends AppCompatActivity {
 
                 String basePath = "";
                 String filePath = "" + actID + "/" + photo.getListObject();
+                if (photo.getListObject().equals("DamagePhoto")){
+                    filePath = filePath + photo.getObjectID();
+                }
                 String filename = photo.getName();
 
                 if (thisSFTP) {

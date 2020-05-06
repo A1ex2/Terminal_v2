@@ -84,7 +84,7 @@ public class RecyclerAdapterDamage extends RecyclerView.Adapter<RecyclerAdapterD
 
         public void set(Damage damage) {
             if (damage.getDetail() != null) {
-                name.setText(damage.getDetail().getDetailName());
+                name.setText(damage.getDetail().toString());
             } else {
                 name.setText("<Деталь не указана>");
             }

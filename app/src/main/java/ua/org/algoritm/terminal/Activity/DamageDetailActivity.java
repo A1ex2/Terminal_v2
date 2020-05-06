@@ -353,7 +353,7 @@ public class DamageDetailActivity extends AppCompatActivity {
 
                     Intent i = new Intent(getApplicationContext(), ListActPhotoDamage.class);
                     i.putExtra("actInspectionID", actInspection.getID());
-                    i.putExtra("detailID", mDamage.getDetail().getID());
+                    i.putExtra("detailID", mDamage.getDetail().getDetailID());
                     i.putExtra("typesPhotoID", typesPhoto.getID());
                     startActivityForResult(i, REQUEST_UPDATE_PHOTO_TypesPhoto);
                 }
@@ -506,14 +506,14 @@ public class DamageDetailActivity extends AppCompatActivity {
             PhotoActInspection photoActInspection = new PhotoActInspection();
             photoActInspection.setActID(actInspection.getID());
             photoActInspection.setName(fileName);
-            photoActInspection.setObjectID(mTypesPhoto.getID());
+            photoActInspection.setObjectID(mDamage.getDetail().getDetailID() + "/" + mTypesPhoto.getID());
             photoActInspection.setListObject(mTypesPhoto.getListObject());
             photoActInspection.setCurrentPhotoPath(mCurrentPhotoPath);
 
             mTypesPhoto.getPhotoActInspections().add(photoActInspection);
 
             IntentServiceDataBase.startInsertPhotoActInspection(DamageDetailActivity.this,
-                    actInspection.getID(), mTypesPhoto.getListObject(), mTypesPhoto.getID(), mCurrentPhotoPath);
+                    actInspection.getID(), mTypesPhoto.getListObject(), mDamage.getDetail().getDetailID() + "/" + mTypesPhoto.getID(), mCurrentPhotoPath);
 
             decodeFile();
 

@@ -454,7 +454,7 @@ public class SharedData {
             if (ACT_INSPECTION.get(i).getID().equals(actInspectionID)){
 
                 for (int j = 0; j < ACT_INSPECTION.get(i).getDamages().size(); j++) {
-                    if (ACT_INSPECTION.get(i).getDamages().get(j).getDetail().getID().equals(detailID)){
+                    if (ACT_INSPECTION.get(i).getDamages().get(j).getDetail().getDetailID().equals(detailID)){
 
                         for (int k = 0; k < ACT_INSPECTION.get(i).getDamages().get(j).getTypeDamagePhoto().size(); k++) {
                             if (ACT_INSPECTION.get(i).getDamages().get(j).getTypeDamagePhoto().get(k).getID().equals(typesPhotoID)){

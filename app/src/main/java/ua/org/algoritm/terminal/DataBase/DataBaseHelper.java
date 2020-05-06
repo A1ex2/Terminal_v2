@@ -460,6 +460,49 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return mPhotoArrayList;
     }
 
+    public ArrayList<PhotoActInspection> getPhotoListActInspection(String actID, String objectID) {
+        ArrayList<PhotoActInspection> mPhotoArrayList = new ArrayList<>();
+        SQLiteDatabase db = getWritableDatabase();
+        Cursor cursor = null;
+
+        try {
+            String select = "actID = '" + actID + "' and objectID LIKE '%" + objectID +  "%'";
+            cursor = db.query("ActInspectionPhoto", null, select, null, null, null, null);
+            //cursor = db.query("ActInspectionPhoto", null, null, null, null, null, null);
+
+            if (cursor.moveToNext()) {
+                while (!cursor.isAfterLast()) {
+                    PhotoActInspection photo = new PhotoActInspection();
+
+                    File file = new File(cursor.getString(cursor.getColumnIndex("currentPhotoPath")));
+                    if(!file.isFile()){
+                        deletePhotoActInspection(cursor.getString(cursor.getColumnIndex("currentPhotoPath")));
+                    }
+                    String fileName = file.getName();
+                    photo.setName(fileName);
+
+                    photo.setCurrentPhotoPath(cursor.getString(cursor.getColumnIndex("currentPhotoPath")));
+
+                    photo.setActID(cursor.getString(cursor.getColumnIndex("actID")));
+                    photo.setListObject(cursor.getString(cursor.getColumnIndex("listObject")));
+                    photo.setObjectID(cursor.getString(cursor.getColumnIndex("objectID")));
+
+                    mPhotoArrayList.add(photo);
+
+                    cursor.moveToNext();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+
+        return mPhotoArrayList;
+    }
+
     public ArrayList<PhotoActInspection> getPhotoActInspectionAll() {
         ArrayList<PhotoActInspection> mPhotoArrayList = new ArrayList<>();
         SQLiteDatabase db = getWritableDatabase();

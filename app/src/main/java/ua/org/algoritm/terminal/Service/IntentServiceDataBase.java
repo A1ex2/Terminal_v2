@@ -21,6 +21,8 @@ import java.util.TreeMap;
 import ua.org.algoritm.terminal.DataBase.DataBaseHelper;
 import ua.org.algoritm.terminal.Objects.CarData;
 import ua.org.algoritm.terminal.Objects.Photo;
+import ua.org.algoritm.terminal.Objects.PhotoActInspection;
+import ua.org.algoritm.terminal.Objects.TypeDamagePhoto;
 
 public class IntentServiceDataBase extends IntentService {
 
@@ -33,6 +35,7 @@ public class IntentServiceDataBase extends IntentService {
 
     private static final String ACTION_INSERT_PHOTO_ACT_INSPECTION = "ua.org.algoritm.terminal.Service.action.INSERT_PHOTO_ACT_INSPECTION";
     private static final String ACTION_DELETE_PHOTO_ACT_INSPECTION = "ua.org.algoritm.terminal.Service.action.DELETE_PHOTO_ACT_INSPECTION";
+    private static final String ACTION_DELETE_PHOTO_ACT_INSPECTION_DAMAGE = "ua.org.algoritm.terminal.Service.action.DELETE_PHOTO_ACT_INSPECTION_DAMAGE";
     private static final String ACTION_GET_PHOTO_ACT_INSPECTION = "ua.org.algoritm.terminal.Service.action.GET_PHOTO_ACT_INSPECTION";
 
     private static final String EXTRA_INSERT_CAR_DATA = "ua.org.algoritm.terminal.Service.extra.INSERT_CAR_DATA";
@@ -43,6 +46,7 @@ public class IntentServiceDataBase extends IntentService {
 
     private static final String EXTRA_INSERT_PHOTO_ACT_INSPECTION = "ua.org.algoritm.terminal.Service.extra.INSERT_PHOTO_ACT_INSPECTION";
     private static final String EXTRA_DELETE_PHOTO_ACT_INSPECTION = "ua.org.algoritm.terminal.Service.extra.DELETE_PHOTO_ACT_INSPECTION";
+    private static final String EXTRA_DELETE_PHOTO_ACT_INSPECTION_DAMAGE = "ua.org.algoritm.terminal.Service.extra.DELETE_PHOTO_ACT_INSPECTION_DAMAGE";
     private static final String EXTRA_GET_PHOTO_ACT_INSPECTION = "ua.org.algoritm.terminal.Service.extra.GET_PHOTO_ACT_INSPECTION";
 
     public static final String EXTRA_CAR_DATA = "ua.org.algoritm.terminal.Service.extra.EXTRA_CAR_DATA";
@@ -56,6 +60,7 @@ public class IntentServiceDataBase extends IntentService {
     public static final int REQUEST_CODE_PHOTO_ACT_INSPECTION = 500;
     public static final int REQUEST_CODE_DELETE_PHOTO_ACT_INSPECTION = 600;
     public static final int REQUEST_CODE_GET_PHOTO_ACT_INSPECTION = 700;
+    public static final int REQUEST_CODE_DELETE_PHOTO_ACT_INSPECTION_DAMAGE = 800;
 
     public IntentServiceDataBase() {
         super("IntentServiceDataBase");
@@ -144,6 +149,22 @@ public class IntentServiceDataBase extends IntentService {
         activity.startService(intent);
     }
 
+    public static void startDeletePhotoActInspectionDamage(AppCompatActivity activity, String actID, String objectID) {
+
+        Intent intent = new Intent(activity, IntentServiceDataBase.class);
+        PendingIntent pendingIntent = activity.createPendingResult(REQUEST_CODE_DELETE_PHOTO_ACT_INSPECTION_DAMAGE, intent, 0);
+        intent.putExtra(EXTRA_PENDING_INTENT, pendingIntent);
+
+        HashMap<String, String> map = new HashMap<>();
+        map.put("actID", actID);
+        map.put("objectID", objectID);
+        intent.putExtra(EXTRA_DELETE_PHOTO_ACT_INSPECTION_DAMAGE, map);
+
+        intent.setAction(ACTION_DELETE_PHOTO_ACT_INSPECTION_DAMAGE);
+
+        activity.startService(intent);
+    }
+
     @Override
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
@@ -178,6 +199,21 @@ public class IntentServiceDataBase extends IntentService {
 
                 helper.insertPhotoActInspection(actID, listObject, objectID, currentPhotoPath);
                 //result.putExtra(EXTRA_CAR_DATA, true);
+
+            } else if (ACTION_DELETE_PHOTO_ACT_INSPECTION_DAMAGE.equals(action)) {
+
+                HashMap<String, String> map = (HashMap<String, String>) intent.getSerializableExtra(EXTRA_DELETE_PHOTO_ACT_INSPECTION_DAMAGE);
+                String actID = map.get("actID");
+                String objectID = map.get("objectID");
+
+                ArrayList<PhotoActInspection> mPhotos = helper.getPhotoListActInspection(actID, objectID);
+
+                for (int i = 0; i < mPhotos.size(); i++) {
+                    helper.deletePhotoActInspection(mPhotos.get(i).getCurrentPhotoPath());
+                    File mFile = new File(mPhotos.get(i).getCurrentPhotoPath());
+                    if (mFile.delete()) {
+                    }
+                }
 
             } else if (ACTION_DELETE_PHOTO.equals(action)) {
 
