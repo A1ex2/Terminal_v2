@@ -500,6 +500,8 @@ public class SOAP_Dispatcher extends Thread {
 
 //            SharedData.checkPhoto(mOrderOutfits);
 
+            SharedData.checkPhotoAct();
+
             for (int i = 0; i < mActInspections.size(); i++) {
                 SharedData.setPhotoActInspection(mActInspections.get(i));
             }

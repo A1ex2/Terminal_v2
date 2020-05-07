@@ -547,6 +547,9 @@ public class DamageDetailActivity extends AppCompatActivity {
             mTypesPhoto = null;
             updateListTypesPhoto();
 
+        } else if ((requestCode == REQUEST_TAKE_PHOTO_TypesPhoto) && resultCode == RESULT_CANCELED) {
+            SharedData.deletePhotoActInspection(mCurrentPhotoPath);
+
         } else if (requestCode == REQUEST_UPDATE_PHOTO_TypesPhoto) {
             updateListTypesPhoto();
 

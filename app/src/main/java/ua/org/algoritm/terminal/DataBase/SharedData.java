@@ -500,4 +500,26 @@ public class SharedData {
 
         return mSchemes;
     }
+
+    public static void checkPhotoAct() {
+        DataBaseHelper helper = new DataBaseHelper(app);
+        ArrayList<PhotoActInspection> mPhotos = helper.getPhotoActInspectionAll();
+        for (int i = 0; i < mPhotos.size(); i++) {
+            PhotoActInspection mPhoto = mPhotos.get(i);
+            boolean isDelete = true;
+            for (int j = 0; j < ACT_INSPECTION.size(); j++) {
+                if (ACT_INSPECTION.get(j).getID().equals(mPhoto.getActID())) {
+                    isDelete = false;
+                } else {
+                }
+            }
+
+            if (isDelete) {
+                try {
+                    deletePhotoActInspection(mPhoto.getCurrentPhotoPath());
+                } catch (Exception e) {
+                }
+            }
+        }
+    }
 }
