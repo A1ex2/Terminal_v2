@@ -93,6 +93,7 @@ public class ActInspectionActivity extends AppCompatActivity {
 
     private boolean isRotate = false;
     private Button performed;
+    private boolean performedAct = false;
 
     private String mCurrentPhotoPath;
     private Equipment mEquipment;
@@ -115,6 +116,7 @@ public class ActInspectionActivity extends AppCompatActivity {
     private SaveTaskPhotoFTP mTaskPhotoFTP;
 
     public static final int ACTION_SET_ACT = 28;
+    public static final int ACTION_SET_ACT_Performed = 29;
     public static final int ACTION_ConnectionError = 0;
 
     public static UIManager uiManager;
@@ -147,7 +149,8 @@ public class ActInspectionActivity extends AppCompatActivity {
         performed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setCB(true);
+                performedAct = true;
+                setCB();
             }
         });
 
@@ -281,13 +284,33 @@ public class ActInspectionActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.saveCB:
-                setCB(false);
+                setCB();
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void setCB(boolean performed) {
+    private void setCB() {
+        mDialog = new ProgressDialog(this);
+        mDialog.setMessage(getString(R.string.wait_sending));
+        mDialog.setCancelable(false);
+        mDialog.show();
+
+        SharedPreferences preferences = getSharedPreferences("MyPref", MODE_PRIVATE);
+        String login = preferences.getString("Login", "");
+        String password = preferences.getString("Password", "");
+
+        //mActInspection.setPerformed(performed);
+
+        String stringObject = SOAP_Objects.getActInspection(mActInspection);
+
+        SOAP_Dispatcher dispatcher = new SOAP_Dispatcher(ACTION_SET_ACT, login, password, getApplicationContext());
+        dispatcher.string_Inquiry = stringObject;
+
+        dispatcher.start();
+    }
+
+    private void setCBPerformed(boolean performed) {
         mDialog = new ProgressDialog(this);
         mDialog.setMessage(getString(R.string.wait_sending));
         mDialog.setCancelable(false);
@@ -301,7 +324,7 @@ public class ActInspectionActivity extends AppCompatActivity {
 
         String stringObject = SOAP_Objects.getActInspection(mActInspection);
 
-        SOAP_Dispatcher dispatcher = new SOAP_Dispatcher(ACTION_SET_ACT, login, password, getApplicationContext());
+        SOAP_Dispatcher dispatcher = new SOAP_Dispatcher(ACTION_SET_ACT_Performed, login, password, getApplicationContext());
         dispatcher.string_Inquiry = stringObject;
 
         dispatcher.start();
@@ -609,12 +632,22 @@ public class ActInspectionActivity extends AppCompatActivity {
                 case ACTION_ConnectionError:
                     uiManager.showToast(getString(R.string.errorConnection) + getSoapErrorMessage());
                     break;
+
                 case ACTION_SET_ACT: {
                     target.checkSetAct();
+                    break;
                 }
-                break;
+
+                case ACTION_SET_ACT_Performed: {
+                    target.isOK();
+                }
             }
         }
+    }
+
+    private void isOK() {
+        setResult(RESULT_OK);
+        finish();
     }
 
     private void checkSetAct() {
@@ -798,8 +831,13 @@ public class ActInspectionActivity extends AppCompatActivity {
                 Toast.makeText(mContext, R.string.error_ftp, Toast.LENGTH_LONG).show();
             } else {
                 Toast.makeText(mContext, R.string.ok_ftp, Toast.LENGTH_LONG).show();
-                setResult(RESULT_OK);
-                finish();
+
+                if (performedAct) {
+                    setCBPerformed(true);
+                } else {
+                    setResult(RESULT_OK);
+                    finish();
+                }
             }
         }
     }

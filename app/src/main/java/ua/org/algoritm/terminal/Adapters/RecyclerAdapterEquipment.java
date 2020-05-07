@@ -106,7 +106,7 @@ public class RecyclerAdapterEquipment extends RecyclerView.Adapter<RecyclerAdapt
         private TextView description;
         private ImageView viewPhoto;
         private TextView quantityPlan;
-        private EditText quantityFact;
+        private TextView quantityFact;
 
         private Button btnAdd;
         private Button btnSub;
