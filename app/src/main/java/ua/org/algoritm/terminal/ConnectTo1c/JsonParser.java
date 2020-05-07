@@ -252,6 +252,10 @@ public class JsonParser {
             actInspection.setInspectionDatePlan(actJSON.getString("InspectionDatePlan"));
             actInspection.setInspectionDateFact(actJSON.getString("InspectionDateFact"));
 
+            actInspection.setRun(actJSON.getString("run"));
+            actInspection.setTruckPositionDirection(actJSON.getString("truckPositionDirection"));
+            actInspection.setTruckPosition(actJSON.getInt("truckPosition"));
+
             actInspection.setCarID(actJSON.getString("CarID"));
             actInspection.setCar(actJSON.getString("Car"));
             actInspection.setProductionDate(actJSON.getString("ProductionDate"));
