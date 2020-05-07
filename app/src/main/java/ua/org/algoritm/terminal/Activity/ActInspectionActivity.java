@@ -180,7 +180,9 @@ public class ActInspectionActivity extends AppCompatActivity {
         ViewAnimation.init(fabOther, textOther);
 
         run = findViewById(R.id.run);
-        run.setText(mActInspection.getRun());
+        if (!mActInspection.getRun().equals("0")){
+            run.setText(mActInspection.getRun());
+        }
 
         truckPosition();
 
@@ -613,6 +615,8 @@ public class ActInspectionActivity extends AppCompatActivity {
     }
 
     private void setCB() {
+        mActInspection.setRun(run.getText().toString());
+
         mDialog = new ProgressDialog(this);
         mDialog.setMessage(getString(R.string.wait_sending));
         mDialog.setCancelable(false);
@@ -633,6 +637,8 @@ public class ActInspectionActivity extends AppCompatActivity {
     }
 
     private void setCBPerformed(boolean performed) {
+        mActInspection.setRun(run.getText().toString());
+
         mDialog = new ProgressDialog(this);
         mDialog.setMessage(getString(R.string.wait_sending));
         mDialog.setCancelable(false);
