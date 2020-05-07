@@ -284,37 +284,6 @@ public class ActInspectionActivity extends AppCompatActivity {
     }
 
     private void truckPosition() {
-        if (mActInspection.getTruckPosition() == 1){
-            setTruckPosition(vehicle_truck_position_01);
-
-        } else if (mActInspection.getTruckPosition() == 2){
-            setTruckPosition(vehicle_truck_position_02);
-
-        } else if (mActInspection.getTruckPosition() == 3) {
-            setTruckPosition(vehicle_truck_position_03);
-
-        } else if (mActInspection.getTruckPosition() == 4) {
-            setTruckPosition(vehicle_truck_position_04);
-
-        } else if (mActInspection.getTruckPosition() == 5) {
-            setTruckPosition(vehicle_truck_position_05);
-
-        } else if (mActInspection.getTruckPosition() == 6) {
-            setTruckPosition(vehicle_truck_position_06);
-
-        } else if (mActInspection.getTruckPosition() == 7) {
-            setTruckPosition(vehicle_truck_position_07);
-
-        } else if (mActInspection.getTruckPosition() == 8) {
-            setTruckPosition(vehicle_truck_position_08);
-
-        } else if (mActInspection.getTruckPosition() == 9) {
-            setTruckPosition(vehicle_truck_position_09);
-
-        } else if (mActInspection.getTruckPosition() == 10) {
-            setTruckPosition(vehicle_truck_position_10);
-        }
-
         vehicle_truck_position_01 = findViewById(R.id.vehicle_truck_position_01);
         vehicle_truck_position_01.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -575,6 +544,37 @@ public class ActInspectionActivity extends AppCompatActivity {
                 vehicle_truck_position_09.setImageResource(R.mipmap.autotruck_car);
             }
         });
+
+        if (mActInspection.getTruckPosition() == 1){
+            setTruckPosition(vehicle_truck_position_01);
+
+        } else if (mActInspection.getTruckPosition() == 2){
+            setTruckPosition(vehicle_truck_position_02);
+
+        } else if (mActInspection.getTruckPosition() == 3) {
+            setTruckPosition(vehicle_truck_position_03);
+
+        } else if (mActInspection.getTruckPosition() == 4) {
+            setTruckPosition(vehicle_truck_position_04);
+
+        } else if (mActInspection.getTruckPosition() == 5) {
+            setTruckPosition(vehicle_truck_position_05);
+
+        } else if (mActInspection.getTruckPosition() == 6) {
+            setTruckPosition(vehicle_truck_position_06);
+
+        } else if (mActInspection.getTruckPosition() == 7) {
+            setTruckPosition(vehicle_truck_position_07);
+
+        } else if (mActInspection.getTruckPosition() == 8) {
+            setTruckPosition(vehicle_truck_position_08);
+
+        } else if (mActInspection.getTruckPosition() == 9) {
+            setTruckPosition(vehicle_truck_position_09);
+
+        } else if (mActInspection.getTruckPosition() == 10) {
+            setTruckPosition(vehicle_truck_position_10);
+        }
     }
 
     private void setTruckPosition(ImageButton vehicle_truck) {
