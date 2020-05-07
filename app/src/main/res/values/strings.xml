@@ -122,5 +122,6 @@
 
     <string name="defect">Дефект</string>
     <string name="performed">Выполнено</string>
+    <string name="run">Пробег</string>
 
 </resources>

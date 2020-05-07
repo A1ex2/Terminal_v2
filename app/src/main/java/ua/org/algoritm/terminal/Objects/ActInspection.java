@@ -18,6 +18,16 @@ public class ActInspection {
     @Expose
     private String formID;
     private String form;
+
+    @Expose
+    private int truckPosition = 0;
+
+    @Expose
+    private String truckPositionDirection = "direct";
+
+    @Expose
+    private String run = "";
+
     @Expose
     private String storageID;
     private String storage;
@@ -288,5 +298,29 @@ public class ActInspection {
 
     public void setPerformed(boolean performed) {
         this.performed = performed;
+    }
+
+    public int getTruckPosition() {
+        return truckPosition;
+    }
+
+    public void setTruckPosition(int truckPosition) {
+        this.truckPosition = truckPosition;
+    }
+
+    public String getTruckPositionDirection() {
+        return truckPositionDirection;
+    }
+
+    public void setTruckPositionDirection(String truckPositionDirection) {
+        this.truckPositionDirection = truckPositionDirection;
+    }
+
+    public String getRun() {
+        return run;
+    }
+
+    public void setRun(String run) {
+        this.run = run;
     }
 }

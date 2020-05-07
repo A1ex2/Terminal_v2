@@ -26,6 +26,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -115,6 +117,19 @@ public class ActInspectionActivity extends AppCompatActivity {
     private ProgressDialog mDialog;
     private SaveTaskPhotoFTP mTaskPhotoFTP;
 
+    private ImageButton vehicle_truck_position_01;
+    private ImageButton vehicle_truck_position_02;
+    private ImageButton vehicle_truck_position_03;
+    private ImageButton vehicle_truck_position_04;
+    private ImageButton vehicle_truck_position_05;
+    private ImageButton vehicle_truck_position_06;
+    private ImageButton vehicle_truck_position_07;
+    private ImageButton vehicle_truck_position_08;
+    private ImageButton vehicle_truck_position_09;
+    private ImageButton vehicle_truck_position_10;
+
+    private EditText run;
+
     public static final int ACTION_SET_ACT = 28;
     public static final int ACTION_SET_ACT_Performed = 29;
     public static final int ACTION_ConnectionError = 0;
@@ -163,6 +178,11 @@ public class ActInspectionActivity extends AppCompatActivity {
 
         ViewAnimation.init(fabDetail, textDetail);
         ViewAnimation.init(fabOther, textOther);
+
+        run = findViewById(R.id.run);
+        run.setText(mActInspection.getRun());
+
+        truckPosition();
 
         addDamage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -261,6 +281,308 @@ public class ActInspectionActivity extends AppCompatActivity {
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemTouchCallback);
         itemTouchHelper.attachToRecyclerView(listDamage);
 
+    }
+
+    private void truckPosition() {
+        if (mActInspection.getTruckPosition() == 1){
+            setTruckPosition(vehicle_truck_position_01);
+
+        } else if (mActInspection.getTruckPosition() == 2){
+            setTruckPosition(vehicle_truck_position_02);
+
+        } else if (mActInspection.getTruckPosition() == 3) {
+            setTruckPosition(vehicle_truck_position_03);
+
+        } else if (mActInspection.getTruckPosition() == 4) {
+            setTruckPosition(vehicle_truck_position_04);
+
+        } else if (mActInspection.getTruckPosition() == 5) {
+            setTruckPosition(vehicle_truck_position_05);
+
+        } else if (mActInspection.getTruckPosition() == 6) {
+            setTruckPosition(vehicle_truck_position_06);
+
+        } else if (mActInspection.getTruckPosition() == 7) {
+            setTruckPosition(vehicle_truck_position_07);
+
+        } else if (mActInspection.getTruckPosition() == 8) {
+            setTruckPosition(vehicle_truck_position_08);
+
+        } else if (mActInspection.getTruckPosition() == 9) {
+            setTruckPosition(vehicle_truck_position_09);
+
+        } else if (mActInspection.getTruckPosition() == 10) {
+            setTruckPosition(vehicle_truck_position_10);
+        }
+
+        vehicle_truck_position_01 = findViewById(R.id.vehicle_truck_position_01);
+        vehicle_truck_position_01.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mActInspection.getTruckPositionDirection().equals("direct")) {
+                    vehicle_truck_position_01.setImageResource(R.mipmap.autotruck_car_reverse);
+                    mActInspection.setTruckPositionDirection("reverse");
+                } else {
+                    vehicle_truck_position_01.setImageResource(R.mipmap.autotruck_car_direct);
+                    mActInspection.setTruckPositionDirection("direct");
+                }
+
+                mActInspection.setTruckPosition(1);
+
+                vehicle_truck_position_02.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_03.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_04.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_05.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_06.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_07.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_08.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_09.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_10.setImageResource(R.mipmap.autotruck_car);
+            }
+        });
+
+        vehicle_truck_position_02 = findViewById(R.id.vehicle_truck_position_02);
+        vehicle_truck_position_02.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mActInspection.getTruckPositionDirection().equals("direct")) {
+                    vehicle_truck_position_02.setImageResource(R.mipmap.autotruck_car_reverse);
+                    mActInspection.setTruckPositionDirection("reverse");
+                } else {
+                    vehicle_truck_position_02.setImageResource(R.mipmap.autotruck_car_direct);
+                    mActInspection.setTruckPositionDirection("direct");
+                }
+
+                mActInspection.setTruckPosition(2);
+
+                vehicle_truck_position_01.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_03.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_04.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_05.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_06.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_07.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_08.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_09.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_10.setImageResource(R.mipmap.autotruck_car);
+            }
+        });
+
+        vehicle_truck_position_03 = findViewById(R.id.vehicle_truck_position_03);
+        vehicle_truck_position_03.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mActInspection.getTruckPositionDirection().equals("direct")) {
+                    vehicle_truck_position_03.setImageResource(R.mipmap.autotruck_car_reverse);
+                    mActInspection.setTruckPositionDirection("reverse");
+                } else {
+                    vehicle_truck_position_03.setImageResource(R.mipmap.autotruck_car_direct);
+                    mActInspection.setTruckPositionDirection("direct");
+                }
+
+                mActInspection.setTruckPosition(3);
+
+                vehicle_truck_position_01.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_02.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_04.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_05.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_06.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_07.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_08.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_09.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_10.setImageResource(R.mipmap.autotruck_car);
+
+            }
+        });
+
+        vehicle_truck_position_04 = findViewById(R.id.vehicle_truck_position_04);
+        vehicle_truck_position_04.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mActInspection.getTruckPositionDirection().equals("direct")) {
+                    vehicle_truck_position_04.setImageResource(R.mipmap.autotruck_car_reverse);
+                    mActInspection.setTruckPositionDirection("reverse");
+                } else {
+                    vehicle_truck_position_04.setImageResource(R.mipmap.autotruck_car_direct);
+                    mActInspection.setTruckPositionDirection("direct");
+                }
+
+                mActInspection.setTruckPosition(4);
+
+                vehicle_truck_position_01.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_02.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_03.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_05.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_06.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_07.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_08.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_09.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_10.setImageResource(R.mipmap.autotruck_car);
+            }
+        });
+
+        vehicle_truck_position_05 = findViewById(R.id.vehicle_truck_position_05);
+        vehicle_truck_position_05.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mActInspection.getTruckPositionDirection().equals("direct")) {
+                    vehicle_truck_position_05.setImageResource(R.mipmap.autotruck_car_reverse);
+                    mActInspection.setTruckPositionDirection("reverse");
+                } else {
+                    vehicle_truck_position_05.setImageResource(R.mipmap.autotruck_car_direct);
+                    mActInspection.setTruckPositionDirection("direct");
+                }
+
+                mActInspection.setTruckPosition(5);
+
+                vehicle_truck_position_01.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_02.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_03.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_04.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_06.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_07.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_08.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_09.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_10.setImageResource(R.mipmap.autotruck_car);
+            }
+        });
+
+        vehicle_truck_position_06 = findViewById(R.id.vehicle_truck_position_06);
+        vehicle_truck_position_06.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mActInspection.getTruckPositionDirection().equals("direct")) {
+                    vehicle_truck_position_06.setImageResource(R.mipmap.autotruck_car_reverse);
+                    mActInspection.setTruckPositionDirection("reverse");
+                } else {
+                    vehicle_truck_position_06.setImageResource(R.mipmap.autotruck_car_direct);
+                    mActInspection.setTruckPositionDirection("direct");
+                }
+
+                mActInspection.setTruckPosition(6);
+
+                vehicle_truck_position_01.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_02.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_03.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_04.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_05.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_07.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_08.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_09.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_10.setImageResource(R.mipmap.autotruck_car);
+            }
+        });
+
+        vehicle_truck_position_07 = findViewById(R.id.vehicle_truck_position_07);
+        vehicle_truck_position_07.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mActInspection.getTruckPositionDirection().equals("direct")) {
+                    vehicle_truck_position_07.setImageResource(R.mipmap.autotruck_car_reverse);
+                    mActInspection.setTruckPositionDirection("reverse");
+                } else {
+                    vehicle_truck_position_07.setImageResource(R.mipmap.autotruck_car_direct);
+                    mActInspection.setTruckPositionDirection("direct");
+                }
+
+                mActInspection.setTruckPosition(7);
+
+                vehicle_truck_position_01.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_02.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_03.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_04.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_05.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_06.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_08.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_09.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_10.setImageResource(R.mipmap.autotruck_car);
+            }
+        });
+
+        vehicle_truck_position_08 = findViewById(R.id.vehicle_truck_position_08);
+        vehicle_truck_position_08.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mActInspection.getTruckPositionDirection().equals("direct")) {
+                    vehicle_truck_position_08.setImageResource(R.mipmap.autotruck_car_reverse);
+                    mActInspection.setTruckPositionDirection("reverse");
+                } else {
+                    vehicle_truck_position_08.setImageResource(R.mipmap.autotruck_car_direct);
+                    mActInspection.setTruckPositionDirection("direct");
+                }
+
+                mActInspection.setTruckPosition(8);
+
+                vehicle_truck_position_01.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_02.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_03.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_04.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_05.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_06.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_07.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_09.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_10.setImageResource(R.mipmap.autotruck_car);
+            }
+        });
+
+        vehicle_truck_position_09 = findViewById(R.id.vehicle_truck_position_09);
+        vehicle_truck_position_09.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mActInspection.getTruckPositionDirection().equals("direct")) {
+                    vehicle_truck_position_09.setImageResource(R.mipmap.autotruck_car_reverse);
+                    mActInspection.setTruckPositionDirection("reverse");
+                } else {
+                    vehicle_truck_position_09.setImageResource(R.mipmap.autotruck_car_direct);
+                    mActInspection.setTruckPositionDirection("direct");
+                }
+
+                mActInspection.setTruckPosition(9);
+
+                vehicle_truck_position_01.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_02.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_03.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_04.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_05.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_06.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_07.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_08.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_10.setImageResource(R.mipmap.autotruck_car);
+            }
+        });
+
+        vehicle_truck_position_10 = findViewById(R.id.vehicle_truck_position_10);
+        vehicle_truck_position_10.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mActInspection.getTruckPositionDirection().equals("direct")) {
+                    vehicle_truck_position_10.setImageResource(R.mipmap.autotruck_car_reverse);
+                    mActInspection.setTruckPositionDirection("reverse");
+                } else {
+                    vehicle_truck_position_10.setImageResource(R.mipmap.autotruck_car_direct);
+                    mActInspection.setTruckPositionDirection("direct");
+                }
+
+                mActInspection.setTruckPosition(10);
+
+                vehicle_truck_position_01.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_02.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_03.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_04.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_05.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_06.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_07.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_08.setImageResource(R.mipmap.autotruck_car);
+                vehicle_truck_position_09.setImageResource(R.mipmap.autotruck_car);
+            }
+        });
+    }
+
+    private void setTruckPosition(ImageButton vehicle_truck) {
+        if (mActInspection.getTruckPositionDirection().equals("reverse")) {
+            vehicle_truck.setImageResource(R.mipmap.autotruck_car_reverse);
+        } else {
+            vehicle_truck.setImageResource(R.mipmap.autotruck_car_direct);
+        }
     }
 
     private void setRotate() {

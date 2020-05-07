@@ -27,7 +27,7 @@
     </style>
 
     <style name="VehicleOnTruckFrameStyle">
-        <item name="android:background">"#00888888"</item>
+        <item name="android:background">@color/color1</item>
         <item name="android:layout_width">89.0dip</item>
         <item name="android:layout_height">fill_parent</item>
     </style>
