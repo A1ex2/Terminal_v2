@@ -1,4 +1,5 @@
 <resources>
+
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
@@ -25,4 +26,27 @@
         <item name="android:windowBackground">@drawable/background_splash</item>
     </style>
 
+    <style name="VehicleOnTruckFrameStyle">
+        <item name="android:background">@color/color1</item>
+        <item name="android:layout_width">89.0dip</item>
+        <item name="android:layout_height">fill_parent</item>
+    </style>
+
+    <style name="VehicleOnTruckStyle" parent="@style/VehicleOnTruckFrameStyle">
+        <item name="android:paddingRight">1.0dip</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:src">@mipmap/autotruck_car</item>
+        <item name="android:scaleType">centerInside</item>
+    </style>
+
+    <style name="VehicleMarkStyle" parent="@style/VehicleOnTruckFrameStyle">
+        <item name="android:textSize">14.0dip</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingLeft">12.0dip</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">fill_parent</item>
+    </style>
 </resources>
+

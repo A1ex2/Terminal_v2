@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="502.0dip"
+    android:layout_height="120.0dip"
+    android:layout_gravity="center">
+
+    <ImageView
+        android:id="@+id/autotruck_back_image"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_centerVertical="true"
+        android:layout_gravity="bottom"
+        android:scaleType="centerInside"
+        android:src="@mipmap/autotruck_back" />
+
+    <RelativeLayout
+        android:id="@+id/line1_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="55.0dip"
+        android:orientation="horizontal">
+
+        <FrameLayout
+            android:id="@+id/line1_shifter"
+            android:layout_width="14.0dip"
+            android:layout_height="fill_parent" />
+
+        <FrameLayout
+            android:id="@+id/frame_truck_position_01"
+            style="@style/VehicleOnTruckFrameStyle"
+            android:layout_toRightOf="@id/line1_shifter">
+
+            <ImageButton
+                android:id="@+id/vehicle_truck_position_01"
+                style="@style/VehicleOnTruckStyle"
+                android:paddingTop="13.0dip" />
+
+            <TextView
+                android:id="@+id/vehicle_truck_position_01_tv"
+                style="@style/VehicleMarkStyle"
+                android:paddingTop="9.0dip"
+                android:text="1" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/frame_truck_position_02"
+            style="@style/VehicleOnTruckFrameStyle"
+            android:layout_toRightOf="@id/frame_truck_position_01">
+
+            <ImageButton
+                android:id="@+id/vehicle_truck_position_02"
+                style="@style/VehicleOnTruckStyle"
+                android:paddingTop="13.0dip" />
+
+            <TextView
+                android:id="@+id/vehicle_truck_position_02_tv"
+                style="@style/VehicleMarkStyle"
+                android:paddingTop="9.0dip"
+                android:text="2" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/frame_truck_position_03"
+            style="@style/VehicleOnTruckFrameStyle"
+            android:layout_toRightOf="@id/frame_truck_position_02">
+
+            <ImageButton
+                android:id="@+id/vehicle_truck_position_03"
+                style="@style/VehicleOnTruckStyle"
+                android:paddingTop="13.0dip" />
+
+            <TextView
+                android:id="@+id/vehicle_truck_position_03_tv"
+                style="@style/VehicleMarkStyle"
+                android:paddingTop="9.0dip"
+                android:text="3" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/frame_truck_position_04"
+            style="@style/VehicleOnTruckFrameStyle"
+            android:layout_toRightOf="@id/frame_truck_position_03">
+
+            <ImageButton
+                android:id="@+id/vehicle_truck_position_04"
+                style="@style/VehicleOnTruckStyle"
+                android:paddingTop="13.0dip" />
+
+            <TextView
+                android:id="@+id/vehicle_truck_position_04_tv"
+                style="@style/VehicleMarkStyle"
+                android:paddingTop="9.0dip"
+                android:text="4" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/frame_truck_position_05"
+            style="@style/VehicleOnTruckFrameStyle"
+            android:layout_toRightOf="@id/frame_truck_position_04">
+
+            <ImageButton
+                android:id="@+id/vehicle_truck_position_05"
+                style="@style/VehicleOnTruckStyle"
+                android:paddingTop="13.0dip" />
+
+            <TextView
+                android:id="@+id/vehicle_truck_position_05_tv"
+                style="@style/VehicleMarkStyle"
+                android:paddingTop="9.0dip"
+                android:text="5" />
+        </FrameLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/line2_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="55.0dip"
+        android:layout_below="@id/line1_layout"
+        android:orientation="horizontal">
+
+        <View
+            android:id="@+id/line2_shifter"
+            android:layout_width="50.0dip"
+            android:layout_height="fill_parent" />
+
+        <FrameLayout
+            android:id="@+id/frame_truck_position_06"
+            style="@style/VehicleOnTruckFrameStyle"
+            android:layout_toRightOf="@id/line2_shifter">
+
+            <ImageButton
+                android:id="@+id/vehicle_truck_position_06"
+                style="@style/VehicleOnTruckStyle"
+                android:paddingBottom="16.0dip" />
+
+            <TextView
+                android:id="@+id/vehicle_truck_position_06_tv"
+                style="@style/VehicleMarkStyle"
+                android:paddingBottom="20.0dip"
+                android:text="6" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/frame_truck_position_07"
+            style="@style/VehicleOnTruckFrameStyle"
+            android:layout_toRightOf="@id/frame_truck_position_06">
+
+            <ImageButton
+                android:id="@+id/vehicle_truck_position_07"
+                style="@style/VehicleOnTruckStyle"
+                android:paddingBottom="16.0dip" />
+
+            <TextView
+                android:id="@+id/vehicle_truck_position_07_tv"
+                style="@style/VehicleMarkStyle"
+                android:paddingBottom="20.0dip"
+                android:text="7" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/frame_truck_position_08"
+            style="@style/VehicleOnTruckFrameStyle"
+            android:layout_toRightOf="@id/frame_truck_position_07">
+
+            <ImageButton
+                android:id="@+id/vehicle_truck_position_08"
+                style="@style/VehicleOnTruckStyle"
+                android:paddingBottom="16.0dip" />
+
+            <TextView
+                android:id="@+id/vehicle_truck_position_08_tv"
+                style="@style/VehicleMarkStyle"
+                android:paddingBottom="20.0dip"
+                android:text="8" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/frame_truck_position_09"
+            style="@style/VehicleOnTruckFrameStyle"
+            android:layout_toRightOf="@id/frame_truck_position_08">
+
+            <ImageButton
+                android:id="@+id/vehicle_truck_position_09"
+                style="@style/VehicleOnTruckStyle"
+                android:paddingBottom="16.0dip" />
+
+            <TextView
+                android:id="@+id/vehicle_truck_position_09_tv"
+                style="@style/VehicleMarkStyle"
+                android:paddingBottom="20.0dip"
+                android:text="9" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/frame_truck_position_10"
+            style="@style/VehicleOnTruckFrameStyle"
+            android:layout_toRightOf="@id/frame_truck_position_09">
+
+            <ImageButton
+                android:id="@+id/vehicle_truck_position_10"
+                style="@style/VehicleOnTruckStyle"
+                android:paddingBottom="16.0dip" />
+
+            <TextView
+                android:id="@+id/vehicle_truck_position_10_tv"
+                style="@style/VehicleMarkStyle"
+                android:paddingBottom="20.0dip"
+                android:text="10" />
+        </FrameLayout>
+    </RelativeLayout>
+</RelativeLayout>
