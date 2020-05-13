@@ -10,6 +10,9 @@ import java.util.Date;
 
 public class ActInspection {
     @Expose
+    private String ReceptionID = "";
+
+    @Expose
     private String ID;
     private String description;
     @Expose
@@ -39,9 +42,12 @@ public class ActInspection {
     private String carID;
     private String car;
 
+    @Expose
     private String productionDate;
 
+    @Expose
     private String barCode;
+
     private String sectorID;
     private String sector;
     private String row;
@@ -322,5 +328,13 @@ public class ActInspection {
 
     public void setRun(String run) {
         this.run = run;
+    }
+
+    public String getReceptionID() {
+        return ReceptionID;
+    }
+
+    public void setReceptionID(String receptionID) {
+        ReceptionID = receptionID;
     }
 }

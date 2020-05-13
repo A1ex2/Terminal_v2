@@ -11,6 +11,7 @@ import android.os.Message;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -28,7 +29,9 @@ import ua.org.algoritm.terminal.ConnectTo1c.SOAP_Dispatcher;
 import ua.org.algoritm.terminal.ConnectTo1c.SOAP_Objects;
 import ua.org.algoritm.terminal.ConnectTo1c.UIManager;
 import ua.org.algoritm.terminal.DataBase.SharedData;
+import ua.org.algoritm.terminal.Objects.ActInspection;
 import ua.org.algoritm.terminal.Objects.CarData;
+import ua.org.algoritm.terminal.Objects.Inspection;
 import ua.org.algoritm.terminal.Objects.Reception;
 import ua.org.algoritm.terminal.Objects.TypeDoc;
 import ua.org.algoritm.terminal.R;
@@ -123,7 +126,14 @@ public class DetailReception extends AppCompatActivity {
         if (requestCode == REQUEST_CODE_PUT_CB) {
             if (resultCode == Activity.RESULT_OK) {
                 CarData carData = data.getParcelableExtra("CarData");
-                setCB(carData);
+                boolean performedAct = data.getBooleanExtra("performedAct", false);
+
+                if (performedAct){
+                    SharedData.deleteCarData(carData.getCarID(), reception);
+                }
+
+                updateLists();
+                //setCB(carData);
                 //updateLists();
             }
         }
@@ -144,9 +154,21 @@ public class DetailReception extends AppCompatActivity {
 //    }
 
     private void viewCarData(CarData carData) {
-        Intent intent = new Intent(DetailReception.this, CarActivity.class);
+        ActInspection actInspection = SharedData.getActInspectionReception(reception.getID(), carData.getCarID());
+
+        if (!actInspection.getReceptionID().equals(reception.getID())){
+            uiManager.showToast("Акт не найден");
+            return;
+        }
+
+        Intent intent = new Intent(getApplicationContext(), ActInspectionActivity.class);
+        intent.putExtra("actInspection", actInspection.getID());
         intent.putExtra("CarData", carData);
         startActivityForResult(intent, REQUEST_CODE_PUT_CB);
+
+//        Intent intent = new Intent(DetailReception.this, CarActivity.class);
+//        intent.putExtra("CarData", carData);
+//        startActivityForResult(intent, REQUEST_CODE_PUT_CB);
     }
 
     private void updateLists() {

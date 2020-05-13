@@ -54,10 +54,6 @@ public class SOAP_Dispatcher extends Thread {
     public static final Integer soapParam_timeout = 220000;
     public static String soapParam_pass = "31415926";
     public static String soapParam_user = "Администратор";
-    //public static String soapParam_URL = "http://gate.algoritm.org.ua:8778/blg_log_test/ws/terminal.1cws";
-    //public static String soapParam_URL = "http://192.168.1.10/blg/ws/terminal.1cws";
-    //public static String soapParam_URL = "http://217.25.195.61:83/blg_log_dev/ws/terminal.1cws";
-//    public static String soapParam_URL = "http://192.168.1.4:8090/blg_log/ws/terminal.1cws";
     public static String soapParam_URL;
     public String string_Inquiry;
     public Context mContext;
@@ -131,6 +127,7 @@ public class SOAP_Dispatcher extends Thread {
 
             case AcceptanceFragment.ACTION_RECEPTION_LIST:
                 getReceptionList();
+                GetActInspection();
                 break;
 
             case DetailReception.ACTION_UPDATE_RECEPTION:

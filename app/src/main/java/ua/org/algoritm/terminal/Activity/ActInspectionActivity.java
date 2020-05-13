@@ -7,7 +7,9 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -22,10 +24,14 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TabHost;
@@ -33,6 +39,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import org.ksoap2.SoapFault;
 import org.ksoap2.serialization.SoapObject;
@@ -43,8 +51,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 import ua.org.algoritm.terminal.Adapters.RecyclerAdapterDamage;
@@ -58,6 +68,7 @@ import ua.org.algoritm.terminal.ConnectTo1c.SOAP_Objects;
 import ua.org.algoritm.terminal.ConnectTo1c.UIManager;
 import ua.org.algoritm.terminal.DataBase.SharedData;
 import ua.org.algoritm.terminal.Objects.ActInspection;
+import ua.org.algoritm.terminal.Objects.CarData;
 import ua.org.algoritm.terminal.Objects.Damage;
 import ua.org.algoritm.terminal.Objects.Equipment;
 import ua.org.algoritm.terminal.Objects.Inspection;
@@ -75,7 +86,13 @@ public class ActInspectionActivity extends AppCompatActivity {
     public static final int REQUEST_TAKE_PHOTO_TypesPhoto = 2;
     public static final int REQUEST_UPDATE_PHOTO_TypesPhoto = 3;
 
+    private static final int REQUEST_CODE_SCAN = 0x0000c0de;
+
     private ActInspection mActInspection;
+    private CarData carData;
+
+    private Calendar dateAndTime = Calendar.getInstance();
+
     private TextView itemForm;
     private TextView itemDatePlan;
     private TextView itemState;
@@ -130,6 +147,11 @@ public class ActInspectionActivity extends AppCompatActivity {
 
     private EditText run;
 
+    private EditText barCode;
+    private EditText editDate;
+    private ImageButton mImageButtonScanBarCode;
+    private ImageButton imButCalendar;
+
     public static final int ACTION_SET_ACT = 28;
     public static final int ACTION_SET_ACT_Performed = 29;
     public static final int ACTION_ConnectionError = 0;
@@ -150,15 +172,21 @@ public class ActInspectionActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         mActInspection = SharedData.getActInspection(intent.getStringExtra("actInspection"));
+        carData = intent.getParcelableExtra("CarData");
 
         itemForm = findViewById(R.id.itemForm);
         itemDatePlan = findViewById(R.id.itemDatePlan);
         itemState = findViewById(R.id.itemState);
         itemCar = findViewById(R.id.itemCar);
-        itemBarCode = findViewById(R.id.itemBarCode);
-        itemProductionDate = findViewById(R.id.itemProductionDate);
-        itemSector = findViewById(R.id.itemSector);
-        itemRow = findViewById(R.id.itemRow);
+//        itemBarCode = findViewById(R.id.itemBarCode);
+//        itemProductionDate = findViewById(R.id.itemProductionDate);
+//        itemSector = findViewById(R.id.itemSector);
+//        itemRow = findViewById(R.id.itemRow);
+
+        barCode = findViewById(R.id.barCode);
+        editDate = findViewById(R.id.editDate);
+        mImageButtonScanBarCode = findViewById(R.id.scanBarCode);
+        imButCalendar = findViewById(R.id.imButCalendar);
 
         performed = findViewById(R.id.performed);
         performed.setOnClickListener(new View.OnClickListener() {
@@ -180,7 +208,7 @@ public class ActInspectionActivity extends AppCompatActivity {
         ViewAnimation.init(fabOther, textOther);
 
         run = findViewById(R.id.run);
-        if (!mActInspection.getRun().equals("0")){
+        if (!mActInspection.getRun().equals("0")) {
             run.setText(mActInspection.getRun());
         }
 
@@ -237,10 +265,10 @@ public class ActInspectionActivity extends AppCompatActivity {
         itemDatePlan.setText(mActInspection.getInspectionDatePlanString());
         itemState.setText(mActInspection.getState());
         itemCar.setText(mActInspection.getCar());
-        itemBarCode.setText(mActInspection.getBarCode());
-        itemProductionDate.setText(mActInspection.getProductionDate());
-        itemSector.setText(mActInspection.getSector());
-        itemRow.setText(mActInspection.getRow());
+//        itemBarCode.setText(mActInspection.getBarCode());
+//        itemProductionDate.setText(mActInspection.getProductionDate());
+//        itemSector.setText(mActInspection.getSector());
+//        itemRow.setText(mActInspection.getRow());
 
 //        ActionBar mbar = getSupportActionBar();
 //        mbar.setTitle(mActInspection.getDescription());
@@ -283,6 +311,146 @@ public class ActInspectionActivity extends AppCompatActivity {
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemTouchCallback);
         itemTouchHelper.attachToRecyclerView(listDamage);
 
+        barCode.setText(carData.getBarCode());
+        editDate.setText(carData.getProductionDateString());
+
+        Date date = carData.getProductionDate();
+        if (date.getTime() > 0) {
+            dateAndTime.setTime(date);
+        }
+
+        editDate.addTextChangedListener(getTextWatcher());
+        editDate.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+//                editSector.performClick();
+//                return true;
+                return false;
+            }
+        });
+
+        mImageButtonScanBarCode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                scanBarCode();
+            }
+        });
+
+        imButCalendar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new DatePickerDialog(ActInspectionActivity.this, d,
+                        dateAndTime.get(Calendar.YEAR),
+                        dateAndTime.get(Calendar.MONTH),
+                        dateAndTime.get(Calendar.DAY_OF_MONTH))
+                        .show();
+
+            }
+        });
+    }
+
+    DatePickerDialog.OnDateSetListener d = new DatePickerDialog.OnDateSetListener() {
+        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+
+            dateAndTime.set(Calendar.YEAR, year);
+            dateAndTime.set(Calendar.MONTH, monthOfYear);
+            dateAndTime.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            setInitialDateTime();
+
+        }
+    };
+
+    private TextWatcher getTextWatcher() {
+        TextWatcher tw = new TextWatcher() {
+            private String current = "";
+            private String ddmmyyyy = "DDMMYYYY";
+            private Calendar cal = Calendar.getInstance();
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (!s.toString().equals(current)) {
+                    String clean = s.toString().replaceAll("[^\\d.]|\\.", "");
+                    String cleanC = current.replaceAll("[^\\d.]|\\.", "");
+
+                    int cl = clean.length();
+                    int sel = cl;
+                    for (int i = 2; i <= cl && i < 6; i += 2) {
+                        sel++;
+                    }
+                    //Fix for pressing delete next to a forward slash
+                    if (clean.equals(cleanC)) sel--;
+
+                    if (clean.length() < 8) {
+                        clean = clean + ddmmyyyy.substring(clean.length());
+                    } else {
+                        //This part makes sure that when we finish entering numbers
+                        //the date is correct, fixing it otherwise
+                        int day = Integer.parseInt(clean.substring(0, 2));
+                        int mon = Integer.parseInt(clean.substring(2, 4));
+                        int year = Integer.parseInt(clean.substring(4, 8));
+
+                        mon = mon < 1 ? 1 : mon > 12 ? 12 : mon;
+                        cal.set(Calendar.MONTH, mon - 1);
+                        year = (year < 1900) ? 1900 : (year > 2100) ? 2100 : year;
+                        cal.set(Calendar.YEAR, year);
+                        // ^ first set year for the line below to work correctly
+                        //with leap years - otherwise, date e.g. 29/02/2012
+                        //would be automatically corrected to 28/02/2012
+
+                        day = (day > cal.getActualMaximum(Calendar.DATE)) ? cal.getActualMaximum(Calendar.DATE) : day;
+                        clean = String.format("%02d%02d%02d", day, mon, year);
+                    }
+
+                    clean = String.format("%s.%s.%s", clean.substring(0, 2),
+                            clean.substring(2, 4),
+                            clean.substring(4, 8));
+
+                    sel = sel < 0 ? 0 : sel;
+                    current = clean;
+                    editDate.setText(current);
+                    editDate.setSelection(sel < current.length() ? sel : current.length());
+
+                    try {
+
+                        DateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+                        Date date = format.parse(current);
+                        dateAndTime.setTime(date);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        };
+
+        return tw;
+    }
+
+    private void setInitialDateTime() {
+        carData.setProductionDate(dateAndTime.getTime());
+        editDate.setText(carData.getProductionDateString());
+//        editSector.performClick();
+    }
+
+    private void scanBarCode() {
+        IntentIntegrator intentIntegrator = new IntentIntegrator(this);
+        intentIntegrator.setCaptureActivity(ScannerActivity.class);
+        intentIntegrator.setDesiredBarcodeFormats(intentIntegrator.ALL_CODE_TYPES);
+        intentIntegrator.setBeepEnabled(false);
+        intentIntegrator.setCameraId(0);
+        intentIntegrator.setPrompt(getString(R.string.camera_to_the_barcode));
+        intentIntegrator.setBarcodeImageEnabled(false);
+        intentIntegrator.setOrientationLocked(false);
+        intentIntegrator.initiateScan();
     }
 
     private void truckPosition() {
@@ -547,10 +715,10 @@ public class ActInspectionActivity extends AppCompatActivity {
             }
         });
 
-        if (mActInspection.getTruckPosition() == 1){
+        if (mActInspection.getTruckPosition() == 1) {
             setTruckPosition(vehicle_truck_position_01);
 
-        } else if (mActInspection.getTruckPosition() == 2){
+        } else if (mActInspection.getTruckPosition() == 2) {
             setTruckPosition(vehicle_truck_position_02);
 
         } else if (mActInspection.getTruckPosition() == 3) {
@@ -615,6 +783,13 @@ public class ActInspectionActivity extends AppCompatActivity {
     }
 
     private void setCB() {
+        carData.setBarCode(barCode.getText().toString());
+        if (!editDate.getText().toString().equals("")) {
+            carData.setProductionDate(dateAndTime.getTime());
+        }
+        mActInspection.setBarCode(carData.getBarCode());
+        mActInspection.setProductionDate(carData.getProductionDateString());
+
         mActInspection.setRun(run.getText().toString());
 
         mDialog = new ProgressDialog(this);
@@ -881,6 +1056,19 @@ public class ActInspectionActivity extends AppCompatActivity {
         } else if (requestCode == REQUEST_CODE_UPDATE_DAMAGE) {
             updateListDamage();
 
+        } else if (requestCode == REQUEST_CODE_SCAN) {
+            IntentResult Result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+            if (Result != null) {
+                if (Result.getContents() == null) {
+
+                } else {
+                    String tBarCode = Result.getContents();
+                    tBarCode = SharedData.clearBarcode(tBarCode);
+                    barCode.setText(tBarCode);
+                }
+            } else {
+                super.onActivityResult(requestCode, resultCode, data);
+            }
         }
     }
 
@@ -1036,6 +1224,10 @@ public class ActInspectionActivity extends AppCompatActivity {
                 alert.show();
 
             } else {
+                Intent intent = new Intent();
+                intent.putExtra("CarData", carData);
+                intent.putExtra("performedAct", performedAct);
+                setResult(Activity.RESULT_OK, intent);
                 finish();
             }
 
@@ -1163,7 +1355,10 @@ public class ActInspectionActivity extends AppCompatActivity {
                 if (performedAct) {
                     setCBPerformed(true);
                 } else {
-                    setResult(RESULT_OK);
+                    Intent intent = new Intent();
+                    intent.putExtra("CarData", carData);
+                    intent.putExtra("performedAct", performedAct);
+                    setResult(Activity.RESULT_OK, intent);
                     finish();
                 }
             }

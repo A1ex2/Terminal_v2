@@ -522,4 +522,18 @@ public class SharedData {
             }
         }
     }
+
+    public static ActInspection getActInspectionReception(String id, String carID) {
+        ActInspection actInspection = new ActInspection();
+
+        for (int i = 0; i < ACT_INSPECTION.size(); i++) {
+            ActInspection mActInspection = ACT_INSPECTION.get(i);
+            if (mActInspection.getReceptionID().equals(id) & mActInspection.getCarID().equals(carID)) {
+                actInspection = mActInspection;
+                break;
+            }
+        }
+
+        return actInspection;
+    }
 }

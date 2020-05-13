@@ -237,6 +237,8 @@ public class JsonParser {
             ActInspection actInspection = new ActInspection();
             JSONObject actJSON = new JSONObject(mActJSON.get(i).toString());
 
+            actInspection.setReceptionID(actJSON.getString("ReceptionID"));
+
             actInspection.setID(actJSON.getString("ID"));
             actInspection.setDescription(actJSON.getString("Description"));
 

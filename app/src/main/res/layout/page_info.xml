@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -97,96 +97,177 @@
                 tools:text="В работе" />
         </LinearLayout>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingTop="10dp">
+
+                    <TextView
+                        android:id="@+id/itemCar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:textAllCaps="false"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        tools:text="TMAJ3813DKJ882739, TUCSON," />
+
+        <!--            <LinearLayout-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="match_parent"-->
+        <!--                android:layout_weight="1"-->
+        <!--                android:orientation="horizontal"-->
+        <!--                android:padding="10dp">-->
+
+        <!--                <TextView-->
+        <!--                    android:id="@+id/itemBarCode"-->
+        <!--                    android:layout_width="match_parent"-->
+        <!--                    android:layout_height="match_parent"-->
+        <!--                    android:layout_weight="1"-->
+        <!--                    android:gravity="right"-->
+        <!--                    android:textAllCaps="false"-->
+        <!--                    android:textSize="20sp"-->
+        <!--                    android:textStyle="bold"-->
+        <!--                    tools:text="2000000588964" />-->
+
+        <!--            </LinearLayout>-->
+
+        <!--            <LinearLayout-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:layout_weight="1"-->
+        <!--                android:gravity="right"-->
+        <!--                android:orientation="horizontal"-->
+        <!--                android:padding="10dp">-->
+
+        <!--                <TextView-->
+        <!--                    android:id="@+id/itemProductionDate"-->
+        <!--                    android:layout_width="match_parent"-->
+        <!--                    android:layout_height="match_parent"-->
+        <!--                    android:layout_weight="2"-->
+        <!--                    android:gravity="left"-->
+        <!--                    android:textAllCaps="false"-->
+        <!--                    android:textSize="20sp"-->
+        <!--                    android:textStyle="bold"-->
+        <!--                    tools:text="01.01.2000" />-->
+
+        <!--                <TextView-->
+        <!--                    android:id="@+id/itemSector"-->
+        <!--                    android:layout_width="match_parent"-->
+        <!--                    android:layout_height="match_parent"-->
+        <!--                    android:layout_marginRight="5dp"-->
+        <!--                    android:layout_weight="2"-->
+        <!--                    android:gravity="right"-->
+        <!--                    android:textAllCaps="false"-->
+        <!--                    android:textSize="20sp"-->
+        <!--                    android:textStyle="bold"-->
+        <!--                    tools:text="G" />-->
+
+        <!--                <TextView-->
+        <!--                    android:id="@+id/itemRow"-->
+        <!--                    android:layout_width="wrap_content"-->
+        <!--                    android:layout_height="wrap_content"-->
+        <!--                    android:gravity="right"-->
+        <!--                    android:textAllCaps="false"-->
+        <!--                    android:textSize="20sp"-->
+        <!--                    android:textStyle="bold"-->
+        <!--                    tools:text="555" />-->
+        <!--            </LinearLayout>-->
+                </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingTop="10dp">
-
-            <TextView
-                android:id="@+id/itemCar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="10dp"
-                android:textAllCaps="false"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                tools:text="TMAJ3813DKJ882739, TUCSON," />
+            android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/barcodeGroup"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="10dp"
-                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:baselineAligned="false"
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/itemBarCode"
+                    android:id="@+id/textBarcode"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:gravity="right|center"
+                    android:text="@string/textBarcode"
+                    android:textAllCaps="false"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/barCode"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:textAllCaps="false"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:gravity="right"
+                    android:gravity="center"
+                    android:inputType="number"
                     tools:text="2000000588964" />
 
+                <ImageButton
+                    android:id="@+id/scanBarCode"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:src="@drawable/ic_barcode" />
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/dateGroup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="right"
-                android:padding="10dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:baselineAligned="false"
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/itemProductionDate"
+                    android:id="@+id/textDate"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="2"
-                    android:gravity="left"
+                    android:gravity="right|center"
+                    android:text="@string/textDate"
                     android:textAllCaps="false"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    tools:text="01.01.2000" />
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/itemSector"
+                <EditText
+                    android:id="@+id/editDate"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginRight="5dp"
-                    android:layout_weight="2"
-                    android:gravity="right"
-                    android:textAllCaps="false"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    tools:text="G" />
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:inputType="date"
+                    android:textSize="20sp" />
 
-                <TextView
-                    android:id="@+id/itemRow"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="right"
-                    android:textAllCaps="false"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    tools:text="555" />
+                <ImageButton
+                    android:id="@+id/imButCalendar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:src="@drawable/ic_calendar" />
             </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp">
 
             <Button
                 android:id="@+id/performed"
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
-                android:text="@string/performed"/>
+                android:text="@string/performed" />
         </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+</ScrollView>
