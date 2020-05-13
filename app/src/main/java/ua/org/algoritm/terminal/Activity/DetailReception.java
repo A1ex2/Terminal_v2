@@ -126,6 +126,15 @@ public class DetailReception extends AppCompatActivity {
         if (requestCode == REQUEST_CODE_PUT_CB) {
             if (resultCode == Activity.RESULT_OK) {
                 CarData carData = data.getParcelableExtra("CarData");
+
+                for (int i = 0; i < reception.getCarData().size(); i++) {
+                    if (carData.getCarID().equals(reception.getCarData().get(i).getCarID())){
+                        carData.setBarCode(carData.getBarCode());
+                        carData.setProductionDate(carData.getProductionDate());
+                        break;
+                    }
+                }
+
                 boolean performedAct = data.getBooleanExtra("performedAct", false);
 
                 if (performedAct){

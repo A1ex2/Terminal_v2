@@ -1162,8 +1162,16 @@ public class ActInspectionActivity extends AppCompatActivity {
     }
 
     private void isOK() {
-        setResult(RESULT_OK);
-        finish();
+        Boolean isSaveSuccess = Boolean.parseBoolean(soapParam_Response.getPropertyAsString("Result"));
+        if (isSaveSuccess) {
+            Intent intent = new Intent();
+            intent.putExtra("CarData", carData);
+            intent.putExtra("performedAct", performedAct);
+            setResult(Activity.RESULT_OK, intent);
+            finish();
+        } else {
+            uiManager.showToast(soapParam_Response.getPropertyAsString("Description"));
+        }
     }
 
     private void checkSetAct() {
@@ -1224,11 +1232,15 @@ public class ActInspectionActivity extends AppCompatActivity {
                 alert.show();
 
             } else {
-                Intent intent = new Intent();
-                intent.putExtra("CarData", carData);
-                intent.putExtra("performedAct", performedAct);
-                setResult(Activity.RESULT_OK, intent);
-                finish();
+                if (performedAct) {
+                    setCBPerformed(true);
+                } else {
+                    Intent intent = new Intent();
+                    intent.putExtra("CarData", carData);
+                    intent.putExtra("performedAct", performedAct);
+                    setResult(Activity.RESULT_OK, intent);
+                    finish();
+                }
             }
 
         } else {
