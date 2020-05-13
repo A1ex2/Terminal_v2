@@ -25,7 +25,7 @@ public class RecyclerAdapterCarData extends RecyclerView.Adapter<RecyclerAdapter
 
     public RecyclerAdapterCarData(Context context, int resourse, ArrayList<CarData> carData) {
         mResourse = resourse;
-        mCarData = carData;
+//        mCarData = carData;
         mCarData.addAll(carData);
         mInflater = LayoutInflater.from(context);
     }

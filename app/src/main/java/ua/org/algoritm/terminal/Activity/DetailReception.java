@@ -141,7 +141,7 @@ public class DetailReception extends AppCompatActivity {
                     SharedData.deleteCarData(carData.getCarID(), reception);
                 }
 
-                updateLists();
+                updateListsCarData();
                 //setCB(carData);
                 //updateLists();
             }
