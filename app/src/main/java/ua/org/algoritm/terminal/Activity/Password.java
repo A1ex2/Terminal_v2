@@ -277,6 +277,7 @@ public class Password extends AppCompatActivity {
             String usernameFTP = "";
             String passwordFTP = "";
             boolean thisSFTP = false;
+            boolean thisDriver = false;
 
             try {
                 hostFTP = soapParam_Response.getPropertyAsString("host");
@@ -284,6 +285,9 @@ public class Password extends AppCompatActivity {
                 portFTP = Integer.parseInt(soapParam_Response.getPropertyAsString("port"));
                 usernameFTP = soapParam_Response.getPropertyAsString("username");
                 passwordFTP = soapParam_Response.getPropertyAsString("password");
+
+                thisDriver = Integer.parseInt(soapParam_Response.getPropertyAsString("thisDriver")) == 1;
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -296,6 +300,8 @@ public class Password extends AppCompatActivity {
             SharedData.portFTP = portFTP;
             SharedData.usernameFTP = usernameFTP;
             SharedData.passwordFTP = passwordFTP;
+
+            SharedData.thisDriver = thisDriver;
 
             SharedPreferences.Editor editor = preferences.edit();
             editor.putString("Login", mLogin);

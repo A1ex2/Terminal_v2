@@ -61,6 +61,7 @@ public class SharedData {
     public static String usernameFTP;
     public static String passwordFTP;
     public static boolean thisSFTP;
+    public static boolean thisDriver;
 
     public static void updateReception(CarData carData) {
         boolean mFinish = false;

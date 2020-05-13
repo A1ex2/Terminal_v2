@@ -34,6 +34,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -311,42 +312,47 @@ public class ActInspectionActivity extends AppCompatActivity {
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemTouchCallback);
         itemTouchHelper.attachToRecyclerView(listDamage);
 
-        barCode.setText(carData.getBarCode());
-        editDate.setText(carData.getProductionDateString());
+        if (carData != null) {
+            barCode.setText(carData.getBarCode());
+            editDate.setText(carData.getProductionDateString());
 
-        Date date = carData.getProductionDate();
-        if (date.getTime() > 0) {
-            dateAndTime.setTime(date);
-        }
+            Date date = carData.getProductionDate();
+            if (date.getTime() > 0) {
+                dateAndTime.setTime(date);
+            }
 
-        editDate.addTextChangedListener(getTextWatcher());
-        editDate.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+            editDate.addTextChangedListener(getTextWatcher());
+            editDate.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 //                editSector.performClick();
 //                return true;
-                return false;
-            }
-        });
+                    return false;
+                }
+            });
 
-        mImageButtonScanBarCode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                scanBarCode();
-            }
-        });
+            mImageButtonScanBarCode.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    scanBarCode();
+                }
+            });
 
-        imButCalendar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new DatePickerDialog(ActInspectionActivity.this, d,
-                        dateAndTime.get(Calendar.YEAR),
-                        dateAndTime.get(Calendar.MONTH),
-                        dateAndTime.get(Calendar.DAY_OF_MONTH))
-                        .show();
+            imButCalendar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new DatePickerDialog(ActInspectionActivity.this, d,
+                            dateAndTime.get(Calendar.YEAR),
+                            dateAndTime.get(Calendar.MONTH),
+                            dateAndTime.get(Calendar.DAY_OF_MONTH))
+                            .show();
 
-            }
-        });
+                }
+            });
+        } else {
+            LinearLayout groupEdit = findViewById(R.id.groupEdit);
+            groupEdit.setVisibility(View.INVISIBLE);
+        }
     }
 
     DatePickerDialog.OnDateSetListener d = new DatePickerDialog.OnDateSetListener() {
@@ -783,12 +789,14 @@ public class ActInspectionActivity extends AppCompatActivity {
     }
 
     private void setCB() {
-        carData.setBarCode(barCode.getText().toString());
-        if (!editDate.getText().toString().equals("")) {
-            carData.setProductionDate(dateAndTime.getTime());
+        if (carData != null) {
+            carData.setBarCode(barCode.getText().toString());
+            if (!editDate.getText().toString().equals("")) {
+                carData.setProductionDate(dateAndTime.getTime());
+            }
+            mActInspection.setBarCode(carData.getBarCode());
+            mActInspection.setProductionDate(carData.getProductionDateString());
         }
-        mActInspection.setBarCode(carData.getBarCode());
-        mActInspection.setProductionDate(carData.getProductionDateString());
 
         mActInspection.setRun(run.getText().toString());
 
@@ -1164,11 +1172,7 @@ public class ActInspectionActivity extends AppCompatActivity {
     private void isOK() {
         Boolean isSaveSuccess = Boolean.parseBoolean(soapParam_Response.getPropertyAsString("Result"));
         if (isSaveSuccess) {
-            Intent intent = new Intent();
-            intent.putExtra("CarData", carData);
-            intent.putExtra("performedAct", performedAct);
-            setResult(Activity.RESULT_OK, intent);
-            finish();
+            finishActivity();
         } else {
             uiManager.showToast(soapParam_Response.getPropertyAsString("Description"));
         }
@@ -1235,17 +1239,25 @@ public class ActInspectionActivity extends AppCompatActivity {
                 if (performedAct) {
                     setCBPerformed(true);
                 } else {
-                    Intent intent = new Intent();
-                    intent.putExtra("CarData", carData);
-                    intent.putExtra("performedAct", performedAct);
-                    setResult(Activity.RESULT_OK, intent);
-                    finish();
+                    finishActivity();
                 }
             }
 
         } else {
             uiManager.showToast(soapParam_Response.getPropertyAsString("Description"));
         }
+    }
+
+    private void finishActivity() {
+        Intent intent = new Intent();
+        intent.putExtra("performedAct", performedAct);
+
+        if (carData != null) {
+            intent.putExtra("CarData", carData);
+        }
+
+        setResult(Activity.RESULT_OK, intent);
+        finish();
     }
 
     private String getSoapErrorMessage() {
@@ -1367,11 +1379,7 @@ public class ActInspectionActivity extends AppCompatActivity {
                 if (performedAct) {
                     setCBPerformed(true);
                 } else {
-                    Intent intent = new Intent();
-                    intent.putExtra("CarData", carData);
-                    intent.putExtra("performedAct", performedAct);
-                    setResult(Activity.RESULT_OK, intent);
-                    finish();
+                    finishActivity();
                 }
             }
         }

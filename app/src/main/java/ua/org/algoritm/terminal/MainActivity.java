@@ -82,7 +82,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+
+        if (SharedData.thisDriver) {
+            setContentView(R.layout.activity_main_driver);
+        } else {
+            setContentView(R.layout.activity_main);
+        }
 
         start = true;
         mNetworkReceiver = new NetworkChangeReceiver();
@@ -102,10 +107,17 @@ public class MainActivity extends AppCompatActivity {
 
         drawer = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
-        mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_acceptance, R.id.nav_moving, R.id.nav_issue, R.id.nav_order_outfit, R.id.nav_act_inspection)
-                .setDrawerLayout(drawer)
-                .build();
+        if (SharedData.thisDriver) {
+            mAppBarConfiguration = new AppBarConfiguration.Builder(
+                    R.id.nav_act_inspection)
+                    .setDrawerLayout(drawer)
+                    .build();
+        } else {
+            mAppBarConfiguration = new AppBarConfiguration.Builder(
+                    R.id.nav_acceptance, R.id.nav_moving, R.id.nav_issue, R.id.nav_order_outfit)
+                    .setDrawerLayout(drawer)
+                    .build();
+        }
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
@@ -126,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static void dialog(boolean value, Context context) {
 
-        if (start){
+        if (start) {
             start = false;
             return;
         }

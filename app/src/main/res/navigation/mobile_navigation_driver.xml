@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation_driver"
+    app:startDestination="@+id/nav_act_inspection">
+
+<!--    <fragment-->
+<!--        android:id="@+id/nav_acceptance"-->
+<!--        android:name="ua.org.algoritm.terminal.ui.acceptance.AcceptanceFragment"-->
+<!--        android:label="@string/menu_acceptance"-->
+<!--        tools:layout="@layout/fragment_acceptance" />-->
+
+<!--    <fragment-->
+<!--        android:id="@+id/nav_moving"-->
+<!--        android:name="ua.org.algoritm.terminal.ui.moving.MovingFragment"-->
+<!--        android:label="@string/menu_moving"-->
+<!--        tools:layout="@layout/fragment_moving" />-->
+
+<!--    <fragment-->
+<!--        android:id="@+id/nav_issue"-->
+<!--        android:name="ua.org.algoritm.terminal.ui.issuance.IssuanceFragment"-->
+<!--        android:label="@string/menu_issue"-->
+<!--        tools:layout="@layout/fragment_issuance" />-->
+
+<!--    <fragment-->
+<!--        android:id="@+id/nav_order_outfit"-->
+<!--        android:name="ua.org.algoritm.terminal.ui.order.OrderOutfitFragment"-->
+<!--        android:label="@string/menu_order_outfit"-->
+<!--        tools:layout="@layout/fragment_order_outfit" />-->
+
+    <fragment
+        android:id="@+id/nav_act_inspection"
+        android:name="ua.org.algoritm.terminal.ui.act.ActInspectionFragment"
+        android:label="@string/menu_act_inspection"
+        tools:layout="@layout/fragment_act_inspection" />
+
+<!--    <fragment-->
+<!--        android:id="@+id/nav_share"-->
+<!--        android:name="ua.org.algoritm.terminal.ui.share.ShareFragment"-->
+<!--        android:label="@string/menu_share"-->
+<!--        tools:layout="@layout/fragment_share" />-->
+
+<!--    <fragment-->
+<!--        android:id="@+id/nav_send"-->
+<!--        android:name="ua.org.algoritm.terminal.ui.send.SendFragment"-->
+<!--        android:label="@string/menu_send"-->
+<!--        tools:layout="@layout/fragment_send" />-->
+</navigation>
