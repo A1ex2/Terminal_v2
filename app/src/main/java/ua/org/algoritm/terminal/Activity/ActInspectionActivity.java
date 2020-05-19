@@ -112,7 +112,6 @@ public class ActInspectionActivity extends AppCompatActivity {
     private TextView textOther;
 
     private boolean isRotate = false;
-    private Button performed;
     private boolean performedAct = false;
 
     private String mCurrentPhotoPath;
@@ -188,15 +187,6 @@ public class ActInspectionActivity extends AppCompatActivity {
         editDate = findViewById(R.id.editDate);
         mImageButtonScanBarCode = findViewById(R.id.scanBarCode);
         imButCalendar = findViewById(R.id.imButCalendar);
-
-        performed = findViewById(R.id.performed);
-        performed.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                performedAct = true;
-                setCB();
-            }
-        });
 
         textDetail = findViewById(R.id.textDetail);
         textOther = findViewById(R.id.textOther);
@@ -774,7 +764,7 @@ public class ActInspectionActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.save_db, menu);
+        getMenuInflater().inflate(R.menu.save_db_act_inspection, menu);
         return true;
     }
 
@@ -783,6 +773,29 @@ public class ActInspectionActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.saveCB:
                 setCB();
+                return true;
+
+            case R.id.savePerformed:
+                String message = getString(R.string.send_performed);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage(message)
+                        .setCancelable(true)
+                        .setPositiveButton(getString(R.string.butt_Yes), new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                performedAct = true;
+                                setCB();
+                            }
+                        })
+                        .setNegativeButton(getString(R.string.butt_Not), new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+
+                            }
+                        });
+                AlertDialog alert = builder.create();
+                alert.show();
+
+
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -1051,9 +1064,48 @@ public class ActInspectionActivity extends AppCompatActivity {
 
             decodeFile();
 
+            Toast.makeText(this, mTypesPhoto.getTypePhoto(), Toast.LENGTH_SHORT).show();
+
             mCurrentPhotoPath = "";
-            mTypesPhoto = null;
-            updateListTypesPhoto();
+
+            String message = getString(R.string.add_photo);
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage(message)
+                    .setCancelable(true)
+                    .setPositiveButton(getString(R.string.butt_Yes), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            for (int i = 0; i < mActInspection.getTypesPhotos().size(); i++) {
+                                if (mTypesPhoto.getTypePhotoID().equals(mActInspection.getTypesPhotos().get(i).getTypePhotoID())) {
+                                    if (i >= mActInspection.getTypesPhotos().size()-1) {
+                                        Toast.makeText(getApplicationContext(), getString(R.string.all_photos_added), Toast.LENGTH_SHORT).show();
+                                        mTypesPhoto = null;
+                                        updateListTypesPhoto();
+
+                                    } else {
+                                        mTypesPhoto = mActInspection.getTypesPhotos().get(i + 1);
+                                        dispatchTakePictureIntent(REQUEST_TAKE_PHOTO_TypesPhoto);
+                                    }
+
+                                    break;
+                                }
+                            }
+                        }
+                    })
+                    .setNegativeButton(getString(R.string.butt_Not), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dispatchTakePictureIntent(REQUEST_TAKE_PHOTO_TypesPhoto);
+                            updateListTypesPhoto();
+                        }
+                    })
+                    .setNeutralButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            mTypesPhoto = null;
+                            updateListTypesPhoto();
+                        }
+                    });
+            AlertDialog alert = builder.create();
+            alert.show();
 
         } else if ((requestCode == REQUEST_TAKE_PHOTO_Equipment | requestCode == REQUEST_TAKE_PHOTO_TypesPhoto) && resultCode == RESULT_CANCELED) {
             SharedData.deletePhotoActInspection(mCurrentPhotoPath);

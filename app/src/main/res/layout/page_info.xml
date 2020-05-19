@@ -258,17 +258,5 @@
                     android:src="@drawable/ic_calendar" />
             </LinearLayout>
         </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp">
-
-            <Button
-                android:id="@+id/performed"
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:text="@string/performed" />
-        </LinearLayout>
     </LinearLayout>
 </ScrollView>
