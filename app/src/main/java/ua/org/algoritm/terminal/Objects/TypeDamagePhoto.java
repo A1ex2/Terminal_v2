@@ -2,9 +2,10 @@ package ua.org.algoritm.terminal.Objects;
 
 import com.google.gson.annotations.Expose;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class TypeDamagePhoto {
+public class TypeDamagePhoto implements Serializable {
     @Expose
     private String ID;
     private String name;

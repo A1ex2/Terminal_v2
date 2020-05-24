@@ -2,7 +2,9 @@ package ua.org.algoritm.terminal.Objects;
 
 import com.google.gson.annotations.Expose;
 
-public class Detail {
+import java.io.Serializable;
+
+public class Detail implements Serializable {
     @Expose
     private String ID;
     private int tempID;

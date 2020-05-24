@@ -3,9 +3,10 @@ package ua.org.algoritm.terminal.Objects;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class TypesPhoto {
+public class TypesPhoto implements Serializable{
     @Expose
     private String typePhotoID;
     private String typePhoto;

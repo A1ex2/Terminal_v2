@@ -2,7 +2,9 @@ package ua.org.algoritm.terminal.Objects;
 
 import com.google.gson.annotations.Expose;
 
-public class ClassificationDamage {
+import java.io.Serializable;
+
+public class ClassificationDamage implements Serializable {
     @Expose
     private String ID;
     private String name;

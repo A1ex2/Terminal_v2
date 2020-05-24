@@ -1,6 +1,7 @@
 package ua.org.algoritm.terminal.Activity;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -67,7 +68,9 @@ import ua.org.algoritm.terminal.ConnectTo1c.SFTPClient;
 import ua.org.algoritm.terminal.ConnectTo1c.SOAP_Dispatcher;
 import ua.org.algoritm.terminal.ConnectTo1c.SOAP_Objects;
 import ua.org.algoritm.terminal.ConnectTo1c.UIManager;
+import ua.org.algoritm.terminal.Constants;
 import ua.org.algoritm.terminal.DataBase.SharedData;
+import ua.org.algoritm.terminal.MainActivity;
 import ua.org.algoritm.terminal.Objects.ActInspection;
 import ua.org.algoritm.terminal.Objects.CarData;
 import ua.org.algoritm.terminal.Objects.Damage;
@@ -78,6 +81,7 @@ import ua.org.algoritm.terminal.Objects.TypeDamagePhoto;
 import ua.org.algoritm.terminal.Objects.TypesPhoto;
 import ua.org.algoritm.terminal.R;
 import ua.org.algoritm.terminal.Service.IntentServiceDataBase;
+import ua.org.algoritm.terminal.Service.ServicePerformedAct;
 import ua.org.algoritm.terminal.ViewAnimation;
 
 public class ActInspectionActivity extends AppCompatActivity {
@@ -1003,6 +1007,8 @@ public class ActInspectionActivity extends AppCompatActivity {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString("mCurrentPhotoPath", mCurrentPhotoPath);
+        outState.putSerializable("mEquipment", mEquipment);
+        outState.putSerializable("mTypesPhoto", mTypesPhoto);
 
         tabHostSelect = tabHost.getCurrentTab();
         outState.putInt("tabHostSelect", tabHostSelect);
@@ -1012,6 +1018,8 @@ public class ActInspectionActivity extends AppCompatActivity {
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         mCurrentPhotoPath = savedInstanceState.getString("mCurrentPhotoPath");
+        mEquipment = (Equipment) savedInstanceState.getSerializable("mEquipment");
+        mTypesPhoto = (TypesPhoto) savedInstanceState.getSerializable("mTypesPhoto");
 
         tabHostSelect = savedInstanceState.getInt("tabHostSelect", 0);
         tabHost.setCurrentTab(tabHostSelect);
@@ -1072,7 +1080,7 @@ public class ActInspectionActivity extends AppCompatActivity {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage(message)
                     .setCancelable(true)
-                    .setPositiveButton(getString(R.string.butt_Yes), new DialogInterface.OnClickListener() {
+                    .setPositiveButton(getString(R.string.butt_next), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             for (int i = 0; i < mActInspection.getTypesPhotos().size(); i++) {
                                 if (mTypesPhoto.getTypePhotoID().equals(mActInspection.getTypesPhotos().get(i).getTypePhotoID())) {
@@ -1091,16 +1099,9 @@ public class ActInspectionActivity extends AppCompatActivity {
                             }
                         }
                     })
-                    .setNegativeButton(getString(R.string.butt_Not), new DialogInterface.OnClickListener() {
+                    .setNegativeButton(getString(R.string.butt_more_photos), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             dispatchTakePictureIntent(REQUEST_TAKE_PHOTO_TypesPhoto);
-                            updateListTypesPhoto();
-                        }
-                    })
-                    .setNeutralButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            mTypesPhoto = null;
                             updateListTypesPhoto();
                         }
                     });
@@ -1272,8 +1273,12 @@ public class ActInspectionActivity extends AppCompatActivity {
                         .setCancelable(true)
                         .setPositiveButton(getString(R.string.butt_Yes), new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                mTaskPhotoFTP = new SaveTaskPhotoFTP(ActInspectionActivity.this, mActInspection.getID());
-                                mTaskPhotoFTP.execute(photoAll);
+                                Intent startIntent = new Intent(ActInspectionActivity.this, ServicePerformedAct.class);
+                                startIntent.setAction(Constants.ACTION.STARTFOREGROUND_ACTION);
+                                startService(startIntent);
+
+//                                mTaskPhotoFTP = new SaveTaskPhotoFTP(ActInspectionActivity.this, mActInspection.getID());
+//                                mTaskPhotoFTP.execute(photoAll);
                             }
                         })
                         .setNegativeButton(getString(R.string.butt_Not), new DialogInterface.OnClickListener() {

@@ -2,11 +2,12 @@ package ua.org.algoritm.terminal.Objects;
 
 import com.google.gson.annotations.Expose;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import ua.org.algoritm.terminal.DataBase.SharedData;
 
-public class Damage {
+public class Damage implements Serializable{
     @Expose
     private Detail detail;
 

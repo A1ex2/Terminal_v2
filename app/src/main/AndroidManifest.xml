@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="ua.org.algoritm.terminal">
 
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
@@ -22,13 +23,27 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Activity.DamageDefectActivity"></activity>
+        <service
+            android:name=".Service.ServicePerformedAct"
+            android:enabled="true"
+            android:exported="false"></service>
+
+        <activity
+            android:name=".Activity.DamageDefectActivity"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
         <activity android:name=".Activity.ListActPhotoDamage" />
         <activity android:name=".Activity.DamageOtherActivity" />
-        <activity android:name=".Activity.DamageDetailActivity" />
+        <activity
+            android:name=".Activity.DamageDetailActivity"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
         <activity android:name=".Activity.DamageDetailSchemeActivity" />
         <activity android:name=".Activity.ListActPhoto" />
-        <activity android:name=".Activity.ActInspectionActivity" />
+        <activity
+            android:name=".Activity.ActInspectionActivity"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".Activity.ViewPhoto"
             android:theme="@style/AppTheme.NoActionBar" />

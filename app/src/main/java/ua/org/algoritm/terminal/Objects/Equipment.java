@@ -3,7 +3,9 @@ package ua.org.algoritm.terminal.Objects;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Equipment {
+import java.io.Serializable;
+
+public class Equipment implements Serializable{
     @Expose
     private String equipmentID;
 

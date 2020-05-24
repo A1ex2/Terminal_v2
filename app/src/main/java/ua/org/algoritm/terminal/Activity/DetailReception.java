@@ -129,8 +129,8 @@ public class DetailReception extends AppCompatActivity {
 
                 for (int i = 0; i < reception.getCarData().size(); i++) {
                     if (carData.getCarID().equals(reception.getCarData().get(i).getCarID())){
-                        carData.setBarCode(carData.getBarCode());
-                        carData.setProductionDate(carData.getProductionDate());
+                        reception.getCarData().get(i).setBarCode(carData.getBarCode());
+                        reception.getCarData().get(i).setProductionDate(carData.getProductionDate());
                         break;
                     }
                 }
