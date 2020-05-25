@@ -71,6 +71,8 @@ public class ActInspection {
     @Expose
     private boolean performed;
 
+    public boolean sendPhoto = false;
+
     public ActInspection() {
     }
 

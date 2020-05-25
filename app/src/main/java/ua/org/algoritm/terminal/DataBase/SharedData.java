@@ -63,6 +63,8 @@ public class SharedData {
     public static boolean thisSFTP;
     public static boolean thisDriver;
 
+    public static int NOTIFY_ID = 1;
+
     public static void updateReception(CarData carData) {
         boolean mFinish = false;
         for (int i = 0; i < RECEPTION.size(); i++) {

@@ -81,6 +81,7 @@ import ua.org.algoritm.terminal.Objects.TypeDamagePhoto;
 import ua.org.algoritm.terminal.Objects.TypesPhoto;
 import ua.org.algoritm.terminal.R;
 import ua.org.algoritm.terminal.Service.IntentServiceDataBase;
+import ua.org.algoritm.terminal.Service.IntentServicePerformedAct;
 import ua.org.algoritm.terminal.Service.ServicePerformedAct;
 import ua.org.algoritm.terminal.ViewAnimation;
 
@@ -1084,7 +1085,7 @@ public class ActInspectionActivity extends AppCompatActivity {
                         public void onClick(DialogInterface dialog, int id) {
                             for (int i = 0; i < mActInspection.getTypesPhotos().size(); i++) {
                                 if (mTypesPhoto.getTypePhotoID().equals(mActInspection.getTypesPhotos().get(i).getTypePhotoID())) {
-                                    if (i >= mActInspection.getTypesPhotos().size()-1) {
+                                    if (i >= mActInspection.getTypesPhotos().size() - 1) {
                                         Toast.makeText(getApplicationContext(), getString(R.string.all_photos_added), Toast.LENGTH_SHORT).show();
                                         mTypesPhoto = null;
                                         updateListTypesPhoto();
@@ -1275,10 +1276,17 @@ public class ActInspectionActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int id) {
                                 Intent startIntent = new Intent(ActInspectionActivity.this, ServicePerformedAct.class);
                                 startIntent.setAction(Constants.ACTION.STARTFOREGROUND_ACTION);
+                                startIntent.putExtra(ServicePerformedAct.EXTRA_ACT_ID, mActInspection.getID());
+                                if (performedAct) {
+                                    startIntent.putExtra(ServicePerformedAct.EXTRA_performedAct, performedAct);
+//                                    setCBPerformed(true);
+                                } else {
+                                }
                                 startService(startIntent);
 
 //                                mTaskPhotoFTP = new SaveTaskPhotoFTP(ActInspectionActivity.this, mActInspection.getID());
 //                                mTaskPhotoFTP.execute(photoAll);
+                                finishActivity();
                             }
                         })
                         .setNegativeButton(getString(R.string.butt_Not), new DialogInterface.OnClickListener() {
@@ -1294,7 +1302,21 @@ public class ActInspectionActivity extends AppCompatActivity {
 
             } else {
                 if (performedAct) {
-                    setCBPerformed(true);
+                    performedAct = false;
+                    String message = getString(R.string.no_photos);
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setMessage(message)
+                            .setCancelable(true)
+                            .setPositiveButton(getString(R.string.butt_OK), new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+
+                                }
+                            });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+
+//                    setCBPerformed(true);
                 } else {
                     finishActivity();
                 }

@@ -129,5 +129,6 @@
     <string name="all_photos_added">Все фото добавлены. если нужно, можно начать сначала</string>
     <string name="butt_next">дальше</string>
     <string name="butt_more_photos">еще фото</string>
+    <string name="no_photos">Запрещено закрыть акт осмотра без обязательных фотографий</string>
 
 </resources>
