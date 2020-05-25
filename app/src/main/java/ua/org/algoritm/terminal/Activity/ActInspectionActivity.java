@@ -1093,6 +1093,7 @@ public class ActInspectionActivity extends AppCompatActivity {
                                     } else {
                                         mTypesPhoto = mActInspection.getTypesPhotos().get(i + 1);
                                         dispatchTakePictureIntent(REQUEST_TAKE_PHOTO_TypesPhoto);
+                                        updateListTypesPhoto();
                                     }
 
                                     break;
@@ -1105,7 +1106,14 @@ public class ActInspectionActivity extends AppCompatActivity {
                             dispatchTakePictureIntent(REQUEST_TAKE_PHOTO_TypesPhoto);
                             updateListTypesPhoto();
                         }
-                    });
+                    })
+            .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialogInterface) {
+                    mTypesPhoto = null;
+                    updateListTypesPhoto();
+                }
+            });
             AlertDialog alert = builder.create();
             alert.show();
 
