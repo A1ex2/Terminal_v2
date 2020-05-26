@@ -62,6 +62,7 @@ public class SharedData {
     public static String passwordFTP;
     public static boolean thisSFTP;
     public static boolean thisDriver;
+    public static String absolutePathFTP;
 
     public static int NOTIFY_ID = 1;
 

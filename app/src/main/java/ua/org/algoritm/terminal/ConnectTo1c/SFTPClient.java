@@ -3,6 +3,8 @@ package ua.org.algoritm.terminal.ConnectTo1c;
 import com.google.android.material.shape.EdgeTreatment;
 import com.jcraft.jsch.*;
 
+import ua.org.algoritm.terminal.DataBase.SharedData;
+
 public class SFTPClient {
     private String host = "";
     private String user = "";
@@ -36,27 +38,33 @@ public class SFTPClient {
         ChannelSftp sftpChannel = (ChannelSftp) channel;
 
         String path = "";
+        String absolutePathN = "";
         for (String dir : absolutePath.split("/")) {
             if (dir.equals("foto")) {
-//                if (true) {
+                if (true) {
 //                    path = "LocalUser/Developer1C_1/" + dir;
 //                    absolutePath = "LocalUser/Developer1C_1/" + absolutePath;
 //                    path = "mnt/DATA5/terminal/" + dir;
-//                    absolutePath = "/mnt/DATA5/terminal/" + absolutePath;;
-//                } else {
+//                    absolutePath = "/mnt/DATA5/terminal/" + absolutePath;
+
+                    path = SharedData.absolutePathFTP;
+                    absolutePathN = SharedData.absolutePathFTP;
+
+                } else {
                     path = dir;
-//                }
+                }
 
                 continue;
             }
             path = path + "/" + dir;
+            absolutePathN = absolutePathN + "/" + dir;
             try {
                 sftpChannel.mkdir(path);
             } catch (Exception ee) {
                 ee.printStackTrace();
             }
         }
-        sftpChannel.cd(absolutePath);
+        sftpChannel.cd(absolutePathN);
 
         sftpChannel.put(source, destination);
         sftpChannel.exit();
