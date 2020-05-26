@@ -46,8 +46,8 @@ public class NotificationHelper {
 //                0 /* Request code */, resultIntent,
 //                PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Bitmap icon = BitmapFactory.decodeResource(mContext.getResources(),
-                R.mipmap.ic_launcher);
+//        Bitmap icon = BitmapFactory.decodeResource(mContext.getResources(),
+//                R.mipmap.ic_launcher);
 
         mBuilder = new NotificationCompat.Builder(mContext);
         mBuilder.setSmallIcon(R.drawable.ic_file_upload);
@@ -55,8 +55,8 @@ public class NotificationHelper {
                 .setTicker(title)
                 .setContentText(message)
                 .setOngoing(true)
-                .setLargeIcon(
-                        Bitmap.createScaledBitmap(icon, 128, 128, false))
+//                .setLargeIcon(
+//                        Bitmap.createScaledBitmap(icon, 128, 128, false))
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
 //                .setContentIntent(resultPendingIntent)
                 .addAction(android.R.drawable.ic_menu_close_clear_cancel, "Отмена",
@@ -89,8 +89,8 @@ public class NotificationHelper {
 //                0 /* Request code */, resultIntent,
 //                PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Bitmap icon = BitmapFactory.decodeResource(mContext.getResources(),
-                R.mipmap.ic_launcher);
+//        Bitmap icon = BitmapFactory.decodeResource(mContext.getResources(),
+//                R.mipmap.ic_launcher);
 
         mBuilder = new NotificationCompat.Builder(mContext);
         mBuilder.setSmallIcon(R.drawable.ic_file_upload);
@@ -99,8 +99,8 @@ public class NotificationHelper {
                 .setContentText(message)
                 .setAutoCancel(true)
                 .setDefaults(Notification.DEFAULT_ALL)
-                .setLargeIcon(
-                        Bitmap.createScaledBitmap(icon, 128, 128, false))
+//                .setLargeIcon(
+//                        Bitmap.createScaledBitmap(icon, 128, 128, false))
 //                .setContentIntent(resultPendingIntent)
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(message));
 
