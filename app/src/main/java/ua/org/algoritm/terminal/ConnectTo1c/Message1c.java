@@ -84,7 +84,8 @@ public class Message1c {
                 isMessage = true;
                 text = soap_Response.getPropertyAsString("Description");
             } else {
-                isMessage = false;
+                isMessage = true;
+                text = soap_Response.getPropertyAsString("Description");
             }
         }
     }
