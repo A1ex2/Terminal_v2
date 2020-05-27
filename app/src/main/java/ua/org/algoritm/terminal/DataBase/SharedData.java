@@ -65,6 +65,7 @@ public class SharedData {
     public static String absolutePathFTP;
 
     public static int NOTIFY_ID = 1;
+    public static boolean isActInspection = false;
 
     public static void updateReception(CarData carData) {
         boolean mFinish = false;

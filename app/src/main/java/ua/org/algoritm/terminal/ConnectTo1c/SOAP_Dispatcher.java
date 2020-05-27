@@ -127,7 +127,9 @@ public class SOAP_Dispatcher extends Thread {
 
             case AcceptanceFragment.ACTION_RECEPTION_LIST:
                 getReceptionList();
-                GetActInspection();
+                if (SharedData.isActInspection) {
+                    GetActInspection();
+                }
                 break;
 
             case DetailReception.ACTION_UPDATE_RECEPTION:

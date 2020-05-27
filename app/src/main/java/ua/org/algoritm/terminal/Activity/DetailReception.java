@@ -128,22 +128,27 @@ public class DetailReception extends AppCompatActivity {
                 CarData carData = data.getParcelableExtra("CarData");
 
                 for (int i = 0; i < reception.getCarData().size(); i++) {
-                    if (carData.getCarID().equals(reception.getCarData().get(i).getCarID())){
+                    if (carData.getCarID().equals(reception.getCarData().get(i).getCarID())) {
                         reception.getCarData().get(i).setBarCode(carData.getBarCode());
                         reception.getCarData().get(i).setProductionDate(carData.getProductionDate());
                         break;
                     }
                 }
 
-                boolean performedAct = data.getBooleanExtra("performedAct", false);
+                if (SharedData.isActInspection) {
 
-                if (performedAct){
-                    SharedData.deleteCarData(carData.getCarID(), reception);
+                    boolean performedAct = data.getBooleanExtra("performedAct", false);
+
+                    if (performedAct) {
+                        SharedData.deleteCarData(carData.getCarID(), reception);
+                    }
+
+                    updateListsCarData();
+
+                } else {
+                    setCB(carData);
+//                    updateLists();
                 }
-
-                updateListsCarData();
-                //setCB(carData);
-                //updateLists();
             }
         }
     }
@@ -163,21 +168,27 @@ public class DetailReception extends AppCompatActivity {
 //    }
 
     private void viewCarData(CarData carData) {
-        ActInspection actInspection = SharedData.getActInspectionReception(reception.getID(), carData.getCarID());
+        if (SharedData.isActInspection) {
+            {
+                ActInspection actInspection = SharedData.getActInspectionReception(reception.getID(), carData.getCarID());
 
-        if (!actInspection.getReceptionID().equals(reception.getID())){
-            uiManager.showToast("Акт не найден");
-            return;
+                if (!actInspection.getReceptionID().equals(reception.getID())) {
+                    uiManager.showToast("Акт не найден");
+                    return;
+                }
+
+                Intent intent = new Intent(getApplicationContext(), ActInspectionActivity.class);
+                intent.putExtra("actInspection", actInspection.getID());
+                intent.putExtra("CarData", carData);
+                startActivityForResult(intent, REQUEST_CODE_PUT_CB);
+            }
+        } else {
+            {
+                Intent intent = new Intent(DetailReception.this, CarActivity.class);
+                intent.putExtra("CarData", carData);
+                startActivityForResult(intent, REQUEST_CODE_PUT_CB);
+            }
         }
-
-        Intent intent = new Intent(getApplicationContext(), ActInspectionActivity.class);
-        intent.putExtra("actInspection", actInspection.getID());
-        intent.putExtra("CarData", carData);
-        startActivityForResult(intent, REQUEST_CODE_PUT_CB);
-
-//        Intent intent = new Intent(DetailReception.this, CarActivity.class);
-//        intent.putExtra("CarData", carData);
-//        startActivityForResult(intent, REQUEST_CODE_PUT_CB);
     }
 
     private void updateLists() {
@@ -224,6 +235,7 @@ public class DetailReception extends AppCompatActivity {
                 break;
             }
         }
+
     }
 
     private void checkSetReception() {
@@ -232,7 +244,7 @@ public class DetailReception extends AppCompatActivity {
         String carID = soapParam_Response.getPrimitivePropertyAsString("CarID");
 
         if (isSaveSuccess) {
-            if (!carID.equals("")){
+            if (!carID.equals("")) {
                 SharedData.deleteCarData(carID, reception);
                 updateListsCarData();
             }
