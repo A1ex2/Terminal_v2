@@ -781,25 +781,49 @@ public class ActInspectionActivity extends AppCompatActivity {
                 return true;
 
             case R.id.savePerformed:
-                String message = getString(R.string.send_performed);
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setMessage(message)
-                        .setCancelable(true)
-                        .setPositiveButton(getString(R.string.butt_Yes), new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                performedAct = true;
-                                setCB();
-                            }
-                        })
-                        .setNegativeButton(getString(R.string.butt_Not), new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
+                if (carData != null) {
+                    carData.setBarCode(barCode.getText().toString());
+                    if (!editDate.getText().toString().equals("")) {
+                        carData.setProductionDate(dateAndTime.getTime());
+                    }
+                    mActInspection.setBarCode(carData.getBarCode());
+                    mActInspection.setProductionDate(carData.getProductionDateString());
+                }
+                if (mActInspection.getBarCode().equals("") || mActInspection.getProductionDate().equals("")) {
+                    String message = getString(R.string.not_completed);
 
-                            }
-                        });
-                AlertDialog alert = builder.create();
-                alert.show();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setMessage(message)
+                            .setCancelable(true)
+                            .setPositiveButton(getString(R.string.butt_OK), new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
 
+                                }
+                            });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+
+                } else {
+                    String message = getString(R.string.send_performed);
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setMessage(message)
+                            .setCancelable(true)
+                            .setPositiveButton(getString(R.string.butt_Yes), new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    performedAct = true;
+                                    setCB();
+                                }
+                            })
+                            .setNegativeButton(getString(R.string.butt_Not), new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+
+                                }
+                            });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                }
 
                 return true;
         }
@@ -1107,13 +1131,13 @@ public class ActInspectionActivity extends AppCompatActivity {
                             updateListTypesPhoto();
                         }
                     })
-            .setOnCancelListener(new DialogInterface.OnCancelListener() {
-                @Override
-                public void onCancel(DialogInterface dialogInterface) {
-                    mTypesPhoto = null;
-                    updateListTypesPhoto();
-                }
-            });
+                    .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                        @Override
+                        public void onCancel(DialogInterface dialogInterface) {
+                            mTypesPhoto = null;
+                            updateListTypesPhoto();
+                        }
+                    });
             AlertDialog alert = builder.create();
             alert.show();
 

@@ -6,8 +6,10 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 
-public class PhotoActInspection {
+
+public class PhotoActInspection implements Serializable {
     @Expose
     private String actID;
 
