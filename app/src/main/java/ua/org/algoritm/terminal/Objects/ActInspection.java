@@ -167,6 +167,16 @@ public class ActInspection {
         return inspectionDateFact;
     }
 
+    public String getInspectionDateFactString() {
+        String date = "";
+        if (inspectionDateFact.getTime() > 0) {
+            String pattern = "dd.MM.yyyy";
+            DateFormat df = new SimpleDateFormat(pattern);
+            date = df.format(inspectionDateFact);
+        }
+        return date;
+    }
+
     public void setInspectionDateFact(Date inspectionDateFact) {
         this.inspectionDateFact = inspectionDateFact;
     }

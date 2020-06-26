@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import ua.org.algoritm.terminal.Objects.ActInspection;
 import ua.org.algoritm.terminal.Objects.CarData;
 import ua.org.algoritm.terminal.Objects.CarDataOutfit;
 import ua.org.algoritm.terminal.Objects.Photo;
@@ -20,7 +21,7 @@ import java.util.ArrayList;
 public class DataBaseHelper extends SQLiteOpenHelper {
 
     public DataBaseHelper(Context context) {
-        super(context, "MyBD.db", null, 3);
+        super(context, "MyBD.db", null, 4);
     }
 
     @Override
@@ -65,6 +66,74 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                     + "objectID TEXT NOT NULL,"
                     + "currentPhotoPath TEXT NOT NULL)");
         }
+
+        if (newVersion == 4) {
+            db.execSQL("CREATE TABLE ActInspection ("
+                    + "_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + "ReceptionID TEXT NOT NULL,"
+                    + "ID TEXT NOT NULL,"
+                    + "description TEXT NOT NULL,"
+                    + "stateID TEXT NOT NULL,"
+                    + "state TEXT NOT NULL,"
+                    + "formID TEXT NOT NULL,"
+                    + "form TEXT NOT NULL,"
+                    + "truckPosition TEXT NOT NULL,"
+                    + "truckPositionDirection TEXT NOT NULL,"
+                    + "run TEXT NOT NULL,"
+                    + "storageID TEXT NOT NULL,"
+                    + "storage TEXT NOT NULL,"
+                    + "inspectionDatePlan TEXT NOT NULL,"
+                    + "inspectionDateFact TEXT NOT NULL,"
+                    + "carID TEXT NOT NULL,"
+                    + "car TEXT NOT NULL,"
+                    + "productionDate TEXT NOT NULL,"
+                    + "barCode TEXT NOT NULL,"
+                    + "sectorID TEXT NOT NULL,"
+                    + "sector TEXT NOT NULL,"
+                    + "_row TEXT NOT NULL,"
+                    + "TypeMachineID TEXT NOT NULL,"
+                    + "TypeMachine TEXT NOT NULL,"
+                    + "performed TEXT NOT NULL)");
+        }
+
+        db.execSQL("CREATE TABLE Equipment ("
+                + "_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + "ID TEXT NOT NULL,"
+                + "equipmentID TEXT NOT NULL,"
+                + "equipment TEXT NOT NULL,"
+                + "listObject TEXT NOT NULL,"
+                + "quantityPlan INTEGER NOT NULL,"
+                + "quantityFact INTEGER NOT NULL)");
+
+        db.execSQL("CREATE TABLE Inspection ("
+                + "_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + "ID TEXT NOT NULL,"
+                + "name TEXT NOT NULL,"
+                + "performed INTEGER NOT NULL)");
+
+        db.execSQL("CREATE TABLE TypesPhoto ("
+                + "_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + "ID TEXT NOT NULL,"
+                + "typePhotoID TEXT NOT NULL,"
+                + "typePhoto TEXT NOT NULL,"
+                + "listObject TEXT NOT NULL)");
+
+        db.execSQL("CREATE TABLE Damage ("
+                + "_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + "ID TEXT NOT NULL,"
+                + "detail TEXT NOT NULL,"
+                + "detailID TEXT NOT NULL,"
+                + "typeDetail TEXT NOT NULL,"
+                + "mDegreesDamage TEXT NOT NULL,"
+                + "mDegreesDamageID TEXT NOT NULL,"
+                + "mClassificationDamage TEXT NOT NULL,"
+                + "mClassificationDamageID TEXT NOT NULL,"
+                + "mOriginDamage TEXT NOT NULL,"
+                + "mOriginDamageID TEXT NOT NULL,"
+                + "detailDamage TEXT NOT NULL,"
+                + "commentDamage TEXT NOT NULL,"
+                + "widthDamage TEXT NOT NULL,"
+                + "heightDamage TEXT NOT NULL)");
 
     }
 
@@ -398,7 +467,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return mPhotos;
     }
 
-
     public long insertPhotoActInspection(String actID, String listObject, String objectID, String currentPhotoPath) {
         SQLiteDatabase db = getReadableDatabase();
         long id = 0;
@@ -423,7 +491,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         Cursor cursor = null;
 
         try {
-            String select = "actID = '" + actID + "' and listObject = '" + listObject + "' and objectID = '" + objectID +  "'";
+            String select = "actID = '" + actID + "' and listObject = '" + listObject + "' and objectID = '" + objectID + "'";
             cursor = db.query("ActInspectionPhoto", null, select, null, null, null, null);
             //cursor = db.query("ActInspectionPhoto", null, null, null, null, null, null);
 
@@ -432,7 +500,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                     PhotoActInspection photo = new PhotoActInspection();
 
                     File file = new File(cursor.getString(cursor.getColumnIndex("currentPhotoPath")));
-                    if(!file.isFile()){
+                    if (!file.isFile()) {
                         deletePhotoActInspection(cursor.getString(cursor.getColumnIndex("currentPhotoPath")));
                     }
                     String fileName = file.getName();
@@ -466,7 +534,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         Cursor cursor = null;
 
         try {
-            String select = "actID = '" + actID + "' and objectID LIKE '%" + objectID +  "%'";
+            String select = "actID = '" + actID + "' and objectID LIKE '%" + objectID + "%'";
             cursor = db.query("ActInspectionPhoto", null, select, null, null, null, null);
             //cursor = db.query("ActInspectionPhoto", null, null, null, null, null, null);
 
@@ -475,7 +543,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                     PhotoActInspection photo = new PhotoActInspection();
 
                     File file = new File(cursor.getString(cursor.getColumnIndex("currentPhotoPath")));
-                    if(!file.isFile()){
+                    if (!file.isFile()) {
                         deletePhotoActInspection(cursor.getString(cursor.getColumnIndex("currentPhotoPath")));
                     }
                     String fileName = file.getName();
@@ -998,5 +1066,80 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 //        }
 //        return productArrayList;
 //    }
+
+    public void insertActInspection(ActInspection actInspection) {
+        SQLiteDatabase db = getReadableDatabase();
+        long id = 0;
+
+        try {
+            ActInspection tActInspection = getActInspection(actInspection.getReceptionID(), actInspection.getID());
+//            if ((dbCarData.getCarID() != null) && (dbCarData.getCarID().equals(carData.getCarID()) & dbCarData.getReceptionID().equals(carData.getReceptionID()))) {
+//                updateCarData(carData);
+//            } else {
+
+                ContentValues values = new ContentValues();
+                values.put("ReceptionID", actInspection.getReceptionID());
+                values.put("ID", actInspection.getID());
+                values.put("description", actInspection.getDescription());
+                values.put("stateID", actInspection.getStateID());
+                values.put("state", actInspection.getState());
+                values.put("formID", actInspection.getFormID());
+                values.put("form", actInspection.getForm());
+                values.put("truckPosition", actInspection.getTruckPosition());
+                values.put("truckPositionDirection", actInspection.getTruckPositionDirection());
+                values.put("run", actInspection.getRun());
+                values.put("storageID", actInspection.getStorageID());
+                values.put("storage", actInspection.getStorage());
+                values.put("inspectionDatePlan", actInspection.getInspectionDatePlanString());
+                values.put("inspectionDateFact", actInspection.getInspectionDateFactString());
+                values.put("carID", actInspection.getCarID());
+                values.put("car", actInspection.getCar());
+                values.put("productionDate", actInspection.getProductionDate());
+                values.put("barCode", actInspection.getBarCode());
+                values.put("sectorID", actInspection.getSectorID());
+                values.put("sector", actInspection.getSector());
+                values.put("_row", actInspection.getRow());
+                values.put("TypeMachineID", actInspection.getTypeMachineID());
+                values.put("TypeMachine", actInspection.getTypeMachine());
+                values.put("performed", actInspection.isPerformed() ? 1 : 0);
+
+                id = db.insert("ActInspection", null, values);
+//            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public ActInspection getActInspection(String receptionID, String id) {
+        ActInspection actInspection = new ActInspection();
+        SQLiteDatabase db = getWritableDatabase();
+        Cursor cursor = null;
+
+        try {
+            String select = "ReceptionID = '" + receptionID + "' and ID = '" + id + "'";
+            cursor = db.query("ActInspection", null, select, null, null, null, null);
+
+            if (cursor.moveToNext()) {
+
+//                carData.setReceptionID(cursor.getString(cursor.getColumnIndex("ReceptionID")));
+//                carData.setCarID(cursor.getString(cursor.getColumnIndex("carID")));
+//                carData.setBarCode(cursor.getString(cursor.getColumnIndex("barCode")));
+//                carData.setSectorID(cursor.getString(cursor.getColumnIndex("sectorID")));
+//                carData.setRow(cursor.getString(cursor.getColumnIndex("mRow")));
+//                carData.setProductionDate(cursor.getString(cursor.getColumnIndex("productionDate")));
+//                carData.setBarCode(cursor.getString(cursor.getColumnIndex("barCode")));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+
+        return actInspection;
+    }
+
 
 }
