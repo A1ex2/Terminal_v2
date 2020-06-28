@@ -150,9 +150,9 @@ public class ActInspection {
 
     public void setInspectionDatePlan(String string) {
         try {
-            DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+            DateFormat format = new SimpleDateFormat("dd.MM.yyyy");
             if (string.equals("")) {
-                string = "0001-01-01T00:00:00";
+                string = "01.01.0001";
             }
 
             Date date = format.parse(string);
@@ -183,9 +183,9 @@ public class ActInspection {
 
     public void setInspectionDateFact(String string) {
         try {
-            DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+            DateFormat format = new SimpleDateFormat("dd.MM.yyyy");
             if (string.equals("")) {
-                string = "0001-01-01T00:00:00";
+                string = "01.01.0001";
             }
 
             Date date = format.parse(string);

@@ -77,7 +77,24 @@ public class AcceptanceFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_search, menu);
+        if (SharedData.isOfflineReception) {
+            inflater.inflate(R.menu.menu_search_offline, menu);
+            final MenuItem update_data_receptions = menu.findItem(R.id.update_data_receptions);
+
+            update_data_receptions.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    SharedData.updateReceptionListDB = true;
+                    SharedData.updateActInspectionListDB = true;
+                    getUpdateReceptionList();
+
+                    return false;
+                }
+            });
+
+        }  else {
+            inflater.inflate(R.menu.menu_search, menu);
+        }
 
         final MenuItem searchItem = menu.findItem(R.id.menu_item_search);
         final SearchView searchView = (SearchView) searchItem.getActionView();

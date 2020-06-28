@@ -66,6 +66,9 @@ public class SharedData {
 
     public static int NOTIFY_ID = 1;
     public static boolean isActInspection = false;
+    public static boolean isOfflineReception = false;
+    public static boolean updateReceptionListDB = false;
+    public static boolean updateActInspectionListDB = false;
 
     public static void updateReception(CarData carData) {
         boolean mFinish = false;
@@ -540,5 +543,25 @@ public class SharedData {
         }
 
         return actInspection;
+    }
+
+    public static void insertReceptionList() {
+        DataBaseHelper helper = new DataBaseHelper(app);
+        helper.insertReceptionList(RECEPTION);
+    }
+
+    public static void getReceptionList() {
+        DataBaseHelper helper = new DataBaseHelper(app);
+        RECEPTION = helper.getReceptionList();
+    }
+
+    public static void insertActInspectionList() {
+        DataBaseHelper helper = new DataBaseHelper(app);
+        helper.insertActInspectionList(ACT_INSPECTION);
+    }
+
+    public static void getActInspectionList() {
+        DataBaseHelper helper = new DataBaseHelper(app);
+        ACT_INSPECTION = helper.getActInspectionList();
     }
 }

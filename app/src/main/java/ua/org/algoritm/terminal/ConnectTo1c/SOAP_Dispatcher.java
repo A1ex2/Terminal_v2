@@ -503,6 +503,23 @@ public class SOAP_Dispatcher extends Thread {
     }
 
     private void GetActInspection() {
+        if (SharedData.isOfflineReception & !SharedData.updateActInspectionListDB) {
+            ArrayList<ActInspection> mActInspections = SharedData.ACT_INSPECTION;
+            mActInspections.clear();
+
+            soap_Response = new SoapObject();
+
+            SharedData.getActInspectionList();
+
+            SharedData.checkPhotoAct();
+
+            for (int i = 0; i < mActInspections.size(); i++) {
+                SharedData.setPhotoActInspection(mActInspections.get(i));
+            }
+
+            return;
+        }
+
         thisGet = true;
 
         String method = "GetActInspection";
@@ -523,6 +540,12 @@ public class SOAP_Dispatcher extends Thread {
             for (int i = 0; i < mActInspections.size(); i++) {
                 SharedData.setPhotoActInspection(mActInspections.get(i));
             }
+
+            if (SharedData.isOfflineReception & SharedData.updateActInspectionListDB) {
+                SharedData.updateActInspectionListDB = false;
+                SharedData.insertActInspectionList();
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -575,6 +598,18 @@ public class SOAP_Dispatcher extends Thread {
     }
 
     void getReceptionList() {
+        if (SharedData.isOfflineReception & !SharedData.updateReceptionListDB) {
+            ArrayList<Reception> mReceptions = SharedData.RECEPTION;
+            mReceptions.clear();
+
+            soap_Response = new SoapObject();
+
+            SharedData.getReceptionList();
+
+            SharedData.updateReceptionsDB();
+            return;
+        }
+
         thisGet = true;
 
         String method = "GetReceptionList";
@@ -630,6 +665,11 @@ public class SOAP_Dispatcher extends Thread {
             }
 
             SharedData.updateReceptionsDB();
+
+            if (SharedData.isOfflineReception & SharedData.updateReceptionListDB) {
+                SharedData.updateReceptionListDB = false;
+                SharedData.insertReceptionList();
+            }
 
         } catch (Exception e) {
             e.printStackTrace();

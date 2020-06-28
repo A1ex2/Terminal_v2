@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Terminal</string>
 
-    <string name="nav_header_version">2.8.4</string>
+    <string name="nav_header_version">2.8.5</string>
 
     <string name="nav_header_title">Terminal</string>
     <string name="nav_header_subtitle">v. 1.0.0</string>
@@ -131,5 +131,6 @@
     <string name="butt_more_photos">еще фото</string>
     <string name="no_photos">Запрещено закрыть акт осмотра без обязательных фотографий</string>
     <string name="not_completed">Запрещено закрыть акт осмотра без заполнения обязательных полей: Штрих код, Дата</string>
+    <string name="update_data">Загрузить данные</string>
 
 </resources>
