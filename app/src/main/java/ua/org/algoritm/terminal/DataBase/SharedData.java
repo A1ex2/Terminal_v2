@@ -291,6 +291,17 @@ public class SharedData {
         return actInspection;
     }
 
+    public static ActInspection getActInspectionCar(String carId) {
+        ActInspection actInspection = new ActInspection();
+        for (int i = 0; i < ACT_INSPECTION.size(); i++) {
+            ActInspection mActInspection = ACT_INSPECTION.get(i);
+            if (mActInspection.getCarID().equals(carId)) {
+                actInspection = mActInspection;
+                break;
+            }
+        }
+        return actInspection;
+    }
     public static void setPhoto(OrderOutfit orderOutfit) {
         DataBaseHelper helper = new DataBaseHelper(app);
         ArrayList<CarDataOutfit> mCarDataOutfits = orderOutfit.getCarDataOutfit();
@@ -585,5 +596,15 @@ public class SharedData {
         ClassificationDamages = helper.getClassificationDamages();
         OriginDamages = helper.getOriginDamages();
         TypeDamagePhotos = helper.getTypeDamagePhotos();
+    }
+
+    public static void updateActInspection(ActInspection actInspection) {
+        for (int i = 0; i < ACT_INSPECTION.size(); i++) {
+            ActInspection mActInspection = ACT_INSPECTION.get(i);
+            if (mActInspection.getID().equals(actInspection.getID())) {
+                mActInspection.copyActInspection(actInspection);
+                break;
+            }
+        }
     }
 }

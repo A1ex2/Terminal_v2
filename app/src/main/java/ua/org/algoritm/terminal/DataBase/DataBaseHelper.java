@@ -1461,7 +1461,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         long id = 0;
 
         try {
-            boolean exist = getActInspectionExist(actInspection.getReceptionID(), actInspection.getCarID());
+            boolean exist = getActInspectionExist(actInspection.getReceptionID(), actInspection.getID());
 
             ContentValues values = new ContentValues();
             values.put("ReceptionID", actInspection.getReceptionID());
@@ -1490,12 +1490,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             values.put("performed", actInspection.isPerformed() ? 1 : 0);
 
             if (exist) {
-                id = db.update("ActInspection", values, "ReceptionID=? and ID=?", new String[]{actInspection.getReceptionID(), actInspection.getCarID()});
+                id = db.update("ActInspection", values, "ReceptionID=? and ID=?", new String[]{actInspection.getReceptionID(), actInspection.getID()});
             } else {
                 id = db.insert("ActInspection", null, values);
             }
 
             if (id != -1) {
+                insertReception(SharedData.getReception(actInspection.getReceptionID()));
+
                 for (int i = 0; i < actInspection.getEquipments().size(); i++) {
                     insertEquipmentActInspection(actInspection.getID(), actInspection.getEquipments().get(i));
                 }
@@ -1572,11 +1574,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                     actInspection.setSectorID(cursor.getString(cursor.getColumnIndex("sectorID")));
                     actInspection.setSector(cursor.getString(cursor.getColumnIndex("sector")));
                     actInspection.setRow(cursor.getString(cursor.getColumnIndex("_row")));
-                    actInspection.setTypeMachine(cursor.getString(cursor.getColumnIndex("TypeMachineID")));
+                    actInspection.setTypeMachineID(cursor.getString(cursor.getColumnIndex("TypeMachineID")));
                     actInspection.setTypeMachine(cursor.getString(cursor.getColumnIndex("TypeMachine")));
                     actInspection.setPerformed(cursor.getInt(cursor.getColumnIndex("performed")) == 0 ? false : true);
 
                     actInspection.setEquipments(getEquipmentActInspection(actInspection.getID()));
+                    actInspection.setInspections(getInspectionActInspection(actInspection.getID()));
+                    actInspection.setTypesPhotos(getTypesPhotoActInspection(actInspection.getID()));
+                    actInspection.setDamages(getDamageActInspection(actInspection.getID()));
 
                     actInspections.add(actInspection);
                     cursor.moveToNext();
@@ -1646,7 +1651,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         long id = 0;
 
         try {
-            boolean exist = getExist("Inspection", "ActID = '" + ActID + "' and typePhotoID = '" + typesPhoto.getTypePhotoID() + "'");
+            boolean exist = getExist("TypesPhoto", "ActID = '" + ActID + "' and typePhotoID = '" + typesPhoto.getTypePhotoID() + "'");
 
             ContentValues values = new ContentValues();
             values.put("ActID", ActID);
@@ -1655,9 +1660,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             values.put("listObject", typesPhoto.getListObject());
 
             if (exist) {
-                id = db.update("Inspection", values, "ActID=? and typePhotoID=?", new String[]{ActID, typesPhoto.getTypePhotoID()});
+                id = db.update("TypesPhoto", values, "ActID=? and typePhotoID=?", new String[]{ActID, typesPhoto.getTypePhotoID()});
             } else {
-                id = db.insert("Inspection", null, values);
+                id = db.insert("TypesPhoto", null, values);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1798,7 +1803,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return list;
     }
 
-    public ArrayList<Damage> getDamagePhotoActInspection(String ActID) {
+    public ArrayList<Damage> getDamageActInspection(String ActID) {
         ArrayList<Damage> list = new ArrayList<>();
         SQLiteDatabase db = getWritableDatabase();
         Cursor cursor = null;
@@ -1812,28 +1817,17 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                     Damage damage = new Damage();
 
                     damage.setDetail(cursor.getString(cursor.getColumnIndex("detailID")));
+                    damage.setTypeDamage(cursor.getString(cursor.getColumnIndex("mTypeDamageID")));
+                    damage.setTypeDetail(cursor.getString(cursor.getColumnIndex("typeDetail")));
+                    damage.setDegreesDamage(cursor.getString(cursor.getColumnIndex("mDegreesDamageID")));
+                    damage.setClassificationDamage(cursor.getString(cursor.getColumnIndex("mClassificationDamageID")));
+                    damage.setOriginDamage(cursor.getString(cursor.getColumnIndex("mOriginDamageID")));
+                    damage.setDetailDamage(cursor.getString(cursor.getColumnIndex("detailDamage")));
+                    damage.setCommentDamage(cursor.getString(cursor.getColumnIndex("commentDamage")));
+                    damage.setWidthDamage(cursor.getString(cursor.getColumnIndex("widthDamage")));
+                    damage.setHeightDamage(cursor.getString(cursor.getColumnIndex("heightDamage")));
 
-//
-//                    damage.setTypePhoto(cursor.getString(cursor.getColumnIndex("typePhoto")));
-//                    damage.setListObject(cursor.getString(cursor.getColumnIndex("listObject")));
-//                    damage.setListObject(cursor.getString(cursor.getColumnIndex("listObject")));
-//                    damage.setListObject(cursor.getString(cursor.getColumnIndex("listObject")));
-//                    damage.setListObject(cursor.getString(cursor.getColumnIndex("listObject")));
-//                    damage.setListObject(cursor.getString(cursor.getColumnIndex("listObject")));
-//                    damage.setListObject(cursor.getString(cursor.getColumnIndex("listObject")));
-//                    damage.setListObject(cursor.getString(cursor.getColumnIndex("listObject")));
-//                    damage.setListObject(cursor.getString(cursor.getColumnIndex("listObject")));
-//                    damage.setListObject(cursor.getString(cursor.getColumnIndex("listObject")));
-//                    damage.setListObject(cursor.getString(cursor.getColumnIndex("listObject")));
-//                    damage.setListObject(cursor.getString(cursor.getColumnIndex("listObject")));
-//                    damage.setListObject(cursor.getString(cursor.getColumnIndex("listObject")));
-//                    damage.setListObject(cursor.getString(cursor.getColumnIndex("listObject")));
-//                    damage.setListObject(cursor.getString(cursor.getColumnIndex("listObject")));
-//                    damage.setListObject(cursor.getString(cursor.getColumnIndex("listObject")));
-//                    damage.setListObject(cursor.getString(cursor.getColumnIndex("listObject")));
-//                    damage.setListObject(cursor.getString(cursor.getColumnIndex("listObject")));
-//
-//                    list.add(typesPhoto);
+                    list.add(damage);
                     cursor.moveToNext();
                 }
             }

@@ -18,7 +18,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import ua.org.algoritm.terminal.Activity.ActInspectionActivity;
 import ua.org.algoritm.terminal.DataBase.DataBaseHelper;
+import ua.org.algoritm.terminal.DataBase.SharedData;
+import ua.org.algoritm.terminal.Objects.ActInspection;
 import ua.org.algoritm.terminal.Objects.CarData;
 import ua.org.algoritm.terminal.Objects.Photo;
 import ua.org.algoritm.terminal.Objects.PhotoActInspection;
@@ -37,6 +40,7 @@ public class IntentServiceDataBase extends IntentService {
     private static final String ACTION_DELETE_PHOTO_ACT_INSPECTION = "ua.org.algoritm.terminal.Service.action.DELETE_PHOTO_ACT_INSPECTION";
     private static final String ACTION_DELETE_PHOTO_ACT_INSPECTION_DAMAGE = "ua.org.algoritm.terminal.Service.action.DELETE_PHOTO_ACT_INSPECTION_DAMAGE";
     private static final String ACTION_GET_PHOTO_ACT_INSPECTION = "ua.org.algoritm.terminal.Service.action.GET_PHOTO_ACT_INSPECTION";
+    private static final String ACTION_INSERT_ACT_INSPECTION = "ua.org.algoritm.terminal.Service.action.ACTION_INSERT_ACT_INSPECTION";
 
     private static final String EXTRA_INSERT_CAR_DATA = "ua.org.algoritm.terminal.Service.extra.INSERT_CAR_DATA";
 
@@ -48,6 +52,7 @@ public class IntentServiceDataBase extends IntentService {
     private static final String EXTRA_DELETE_PHOTO_ACT_INSPECTION = "ua.org.algoritm.terminal.Service.extra.DELETE_PHOTO_ACT_INSPECTION";
     private static final String EXTRA_DELETE_PHOTO_ACT_INSPECTION_DAMAGE = "ua.org.algoritm.terminal.Service.extra.DELETE_PHOTO_ACT_INSPECTION_DAMAGE";
     private static final String EXTRA_GET_PHOTO_ACT_INSPECTION = "ua.org.algoritm.terminal.Service.extra.GET_PHOTO_ACT_INSPECTION";
+    private static final String EXTRA_INSERT_ACT_INSPECTION = "ua.org.algoritm.terminal.Service.extra.EXTRA_INSERT_ACT_INSPECTION";
 
     public static final String EXTRA_CAR_DATA = "ua.org.algoritm.terminal.Service.extra.EXTRA_CAR_DATA";
 
@@ -61,6 +66,7 @@ public class IntentServiceDataBase extends IntentService {
     public static final int REQUEST_CODE_DELETE_PHOTO_ACT_INSPECTION = 600;
     public static final int REQUEST_CODE_GET_PHOTO_ACT_INSPECTION = 700;
     public static final int REQUEST_CODE_DELETE_PHOTO_ACT_INSPECTION_DAMAGE = 800;
+    public static final int REQUEST_CODE_INSERT_ACT_INSPECTION = 900;
 
     public IntentServiceDataBase() {
         super("IntentServiceDataBase");
@@ -165,6 +171,18 @@ public class IntentServiceDataBase extends IntentService {
         activity.startService(intent);
     }
 
+    public static void startInsertActInspection(AppCompatActivity activity, String id) {
+        Intent intent = new Intent(activity, IntentServiceDataBase.class);
+        PendingIntent pendingIntent = activity.createPendingResult(REQUEST_CODE_INSERT_ACT_INSPECTION, intent, 0);
+        intent.putExtra(EXTRA_PENDING_INTENT, pendingIntent);
+
+        intent.setAction(ACTION_INSERT_ACT_INSPECTION);
+        intent.putExtra(EXTRA_INSERT_ACT_INSPECTION, id);
+
+        activity.startService(intent);
+    }
+
+
     @Override
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
@@ -238,6 +256,12 @@ public class IntentServiceDataBase extends IntentService {
                 String orderID = intent.getStringExtra(EXTRA_GET_PHOTO_OUTFIT);
                 ArrayList<Photo> mPhotos = helper.getPhotoOutfit(orderID);
                 result.putExtra("photos", mPhotos);
+
+            } else if (ACTION_INSERT_ACT_INSPECTION.equals(action)) {
+                String ActID = intent.getStringExtra(EXTRA_INSERT_ACT_INSPECTION);
+
+                ActInspection actInspection = SharedData.getActInspection(ActID);
+                helper.insertActInspection(actInspection);
             }
 
 //            else if (ACTION_BAZ.equals(action)) {

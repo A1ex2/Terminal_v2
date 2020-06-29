@@ -76,6 +76,38 @@ public class ActInspection {
     public ActInspection() {
     }
 
+    public void copyActInspection(ActInspection actInspection) {
+        this.ReceptionID = actInspection.getReceptionID();
+        this.ID = actInspection.getID();
+        this.description = actInspection.getDescription();
+        this.stateID = actInspection.getStateID();
+        this.state = actInspection.getState();
+        this.formID = actInspection.getFormID();
+        this.form = actInspection.getForm();
+        this.truckPosition = actInspection.getTruckPosition();
+        this.truckPositionDirection = actInspection.getTruckPositionDirection();
+        this.run = actInspection.getRun();
+        this.storageID = actInspection.getStorageID();
+        this.storage = actInspection.getStorage();
+        this.inspectionDatePlan = actInspection.getInspectionDatePlan();
+        this.inspectionDateFact = actInspection.getInspectionDateFact();
+        this.carID = actInspection.getCarID();
+        this.car = actInspection.getCar();
+        this.productionDate = actInspection.getProductionDate();
+        this.barCode = actInspection.getBarCode();
+        this.sectorID = actInspection.getSectorID();
+        this.sector = actInspection.getSector();
+        this.row = actInspection.getRow();
+        this.Equipments = actInspection.getEquipments();
+        this.Inspections = actInspection.getInspections();
+        this.TypesPhotos = actInspection.getTypesPhotos();
+        this.Damages = actInspection.getDamages();
+        this.TypeMachineID = actInspection.getTypeMachineID();
+        this.TypeMachine = actInspection.getTypeMachine();
+        this.performed = actInspection.isPerformed();
+        this.sendPhoto = actInspection.sendPhoto;
+    }
+
     public String getID() {
         return ID;
     }

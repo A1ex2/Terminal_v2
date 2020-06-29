@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="SQLAndroidSettings">
+    <option name="databases">
+      <map>
+        <entry key="MyBD.db_C:\Users\A1ex\AndroidStudioProjects\Terminal_v2\AndroidSqlEditorDatabases\">
+          <value>
+            <list>
+              <option value="127.0.0.1:62001" />
+              <option value="/databases/MyBD.db" />
+              <option value="MyBD.db" />
+              <option value="MyBD.db" />
+              <option value="false" />
+              <option value="ua.org.algoritm.terminal" />
+            </list>
+          </value>
+        </entry>
+      </map>
+    </option>
     <option name="storageVersion" value="2" />
   </component>
 </project>

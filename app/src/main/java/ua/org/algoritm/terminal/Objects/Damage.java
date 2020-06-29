@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 import ua.org.algoritm.terminal.DataBase.SharedData;
 
-public class Damage implements Serializable{
+public class Damage implements Serializable {
     @Expose
     private Detail detail;
 
@@ -147,13 +147,70 @@ public class Damage implements Serializable{
     }
 
     public void setDetail(String detailID) {
-        if (detailID.equals("")){
+        if (detailID.equals("")) {
 
         } else {
             for (int i = 0; i < SharedData.DamageDefect.size(); i++) {
                 Detail mDetail = SharedData.DamageDefect.get(i);
-                if (mDetail.getID().equals(detailID)){
+                if (mDetail.getID().equals(detailID)) {
                     this.detail = mDetail;
+                    break;
+                }
+            }
+        }
+    }
+
+    public void setTypeDamage(String mTypeDamageID) {
+        if (mTypeDamageID.equals("")) {
+
+        } else {
+            for (int i = 0; i < SharedData.TypesDamages.size(); i++) {
+                TypeDamage typeDamage = SharedData.TypesDamages.get(i);
+                if (typeDamage.getID().equals(mTypeDamageID)) {
+                    this.mTypeDamage = typeDamage;
+                    break;
+                }
+            }
+        }
+    }
+
+    public void setDegreesDamage(String mDegreesDamageID) {
+        if (mDegreesDamageID.equals("")) {
+
+        } else {
+            for (int i = 0; i < SharedData.DegreesDamages.size(); i++) {
+                DegreesDamage degreesDamage = SharedData.DegreesDamages.get(i);
+                if (degreesDamage.getID().equals(mDegreesDamageID)) {
+                    this.mDegreesDamage = degreesDamage;
+                    break;
+                }
+            }
+        }
+    }
+
+    public void setClassificationDamage(String mClassificationDamageID) {
+        if (mClassificationDamageID.equals("")) {
+
+        } else {
+            for (int i = 0; i < SharedData.ClassificationDamages.size(); i++) {
+                ClassificationDamage classificationDamage = SharedData.ClassificationDamages.get(i);
+                if (classificationDamage.getID().equals(mClassificationDamageID)) {
+                    this.mClassificationDamage = classificationDamage;
+                    break;
+                }
+            }
+        }
+    }
+
+    public void setOriginDamage(String mOriginDamageID) {
+        if (mOriginDamageID.equals("")) {
+
+        } else {
+            for (int i = 0; i < SharedData.OriginDamages.size(); i++) {
+                OriginDamage originDamage = SharedData.OriginDamages.get(i);
+                if (originDamage.getID().equals(mOriginDamageID)) {
+                    this.mOriginDamage = originDamage;
+                    break;
                 }
             }
         }

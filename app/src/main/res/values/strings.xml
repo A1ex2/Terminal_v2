@@ -133,4 +133,6 @@
     <string name="not_completed">Запрещено закрыть акт осмотра без заполнения обязательных полей: Штрих код, Дата</string>
     <string name="update_data">Загрузить данные</string>
 
+    <string name="save_act">Акт записан для отправки</string>
+
 </resources>

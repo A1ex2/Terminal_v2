@@ -77,6 +77,7 @@ import ua.org.algoritm.terminal.Objects.Damage;
 import ua.org.algoritm.terminal.Objects.Equipment;
 import ua.org.algoritm.terminal.Objects.Inspection;
 import ua.org.algoritm.terminal.Objects.PhotoActInspection;
+import ua.org.algoritm.terminal.Objects.Reception;
 import ua.org.algoritm.terminal.Objects.TypeDamagePhoto;
 import ua.org.algoritm.terminal.Objects.TypesPhoto;
 import ua.org.algoritm.terminal.R;
@@ -159,6 +160,7 @@ public class ActInspectionActivity extends AppCompatActivity {
 
     public static final int ACTION_SET_ACT = 28;
     public static final int ACTION_SET_ACT_Performed = 29;
+    public static final int ACTION_SET_ACT_DB = 30;
     public static final int ACTION_ConnectionError = 0;
 
     public static UIManager uiManager;
@@ -847,6 +849,25 @@ public class ActInspectionActivity extends AppCompatActivity {
         mDialog.setCancelable(false);
         mDialog.show();
 
+        if (SharedData.isOfflineReception){
+            mActInspection.setPerformed(performedAct);
+
+            Reception reception = SharedData.getReception(mActInspection.getReceptionID());
+            for (int i = 0; i < reception.getCarData().size(); i++) {
+                CarData mCarData = reception.getCarData().get(i);
+                if (carData.getCarID().equals(mCarData.getCarID())){
+                    mCarData.setProductionDate(carData.getProductionDate());
+                    mCarData.setBarCode(carData.getBarCode());
+                    break;
+                }
+            }
+
+            IntentServiceDataBase.startInsertActInspection(ActInspectionActivity.this,
+                    mActInspection.getID());
+
+            return;
+        }
+
         SharedPreferences preferences = getSharedPreferences("MyPref", MODE_PRIVATE);
         String login = preferences.getString("Login", "");
         String password = preferences.getString("Password", "");
@@ -869,11 +890,11 @@ public class ActInspectionActivity extends AppCompatActivity {
         mDialog.setCancelable(false);
         mDialog.show();
 
+        mActInspection.setPerformed(performed);
+
         SharedPreferences preferences = getSharedPreferences("MyPref", MODE_PRIVATE);
         String login = preferences.getString("Login", "");
         String password = preferences.getString("Password", "");
-
-        mActInspection.setPerformed(performed);
 
         String stringObject = SOAP_Objects.getActInspection(mActInspection);
 
@@ -1162,6 +1183,16 @@ public class ActInspectionActivity extends AppCompatActivity {
                 }
             } else {
                 super.onActivityResult(requestCode, resultCode, data);
+            }
+        } else if (requestCode == IntentServiceDataBase.REQUEST_CODE_INSERT_ACT_INSPECTION){
+            if (mDialog != null && mDialog.isShowing()) {
+                mDialog.dismiss();
+            }
+
+            Toast.makeText(this, getString(R.string.save_act), Toast.LENGTH_SHORT).show();
+
+            if (performedAct){
+                finishActivity();
             }
         }
     }
