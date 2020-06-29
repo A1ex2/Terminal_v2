@@ -9,13 +9,20 @@ import android.database.sqlite.SQLiteOpenHelper;
 import ua.org.algoritm.terminal.Objects.ActInspection;
 import ua.org.algoritm.terminal.Objects.CarData;
 import ua.org.algoritm.terminal.Objects.CarDataOutfit;
+import ua.org.algoritm.terminal.Objects.ClassificationDamage;
 import ua.org.algoritm.terminal.Objects.Damage;
+import ua.org.algoritm.terminal.Objects.DegreesDamage;
+import ua.org.algoritm.terminal.Objects.Detail;
 import ua.org.algoritm.terminal.Objects.Equipment;
 import ua.org.algoritm.terminal.Objects.Inspection;
+import ua.org.algoritm.terminal.Objects.OriginDamage;
 import ua.org.algoritm.terminal.Objects.Photo;
 import ua.org.algoritm.terminal.Objects.PhotoActInspection;
 import ua.org.algoritm.terminal.Objects.Reception;
+import ua.org.algoritm.terminal.Objects.Scheme;
 import ua.org.algoritm.terminal.Objects.Sector;
+import ua.org.algoritm.terminal.Objects.TypeDamage;
+import ua.org.algoritm.terminal.Objects.TypeDamagePhoto;
 import ua.org.algoritm.terminal.Objects.TypesPhoto;
 import ua.org.algoritm.terminal.Objects.User;
 
@@ -126,19 +133,58 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE Damage ("
                 + "_id INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + "ActID TEXT NOT NULL,"
-                + "detail TEXT NOT NULL,"
                 + "detailID TEXT NOT NULL,"
+                + "mTypeDamageID TEXT NOT NULL,"
                 + "typeDetail TEXT NOT NULL,"
-                + "mDegreesDamage TEXT NOT NULL,"
                 + "mDegreesDamageID TEXT NOT NULL,"
-                + "mClassificationDamage TEXT NOT NULL,"
                 + "mClassificationDamageID TEXT NOT NULL,"
-                + "mOriginDamage TEXT NOT NULL,"
                 + "mOriginDamageID TEXT NOT NULL,"
                 + "detailDamage TEXT NOT NULL,"
                 + "commentDamage TEXT NOT NULL,"
                 + "widthDamage TEXT NOT NULL,"
                 + "heightDamage TEXT NOT NULL)");
+
+        db.execSQL("CREATE TABLE Scheme ("
+                + "_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + "ID TEXT NOT NULL,"
+                + "Name TEXT NOT NULL,"
+                + "TypeMachineID TEXT NOT NULL,"
+                + "TypeMachine TEXT NOT NULL,"
+                + "ViewSchemesID TEXT NOT NULL,"
+                + "ViewSchemes TEXT NOT NULL,"
+                + "SVG TEXT NOT NULL)");
+
+        db.execSQL("CREATE TABLE Detail ("
+                + "_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + "ID TEXT NOT NULL,"
+                + "tempID INTEGER NOT NULL,"
+                + "detailID TEXT NOT NULL,"
+                + "detailName TEXT NOT NULL)");
+
+        db.execSQL("CREATE TABLE TypesDamages ("
+                + "_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + "ID TEXT NOT NULL,"
+                + "name TEXT NOT NULL)");
+
+        db.execSQL("CREATE TABLE DegreesDamages ("
+                + "_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + "ID TEXT NOT NULL,"
+                + "name TEXT NOT NULL)");
+
+        db.execSQL("CREATE TABLE ClassificationDamages ("
+                + "_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + "ID TEXT NOT NULL,"
+                + "name TEXT NOT NULL)");
+
+        db.execSQL("CREATE TABLE OriginDamages ("
+                + "_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + "ID TEXT NOT NULL,"
+                + "name TEXT NOT NULL)");
+
+        db.execSQL("CREATE TABLE TypeDamagePhotos ("
+                + "_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + "ID TEXT NOT NULL,"
+                + "name TEXT NOT NULL)");
     }
 
     @Override
@@ -234,19 +280,59 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             db.execSQL("CREATE TABLE Damage ("
                     + "_id INTEGER PRIMARY KEY AUTOINCREMENT, "
                     + "ActID TEXT NOT NULL,"
-                    + "detail TEXT NOT NULL,"
                     + "detailID TEXT NOT NULL,"
+                    + "mTypeDamageID TEXT NOT NULL,"
                     + "typeDetail TEXT NOT NULL,"
-                    + "mDegreesDamage TEXT NOT NULL,"
                     + "mDegreesDamageID TEXT NOT NULL,"
-                    + "mClassificationDamage TEXT NOT NULL,"
                     + "mClassificationDamageID TEXT NOT NULL,"
-                    + "mOriginDamage TEXT NOT NULL,"
                     + "mOriginDamageID TEXT NOT NULL,"
                     + "detailDamage TEXT NOT NULL,"
                     + "commentDamage TEXT NOT NULL,"
                     + "widthDamage TEXT NOT NULL,"
                     + "heightDamage TEXT NOT NULL)");
+
+            db.execSQL("CREATE TABLE Scheme ("
+                    + "_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + "ID TEXT NOT NULL,"
+                    + "Name TEXT NOT NULL,"
+                    + "TypeMachineID TEXT NOT NULL,"
+                    + "TypeMachine TEXT NOT NULL,"
+                    + "ViewSchemesID TEXT NOT NULL,"
+                    + "ViewSchemes TEXT NOT NULL,"
+                    + "SVG TEXT NOT NULL)");
+
+            db.execSQL("CREATE TABLE Detail ("
+                    + "_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + "ID TEXT NOT NULL,"
+                    + "tempID INTEGER NOT NULL,"
+                    + "detailID TEXT NOT NULL,"
+                    + "detailName TEXT NOT NULL)");
+
+            db.execSQL("CREATE TABLE TypesDamages ("
+                    + "_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + "ID TEXT NOT NULL,"
+                    + "name TEXT NOT NULL)");
+
+            db.execSQL("CREATE TABLE DegreesDamages ("
+                    + "_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + "ID TEXT NOT NULL,"
+                    + "name TEXT NOT NULL)");
+
+            db.execSQL("CREATE TABLE ClassificationDamages ("
+                    + "_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + "ID TEXT NOT NULL,"
+                    + "name TEXT NOT NULL)");
+
+            db.execSQL("CREATE TABLE OriginDamages ("
+                    + "_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + "ID TEXT NOT NULL,"
+                    + "name TEXT NOT NULL)");
+
+            db.execSQL("CREATE TABLE TypeDamagePhotos ("
+                    + "_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + "ID TEXT NOT NULL,"
+                    + "name TEXT NOT NULL)");
+
         }
     }
 
@@ -1409,9 +1495,21 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 id = db.insert("ActInspection", null, values);
             }
 
-            if (id != -1){
+            if (id != -1) {
                 for (int i = 0; i < actInspection.getEquipments().size(); i++) {
                     insertEquipmentActInspection(actInspection.getID(), actInspection.getEquipments().get(i));
+                }
+
+                for (int i = 0; i < actInspection.getInspections().size(); i++) {
+                    insertInspectionActInspection(actInspection.getID(), actInspection.getInspections().get(i));
+                }
+
+                for (int i = 0; i < actInspection.getTypesPhotos().size(); i++) {
+                    insertTypesPhotoActInspection(actInspection.getID(), actInspection.getTypesPhotos().get(i));
+                }
+
+                for (int i = 0; i < actInspection.getDamages().size(); i++) {
+                    insertDamageActInspection(actInspection.getID(), actInspection.getDamages().get(i));
                 }
             }
         } catch (Exception e) {
@@ -1478,6 +1576,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                     actInspection.setTypeMachine(cursor.getString(cursor.getColumnIndex("TypeMachine")));
                     actInspection.setPerformed(cursor.getInt(cursor.getColumnIndex("performed")) == 0 ? false : true);
 
+                    actInspection.setEquipments(getEquipmentActInspection(actInspection.getID()));
+
                     actInspections.add(actInspection);
                     cursor.moveToNext();
                 }
@@ -1498,7 +1598,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         long id = 0;
 
         try {
-            boolean exist = getExist("Equipment","ActID = '" + ActID + "' and equipmentID = '" + equipment.getEquipmentID() + "'");
+            boolean exist = getExist("Equipment", "ActID = '" + ActID + "' and equipmentID = '" + equipment.getEquipmentID() + "'");
 
             ContentValues values = new ContentValues();
             values.put("ActID", ActID);
@@ -1523,7 +1623,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         long id = 0;
 
         try {
-            boolean exist = getExist("Inspection","ActID = '" + ActID + "' and ID = '" + inspection.getID() + "'");
+            boolean exist = getExist("Inspection", "ActID = '" + ActID + "' and ID = '" + inspection.getID() + "'");
 
             ContentValues values = new ContentValues();
             values.put("ActID", ActID);
@@ -1546,7 +1646,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         long id = 0;
 
         try {
-            boolean exist = getExist("Inspection","ActID = '" + ActID + "' and typePhotoID = '" + typesPhoto.getTypePhotoID() + "'");
+            boolean exist = getExist("Inspection", "ActID = '" + ActID + "' and typePhotoID = '" + typesPhoto.getTypePhotoID() + "'");
 
             ContentValues values = new ContentValues();
             values.put("ActID", ActID);
@@ -1565,42 +1665,350 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
     public void insertDamageActInspection(String ActID, Damage damage) {
-//        SQLiteDatabase db = getReadableDatabase();
-//        long id = 0;
+        SQLiteDatabase db = getReadableDatabase();
+        long id = 0;
+
+        try {
+            String detailID = damage.getDetail() == null ? "" : damage.getDetail().getID();
+            String mTypeDamageID = damage.getDetail() == null ? "" : damage.getDetail().getID();
+            String mDegreesDamageID = damage.getDetail() == null ? "" : damage.getDetail().getID();
+            String mClassificationDamageID = damage.getDetail() == null ? "" : damage.getDetail().getID();
+            String mOriginDamageID = damage.getDetail() == null ? "" : damage.getDetail().getID();
+
+            boolean exist = getExist("Damage","ActID = '" + ActID + "' and detailID = '" + detailID + "'");
+
+            ContentValues values = new ContentValues();
+            values.put("ActID", ActID);
+            values.put("detailID", detailID);
+            values.put("mTypeDamageID", mTypeDamageID);
+            values.put("typeDetail", damage.getTypeDetail());
+            values.put("mDegreesDamageID", mDegreesDamageID);
+            values.put("mClassificationDamageID", mClassificationDamageID);
+            values.put("mOriginDamageID", mOriginDamageID);
+            values.put("detailDamage", damage.getDetailDamage());
+            values.put("commentDamage", damage.getCommentDamage());
+            values.put("widthDamage", damage.getWidthDamage());
+            values.put("heightDamage", damage.getHeightDamage());
+
+            if (exist) {
+                id = db.update("Damage", values, "ActID=? and detailID=?", new String[]{ActID, detailID});
+            } else {
+                id = db.insert("Damage", null, values);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public ArrayList<Equipment> getEquipmentActInspection(String ActID) {
+        ArrayList<Equipment> list = new ArrayList<>();
+        SQLiteDatabase db = getWritableDatabase();
+        Cursor cursor = null;
+
+        try {
+            String select = "ActID = '" + ActID + "'";
+            cursor = db.query("Equipment", null, select, null, null, null, null);
+
+            if (cursor.moveToNext()) {
+                while (!cursor.isAfterLast()) {
+                    Equipment equipment = new Equipment();
+
+                    equipment.setEquipmentID(cursor.getString(cursor.getColumnIndex("equipmentID")));
+                    equipment.setEquipment(cursor.getString(cursor.getColumnIndex("equipment")));
+                    equipment.setListObject(cursor.getString(cursor.getColumnIndex("listObject")));
+                    equipment.setQuantityPlan(cursor.getInt(cursor.getColumnIndex("quantityPlan")));
+                    equipment.setQuantityFact(cursor.getInt(cursor.getColumnIndex("quantityFact")));
+
+                    list.add(equipment);
+                    cursor.moveToNext();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+
+        return list;
+    }
+
+    public ArrayList<Inspection> getInspectionActInspection(String ActID) {
+        ArrayList<Inspection> list = new ArrayList<>();
+        SQLiteDatabase db = getWritableDatabase();
+        Cursor cursor = null;
+
+        try {
+            String select = "ActID = '" + ActID + "'";
+            cursor = db.query("Inspection", null, select, null, null, null, null);
+
+            if (cursor.moveToNext()) {
+                while (!cursor.isAfterLast()) {
+                    Inspection inspection = new Inspection();
+
+                    inspection.setID(cursor.getString(cursor.getColumnIndex("ID")));
+                    inspection.setName(cursor.getString(cursor.getColumnIndex("name")));
+                    inspection.setPerformed(cursor.getInt(cursor.getColumnIndex("performed")) == 0 ? false : true);
+
+                    list.add(inspection);
+                    cursor.moveToNext();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+
+        return list;
+    }
+
+    public ArrayList<TypesPhoto> getTypesPhotoActInspection(String ActID) {
+        ArrayList<TypesPhoto> list = new ArrayList<>();
+        SQLiteDatabase db = getWritableDatabase();
+        Cursor cursor = null;
+
+        try {
+            String select = "ActID = '" + ActID + "'";
+            cursor = db.query("TypesPhoto", null, select, null, null, null, null);
+
+            if (cursor.moveToNext()) {
+                while (!cursor.isAfterLast()) {
+                    TypesPhoto typesPhoto = new TypesPhoto();
+
+                    typesPhoto.setTypePhotoID(cursor.getString(cursor.getColumnIndex("typePhotoID")));
+                    typesPhoto.setTypePhoto(cursor.getString(cursor.getColumnIndex("typePhoto")));
+                    typesPhoto.setListObject(cursor.getString(cursor.getColumnIndex("listObject")));
+
+                    list.add(typesPhoto);
+                    cursor.moveToNext();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+
+        return list;
+    }
+
+    public ArrayList<Damage> getDamagePhotoActInspection(String ActID) {
+        ArrayList<Damage> list = new ArrayList<>();
+        SQLiteDatabase db = getWritableDatabase();
+        Cursor cursor = null;
+
+        try {
+            String select = "ActID = '" + ActID + "'";
+            cursor = db.query("Damage", null, select, null, null, null, null);
+
+            if (cursor.moveToNext()) {
+                while (!cursor.isAfterLast()) {
+                    Damage damage = new Damage();
+
+                    damage.setDetail(cursor.getString(cursor.getColumnIndex("detailID")));
+
 //
-//        try {
-//            boolean exist = getExist("Inspection","ActID = '" + ActID + "' and detailID = '" + damage.getDetail().getDetailID() + "'");
+//                    damage.setTypePhoto(cursor.getString(cursor.getColumnIndex("typePhoto")));
+//                    damage.setListObject(cursor.getString(cursor.getColumnIndex("listObject")));
+//                    damage.setListObject(cursor.getString(cursor.getColumnIndex("listObject")));
+//                    damage.setListObject(cursor.getString(cursor.getColumnIndex("listObject")));
+//                    damage.setListObject(cursor.getString(cursor.getColumnIndex("listObject")));
+//                    damage.setListObject(cursor.getString(cursor.getColumnIndex("listObject")));
+//                    damage.setListObject(cursor.getString(cursor.getColumnIndex("listObject")));
+//                    damage.setListObject(cursor.getString(cursor.getColumnIndex("listObject")));
+//                    damage.setListObject(cursor.getString(cursor.getColumnIndex("listObject")));
+//                    damage.setListObject(cursor.getString(cursor.getColumnIndex("listObject")));
+//                    damage.setListObject(cursor.getString(cursor.getColumnIndex("listObject")));
+//                    damage.setListObject(cursor.getString(cursor.getColumnIndex("listObject")));
+//                    damage.setListObject(cursor.getString(cursor.getColumnIndex("listObject")));
+//                    damage.setListObject(cursor.getString(cursor.getColumnIndex("listObject")));
+//                    damage.setListObject(cursor.getString(cursor.getColumnIndex("listObject")));
+//                    damage.setListObject(cursor.getString(cursor.getColumnIndex("listObject")));
+//                    damage.setListObject(cursor.getString(cursor.getColumnIndex("listObject")));
+//                    damage.setListObject(cursor.getString(cursor.getColumnIndex("listObject")));
 //
-//            ContentValues values = new ContentValues();
-//            values.put("ActID", ActID);
-//            values.put("typePhotoID", typesPhoto.getTypePhotoID());
-//            values.put("typePhoto", typesPhoto.getTypePhoto());
-//            values.put("listObject", typesPhoto.getListObject());
-//
-//            if (exist) {
-//                id = db.update("Inspection", values, "ActID=? and typePhotoID=?", new String[]{ActID, damage.getTypePhotoID()});
-//            } else {
-//                id = db.insert("Inspection", null, values);
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+//                    list.add(typesPhoto);
+                    cursor.moveToNext();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+
+        return list;
     }
 
 
 
 
+    public void insertScheme() {
+        SQLiteDatabase db = getReadableDatabase();
+        long id = 0;
+        try {
+            removeAll("Scheme");
 
+            for (int i = 0; i < SharedData.SCHEMES.size(); i++) {
+                ContentValues values = new ContentValues();
 
+                Scheme scheme = SharedData.SCHEMES.get(i);
 
+                values.put("ID", scheme.getID());
+                values.put("Name", scheme.getName());
+                values.put("TypeMachineID", scheme.getTypeMachineID());
+                values.put("TypeMachine", scheme.getTypeMachine());
+                values.put("ViewSchemesID", scheme.getViewSchemesID());
+                values.put("ViewSchemes", scheme.getViewSchemes());
+                values.put("SVG", scheme.getSVG());
 
+                id = db.insert("Scheme", null, values);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
+    public void insertDetail() {
+        SQLiteDatabase db = getReadableDatabase();
+        long id = 0;
+        try {
+            removeAll("Detail");
 
+            for (int i = 0; i < SharedData.DamageDefect.size(); i++) {
+                ContentValues values = new ContentValues();
 
+                Detail detail = SharedData.DamageDefect.get(i);
 
+                values.put("ID", detail.getID());
+                values.put("tempID", detail.getTempID());
+                values.put("detailID", detail.getDetailID());
+                values.put("detailName", detail.getDetailName());
 
+                id = db.insert("Detail", null, values);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
+    public void insertTypesDamages() {
+        SQLiteDatabase db = getReadableDatabase();
+        long id = 0;
+        try {
+            removeAll("TypesDamages");
 
+            for (int i = 0; i < SharedData.TypesDamages.size(); i++) {
+                ContentValues values = new ContentValues();
+
+                TypeDamage typeDamage = SharedData.TypesDamages.get(i);
+
+                values.put("ID", typeDamage.getID());
+                values.put("name", typeDamage.getName());
+
+                id = db.insert("TypesDamages", null, values);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void insertDegreesDamages() {
+        SQLiteDatabase db = getReadableDatabase();
+        long id = 0;
+        try {
+            removeAll("DegreesDamages");
+
+            for (int i = 0; i < SharedData.DegreesDamages.size(); i++) {
+                ContentValues values = new ContentValues();
+
+                DegreesDamage degreesDamage = SharedData.DegreesDamages.get(i);
+
+                values.put("ID", degreesDamage.getID());
+                values.put("name", degreesDamage.getName());
+
+                id = db.insert("DegreesDamages", null, values);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void insertClassificationDamages() {
+        SQLiteDatabase db = getReadableDatabase();
+        long id = 0;
+        try {
+            removeAll("ClassificationDamages");
+
+            for (int i = 0; i < SharedData.ClassificationDamages.size(); i++) {
+                ContentValues values = new ContentValues();
+
+                ClassificationDamage classificationDamage = SharedData.ClassificationDamages.get(i);
+
+                values.put("ID", classificationDamage.getID());
+                values.put("name", classificationDamage.getName());
+
+                id = db.insert("ClassificationDamages", null, values);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void insertOriginDamages() {
+        SQLiteDatabase db = getReadableDatabase();
+        long id = 0;
+        try {
+            removeAll("OriginDamages");
+
+            for (int i = 0; i < SharedData.OriginDamages.size(); i++) {
+                ContentValues values = new ContentValues();
+
+                OriginDamage originDamage = SharedData.OriginDamages.get(i);
+
+                values.put("ID", originDamage.getID());
+                values.put("name", originDamage.getName());
+
+                id = db.insert("OriginDamages", null, values);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void insertTypeDamagePhotos() {
+        SQLiteDatabase db = getReadableDatabase();
+        long id = 0;
+        try {
+            removeAll("TypeDamagePhotos");
+
+            for (int i = 0; i < SharedData.TypeDamagePhotos.size(); i++) {
+                ContentValues values = new ContentValues();
+
+                TypeDamagePhoto typeDamagePhoto = SharedData.TypeDamagePhotos.get(i);
+
+                values.put("ID", typeDamagePhoto.getID());
+                values.put("name", typeDamagePhoto.getName());
+
+                id = db.insert("TypeDamagePhotos", null, values);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void removeAll(String tableName) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete(tableName, null, null);
+    }
 
     public boolean getExist(String table, String select) {
         SQLiteDatabase db = getWritableDatabase();
@@ -1615,11 +2023,227 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            if (cursor != null){
+            if (cursor != null) {
                 cursor.close();
             }
         }
         return false;
     }
 
+    public ArrayList<Scheme> getScheme() {
+        ArrayList<Scheme> list = new ArrayList<>();
+        SQLiteDatabase db = getWritableDatabase();
+        Cursor cursor = null;
+
+        try {
+            cursor = db.query("Scheme", null, null, null, null, null, null);
+
+            if (cursor.moveToNext()) {
+                while (!cursor.isAfterLast()) {
+                    Scheme scheme = new Scheme();
+
+                    scheme.setID(cursor.getString(cursor.getColumnIndex("ID")));
+                    scheme.setName(cursor.getString(cursor.getColumnIndex("Name")));
+                    scheme.setTypeMachineID(cursor.getString(cursor.getColumnIndex("TypeMachineID")));
+                    scheme.setTypeMachine(cursor.getString(cursor.getColumnIndex("TypeMachine")));
+                    scheme.setViewSchemesID(cursor.getString(cursor.getColumnIndex("ViewSchemesID")));
+                    scheme.setViewSchemes(cursor.getString(cursor.getColumnIndex("ViewSchemes")));
+                    scheme.setSVG(cursor.getString(cursor.getColumnIndex("SVG")));
+
+                    list.add(scheme);
+                    cursor.moveToNext();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+
+        return list;
+    }
+
+    public ArrayList<Detail> getDetail() {
+        ArrayList<Detail> list = new ArrayList<>();
+        SQLiteDatabase db = getWritableDatabase();
+        Cursor cursor = null;
+
+        try {
+            cursor = db.query("Detail", null, null, null, null, null, null);
+
+            if (cursor.moveToNext()) {
+                while (!cursor.isAfterLast()) {
+                    Detail detail = new Detail();
+
+                    detail.setID(cursor.getString(cursor.getColumnIndex("ID")));
+                    detail.setTempID(cursor.getInt(cursor.getColumnIndex("tempID")));
+                    detail.setDetailID(cursor.getString(cursor.getColumnIndex("detailID")));
+                    detail.setDetailName(cursor.getString(cursor.getColumnIndex("detailName")));
+
+                    list.add(detail);
+                    cursor.moveToNext();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+
+        return list;
+    }
+
+    public ArrayList<TypeDamage> getTypesDamages() {
+        ArrayList<TypeDamage> list = new ArrayList<>();
+        SQLiteDatabase db = getWritableDatabase();
+        Cursor cursor = null;
+
+        try {
+            cursor = db.query("TypesDamages", null, null, null, null, null, null);
+
+            if (cursor.moveToNext()) {
+                while (!cursor.isAfterLast()) {
+                    TypeDamage typeDamage = new TypeDamage();
+
+                    typeDamage.setID(cursor.getString(cursor.getColumnIndex("ID")));
+                    typeDamage.setName(cursor.getString(cursor.getColumnIndex("name")));
+
+                    list.add(typeDamage);
+                    cursor.moveToNext();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+
+        return list;
+    }
+
+    public ArrayList<DegreesDamage> getDegreesDamages() {
+        ArrayList<DegreesDamage> list = new ArrayList<>();
+        SQLiteDatabase db = getWritableDatabase();
+        Cursor cursor = null;
+
+        try {
+            cursor = db.query("DegreesDamages", null, null, null, null, null, null);
+
+            if (cursor.moveToNext()) {
+                while (!cursor.isAfterLast()) {
+                    DegreesDamage degreesDamage = new DegreesDamage();
+
+                    degreesDamage.setID(cursor.getString(cursor.getColumnIndex("ID")));
+                    degreesDamage.setName(cursor.getString(cursor.getColumnIndex("name")));
+
+                    list.add(degreesDamage);
+                    cursor.moveToNext();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+
+        return list;
+    }
+
+    public ArrayList<ClassificationDamage> getClassificationDamages() {
+        ArrayList<ClassificationDamage> list = new ArrayList<>();
+        SQLiteDatabase db = getWritableDatabase();
+        Cursor cursor = null;
+
+        try {
+            cursor = db.query("ClassificationDamages", null, null, null, null, null, null);
+
+            if (cursor.moveToNext()) {
+                while (!cursor.isAfterLast()) {
+                    ClassificationDamage classificationDamage = new ClassificationDamage();
+
+                    classificationDamage.setID(cursor.getString(cursor.getColumnIndex("ID")));
+                    classificationDamage.setName(cursor.getString(cursor.getColumnIndex("name")));
+
+                    list.add(classificationDamage);
+                    cursor.moveToNext();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+
+        return list;
+    }
+
+    public ArrayList<OriginDamage> getOriginDamages() {
+        ArrayList<OriginDamage> list = new ArrayList<>();
+        SQLiteDatabase db = getWritableDatabase();
+        Cursor cursor = null;
+
+        try {
+            cursor = db.query("OriginDamages", null, null, null, null, null, null);
+
+            if (cursor.moveToNext()) {
+                while (!cursor.isAfterLast()) {
+                    OriginDamage originDamage = new OriginDamage();
+
+                    originDamage.setID(cursor.getString(cursor.getColumnIndex("ID")));
+                    originDamage.setName(cursor.getString(cursor.getColumnIndex("name")));
+
+                    list.add(originDamage);
+                    cursor.moveToNext();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+
+        return list;
+    }
+
+    public ArrayList<TypeDamagePhoto> getTypeDamagePhotos() {
+        ArrayList<TypeDamagePhoto> list = new ArrayList<>();
+        SQLiteDatabase db = getWritableDatabase();
+        Cursor cursor = null;
+
+        try {
+            cursor = db.query("TypeDamagePhotos", null, null, null, null, null, null);
+
+            if (cursor.moveToNext()) {
+                while (!cursor.isAfterLast()) {
+                    TypeDamagePhoto typeDamagePhoto = new TypeDamagePhoto();
+
+                    typeDamagePhoto.setID(cursor.getString(cursor.getColumnIndex("ID")));
+                    typeDamagePhoto.setName(cursor.getString(cursor.getColumnIndex("name")));
+
+                    list.add(typeDamagePhoto);
+                    cursor.moveToNext();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+
+        return list;
+    }
 }

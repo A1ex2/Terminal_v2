@@ -169,6 +169,10 @@ public class ActInspection {
 
     public String getInspectionDateFactString() {
         String date = "";
+        if (inspectionDateFact == null){
+            return "01.01.0001";
+        }
+
         if (inspectionDateFact.getTime() > 0) {
             String pattern = "dd.MM.yyyy";
             DateFormat df = new SimpleDateFormat(pattern);
@@ -254,6 +258,10 @@ public class ActInspection {
 
     public String getInspectionDatePlanString() {
         String date = "";
+        if (inspectionDatePlan == null){
+            return "01.01.0001";
+        }
+
         if (inspectionDatePlan.getTime() > 0) {
             String pattern = "dd.MM.yyyy";
             DateFormat df = new SimpleDateFormat(pattern);

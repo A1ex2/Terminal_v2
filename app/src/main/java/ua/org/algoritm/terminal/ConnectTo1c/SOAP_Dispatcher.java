@@ -509,6 +509,7 @@ public class SOAP_Dispatcher extends Thread {
 
             soap_Response = new SoapObject();
 
+            SharedData.getCatalog();
             SharedData.getActInspectionList();
 
             SharedData.checkPhotoAct();
@@ -543,6 +544,7 @@ public class SOAP_Dispatcher extends Thread {
 
             if (SharedData.isOfflineReception & SharedData.updateActInspectionListDB) {
                 SharedData.updateActInspectionListDB = false;
+                SharedData.insertCatalog();
                 SharedData.insertActInspectionList();
             }
 

@@ -564,4 +564,26 @@ public class SharedData {
         DataBaseHelper helper = new DataBaseHelper(app);
         ACT_INSPECTION = helper.getActInspectionList();
     }
+
+    public static void insertCatalog() {
+        DataBaseHelper helper = new DataBaseHelper(app);
+        helper.insertScheme();
+        helper.insertDetail();
+        helper.insertTypesDamages();
+        helper.insertDegreesDamages();
+        helper.insertClassificationDamages();
+        helper.insertOriginDamages();
+        helper.insertTypeDamagePhotos();
+    }
+
+    public static void getCatalog() {
+        DataBaseHelper helper = new DataBaseHelper(app);
+        SCHEMES = helper.getScheme();
+        DamageDefect = helper.getDetail();
+        TypesDamages = helper.getTypesDamages();
+        DegreesDamages = helper.getDegreesDamages();
+        ClassificationDamages = helper.getClassificationDamages();
+        OriginDamages = helper.getOriginDamages();
+        TypeDamagePhotos = helper.getTypeDamagePhotos();
+    }
 }
