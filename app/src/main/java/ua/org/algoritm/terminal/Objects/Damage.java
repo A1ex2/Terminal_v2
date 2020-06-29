@@ -146,17 +146,30 @@ public class Damage implements Serializable {
         this.typeDetail = typeDetail;
     }
 
-    public void setDetail(String detailID) {
+    public void setDetail(String typeMachineID, String detailID) {
         if (detailID.equals("")) {
 
         } else {
-            for (int i = 0; i < SharedData.DamageDefect.size(); i++) {
-                Detail mDetail = SharedData.DamageDefect.get(i);
-                if (mDetail.getID().equals(detailID)) {
-                    this.detail = mDetail;
-                    break;
+            for (int i = 0; i < SharedData.SCHEMES.size(); i++) {
+                if (SharedData.SCHEMES.get(i).getTypeMachineID().equals(typeMachineID)) {
+                    for (int j = 0; j < SharedData.SCHEMES.get(i).getDetails().size(); j++) {
+                        Detail mDetail = SharedData.SCHEMES.get(i).getDetails().get(j);
+                        if (mDetail.getDetailID().equals(detailID)) {
+                            this.detail = mDetail;
+                            return;
+                        }
+                    }
                 }
             }
+
+            for (int i = 0; i < SharedData.DamageDefect.size(); i++) {
+                Detail mDetail = SharedData.DamageDefect.get(i);
+                if (mDetail.getDetailID().equals(detailID)) {
+                    this.detail = mDetail;
+                    return;
+                }
+            }
+
         }
     }
 

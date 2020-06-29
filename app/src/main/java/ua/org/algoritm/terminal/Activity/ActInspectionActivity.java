@@ -849,13 +849,21 @@ public class ActInspectionActivity extends AppCompatActivity {
         mDialog.setCancelable(false);
         mDialog.show();
 
-        if (SharedData.isOfflineReception){
+        if (SharedData.isOfflineReception) {
             mActInspection.setPerformed(performedAct);
+
+            if (!checkPhotoAct()) {
+                if (mDialog != null && mDialog.isShowing()) {
+                    mDialog.dismiss();
+                }
+
+                return;
+            }
 
             Reception reception = SharedData.getReception(mActInspection.getReceptionID());
             for (int i = 0; i < reception.getCarData().size(); i++) {
                 CarData mCarData = reception.getCarData().get(i);
-                if (carData.getCarID().equals(mCarData.getCarID())){
+                if (carData.getCarID().equals(mCarData.getCarID())) {
                     mCarData.setProductionDate(carData.getProductionDate());
                     mCarData.setBarCode(carData.getBarCode());
                     break;
@@ -1184,14 +1192,14 @@ public class ActInspectionActivity extends AppCompatActivity {
             } else {
                 super.onActivityResult(requestCode, resultCode, data);
             }
-        } else if (requestCode == IntentServiceDataBase.REQUEST_CODE_INSERT_ACT_INSPECTION){
+        } else if (requestCode == IntentServiceDataBase.REQUEST_CODE_INSERT_ACT_INSPECTION) {
             if (mDialog != null && mDialog.isShowing()) {
                 mDialog.dismiss();
             }
 
             Toast.makeText(this, getString(R.string.save_act), Toast.LENGTH_SHORT).show();
 
-            if (performedAct){
+            if (performedAct) {
                 finishActivity();
             }
         }
@@ -1388,6 +1396,59 @@ public class ActInspectionActivity extends AppCompatActivity {
         } else {
             uiManager.showToast(soapParam_Response.getPropertyAsString("Description"));
         }
+    }
+
+    private boolean checkPhotoAct() {
+        ArrayList<PhotoActInspection> photoAll = new ArrayList<>();
+
+        for (int i = 0; i < mActInspection.getEquipments().size(); i++) {
+            if (!mActInspection.getEquipments().get(i).getPhotoActInspection().getCurrentPhotoPath().equals("")) {
+                photoAll.add(mActInspection.getEquipments().get(i).getPhotoActInspection());
+            }
+        }
+
+        for (int i = 0; i < mActInspection.getTypesPhotos().size(); i++) {
+            TypesPhoto typesPhoto = mActInspection.getTypesPhotos().get(i);
+            for (int j = 0; j < typesPhoto.getPhotoActInspections().size(); j++) {
+                if (!typesPhoto.getPhotoActInspections().get(j).getCurrentPhotoPath().equals("")) {
+                    photoAll.add(typesPhoto.getPhotoActInspections().get(j));
+                }
+            }
+        }
+
+        for (int i = 0; i < mActInspection.getDamages().size(); i++) {
+            for (int j = 0; j < mActInspection.getDamages().get(i).getTypeDamagePhoto().size(); j++) {
+                TypeDamagePhoto typesPhoto = mActInspection.getDamages().get(i).getTypeDamagePhoto().get(j);
+
+                for (int k = 0; k < typesPhoto.getPhotoActInspections().size(); k++) {
+                    if (!typesPhoto.getPhotoActInspections().get(k).getCurrentPhotoPath().equals("")) {
+                        photoAll.add(typesPhoto.getPhotoActInspections().get(k));
+                    }
+                }
+            }
+        }
+
+        if (photoAll.size() == 0) {
+            if (performedAct) {
+                performedAct = false;
+                String message = getString(R.string.no_photos);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage(message)
+                        .setCancelable(true)
+                        .setPositiveButton(getString(R.string.butt_OK), new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+
+                            }
+                        });
+                AlertDialog alert = builder.create();
+                alert.show();
+                return false;
+            }
+        } else {
+            return true;
+        }
+        return true;
     }
 
     private void finishActivity() {

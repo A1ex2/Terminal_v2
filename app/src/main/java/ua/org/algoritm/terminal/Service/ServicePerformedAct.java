@@ -84,6 +84,33 @@ public class ServicePerformedAct extends Service {
                 }
             }
 
+        } else if (intent.getAction().equals(Constants.ACTION.STARTFOREGROUND_ACTION_ALL)) {
+            for (int i = 0; i < SharedData.ACT_INSPECTION.size(); i++) {
+                ActInspection mActInspection1 = SharedData.ACT_INSPECTION.get(i);
+                if (mActInspection1.isPerformed()) {
+                    boolean add = true;
+                    for (int j = 0; j < mActInspections.size(); j++) {
+                        if (mActInspection1.getID().equals(mActInspections.get(j).getID())) {
+                            add = false;
+                        }
+                    }
+
+                    if (add) {
+                        mActInspections.add(mActInspection1);
+                    }
+
+                    for (int j = 0; j < mActInspections.size(); j++) {
+                        ActInspection mActInspection = mActInspections.get(j);
+                        if (!mActInspection.sendPhoto) {
+                            ArrayList<PhotoActInspection> photoAll = getPhotoAct(mActInspection);
+                            countTo = photoAll.size();
+                            startCount(mActInspection, photoAll);
+                        }
+                    }
+
+                }
+            }
+
         } else if (intent.getAction().equals(Constants.ACTION.PREV_CANCEL)) {
 //            stopForeground(true);
             stopSelf();
@@ -129,6 +156,33 @@ public class ServicePerformedAct extends Service {
         final Thread myThread = new Thread(new Runnable() {
             @Override
             public void run() {
+                if (SharedData.isOfflineReception) {
+                    int id = SharedData.NOTIFY_ID;
+
+                    String title = "Отправка Акта " + mActInspection.getDescription();
+                    sendMessage(title, "отправка изменений", id);
+
+                    Message1c message = new Message1c(SharedData.API, SharedData.LOGIN, SharedData.PASSWORD, getApplicationContext());
+
+                    String stringObject = SOAP_Objects.getActInspection(mActInspection);
+                    message.string_Inquiry = stringObject;
+                    message.setActInspection();
+
+                    Boolean isMessage = message.isMessage;
+                    String textErr = message.text;
+
+                    if (isMessage) {
+                        String text = "" + mActInspection.getDescription() + ". " + textErr;
+                        sendMessageError(title, text);
+
+                        if (!textErr.equals("Все ОК!")) {
+                            stopForeground(true);
+                            stopSelf();
+                            return;
+                        }
+                    }
+                }
+
                 mActInspection.sendPhoto = true;
 //                SharedData.NOTIFY_ID = SharedData.NOTIFY_ID + 1;
                 int id = SharedData.NOTIFY_ID;
@@ -151,7 +205,7 @@ public class ServicePerformedAct extends Service {
 
                 }
 
-                if (mActInspection.isPerformed()){
+                if (mActInspection.isPerformed()) {
                     Message1c message = new Message1c(SharedData.API, SharedData.LOGIN, SharedData.PASSWORD, getApplicationContext());
 
                     String stringObject = SOAP_Objects.getActInspection(mActInspection);
@@ -161,7 +215,7 @@ public class ServicePerformedAct extends Service {
                     Boolean isMessage = message.isMessage;
                     String textErr = message.text;
 
-                    if (isMessage){
+                    if (isMessage) {
                         String text = "" + mActInspection.getDescription() + ". " + textErr;
                         sendMessageError(title, text);
                     }

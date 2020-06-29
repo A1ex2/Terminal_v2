@@ -8,6 +8,7 @@ public class Constants {
 //        public static String PLAY_ACTION = "com.truiton.foregroundservice.action.play";
 //        public static String NEXT_ACTION = "com.truiton.foregroundservice.action.next";
         public static String STARTFOREGROUND_ACTION = "com.truiton.foregroundservice.action.startforeground";
+        public static String STARTFOREGROUND_ACTION_ALL = "com.truiton.foregroundservice.action.startforegroundALL";
         public static String STOPFOREGROUND_ACTION = "com.truiton.foregroundservice.action.stopforeground";
     }
 

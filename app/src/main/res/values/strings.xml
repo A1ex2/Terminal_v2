@@ -134,5 +134,6 @@
     <string name="update_data">Загрузить данные</string>
 
     <string name="save_act">Акт записан для отправки</string>
+    <string name="send_act">Отправить Акты</string>
 
 </resources>

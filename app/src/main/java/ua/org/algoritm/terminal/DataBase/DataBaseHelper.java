@@ -156,6 +156,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         db.execSQL("CREATE TABLE Detail ("
                 + "_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + "typeDetail TEXT NOT NULL,"
                 + "ID TEXT NOT NULL,"
                 + "tempID INTEGER NOT NULL,"
                 + "detailID TEXT NOT NULL,"
@@ -734,6 +735,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         ArrayList<PhotoActInspection> mPhotoArrayList = new ArrayList<>();
         SQLiteDatabase db = getWritableDatabase();
         Cursor cursor = null;
+
+        deleteDamageActInspection(actID, objectID);
 
         try {
             String select = "actID = '" + actID + "' and objectID LIKE '%" + objectID + "%'";
@@ -1581,7 +1584,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                     actInspection.setEquipments(getEquipmentActInspection(actInspection.getID()));
                     actInspection.setInspections(getInspectionActInspection(actInspection.getID()));
                     actInspection.setTypesPhotos(getTypesPhotoActInspection(actInspection.getID()));
-                    actInspection.setDamages(getDamageActInspection(actInspection.getID()));
+                    actInspection.setDamages(getDamageActInspection(actInspection));
 
                     actInspections.add(actInspection);
                     cursor.moveToNext();
@@ -1674,32 +1677,41 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         long id = 0;
 
         try {
-            String detailID = damage.getDetail() == null ? "" : damage.getDetail().getID();
-            String mTypeDamageID = damage.getDetail() == null ? "" : damage.getDetail().getID();
-            String mDegreesDamageID = damage.getDetail() == null ? "" : damage.getDetail().getID();
-            String mClassificationDamageID = damage.getDetail() == null ? "" : damage.getDetail().getID();
-            String mOriginDamageID = damage.getDetail() == null ? "" : damage.getDetail().getID();
+            String detailID = damage.getDetail() == null ? "" : damage.getDetail().getDetailID();
+            String mTypeDamageID = damage.getTypeDamage() == null ? "" : damage.getTypeDamage().getID();
+            String mDegreesDamageID = damage.getDegreesDamage() == null ? "" : damage.getDegreesDamage().getID();
+            String mClassificationDamageID = damage.getClassificationDamage() == null ? "" : damage.getClassificationDamage().getID();
+            String mOriginDamageID = damage.getOriginDamage() == null ? "" : damage.getOriginDamage().getID();
 
-            boolean exist = getExist("Damage","ActID = '" + ActID + "' and detailID = '" + detailID + "'");
+            boolean exist = getExist("Damage", "ActID = '" + ActID + "' and detailID = '" + detailID + "'");
 
             ContentValues values = new ContentValues();
             values.put("ActID", ActID);
             values.put("detailID", detailID);
             values.put("mTypeDamageID", mTypeDamageID);
-            values.put("typeDetail", damage.getTypeDetail());
+            values.put("typeDetail", damage.getTypeDetail() == null ? "" : damage.getTypeDetail());
             values.put("mDegreesDamageID", mDegreesDamageID);
             values.put("mClassificationDamageID", mClassificationDamageID);
             values.put("mOriginDamageID", mOriginDamageID);
-            values.put("detailDamage", damage.getDetailDamage());
-            values.put("commentDamage", damage.getCommentDamage());
-            values.put("widthDamage", damage.getWidthDamage());
-            values.put("heightDamage", damage.getHeightDamage());
+            values.put("detailDamage", damage.getDetailDamage() == null ? "" : damage.getDetailDamage());
+            values.put("commentDamage", damage.getCommentDamage() == null ? "" : damage.getCommentDamage());
+            values.put("widthDamage", damage.getWidthDamage() == null ? "" : damage.getWidthDamage());
+            values.put("heightDamage", damage.getHeightDamage() == null ? "" : damage.getHeightDamage());
 
             if (exist) {
                 id = db.update("Damage", values, "ActID=? and detailID=?", new String[]{ActID, detailID});
             } else {
                 id = db.insert("Damage", null, values);
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteDamageActInspection(String ActID, String detailID) {
+        try {
+            SQLiteDatabase db = getWritableDatabase();
+            db.delete("Damage", "ActID = '" + ActID + "' and detailID = '" + detailID + "'", null);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1803,20 +1815,20 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return list;
     }
 
-    public ArrayList<Damage> getDamageActInspection(String ActID) {
+    public ArrayList<Damage> getDamageActInspection(ActInspection actInspection) {
         ArrayList<Damage> list = new ArrayList<>();
         SQLiteDatabase db = getWritableDatabase();
         Cursor cursor = null;
 
         try {
-            String select = "ActID = '" + ActID + "'";
+            String select = "ActID = '" + actInspection.getID() + "'";
             cursor = db.query("Damage", null, select, null, null, null, null);
 
             if (cursor.moveToNext()) {
                 while (!cursor.isAfterLast()) {
                     Damage damage = new Damage();
 
-                    damage.setDetail(cursor.getString(cursor.getColumnIndex("detailID")));
+                    damage.setDetail(actInspection.getTypeMachineID(), cursor.getString(cursor.getColumnIndex("detailID")));
                     damage.setTypeDamage(cursor.getString(cursor.getColumnIndex("mTypeDamageID")));
                     damage.setTypeDetail(cursor.getString(cursor.getColumnIndex("typeDetail")));
                     damage.setDegreesDamage(cursor.getString(cursor.getColumnIndex("mDegreesDamageID")));
@@ -1841,8 +1853,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         return list;
     }
-
-
 
 
     public void insertScheme() {
@@ -1878,16 +1888,35 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             removeAll("Detail");
 
             for (int i = 0; i < SharedData.DamageDefect.size(); i++) {
-                ContentValues values = new ContentValues();
-
                 Detail detail = SharedData.DamageDefect.get(i);
 
+                ContentValues values = new ContentValues();
+
+                values.put("typeDetail", "defect");
                 values.put("ID", detail.getID());
                 values.put("tempID", detail.getTempID());
                 values.put("detailID", detail.getDetailID());
                 values.put("detailName", detail.getDetailName());
 
                 id = db.insert("Detail", null, values);
+            }
+
+            for (int i = 0; i < SharedData.SCHEMES.size(); i++) {
+                Scheme scheme = SharedData.SCHEMES.get(i);
+
+                for (int j = 0; j < scheme.getDetails().size(); j++) {
+                    Detail detail = scheme.getDetails().get(j);
+
+                    ContentValues values = new ContentValues();
+
+                    values.put("typeDetail", scheme.getID());
+                    values.put("ID", detail.getID());
+                    values.put("tempID", detail.getTempID());
+                    values.put("detailID", detail.getDetailID());
+                    values.put("detailName", detail.getDetailName());
+
+                    id = db.insert("Detail", null, values);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -2065,7 +2094,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         Cursor cursor = null;
 
         try {
-            cursor = db.query("Detail", null, null, null, null, null, null);
+            String select = "typeDetail = 'defect'";
+            cursor = db.query("Detail", null, select, null, null, null, null);
 
             if (cursor.moveToNext()) {
                 while (!cursor.isAfterLast()) {
@@ -2080,6 +2110,30 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                     cursor.moveToNext();
                 }
             }
+
+            for (int i = 0; i < SharedData.SCHEMES.size(); i++) {
+                Scheme scheme = SharedData.SCHEMES.get(i);
+                scheme.getDetails().clear();
+
+                select = "typeDetail = '" + scheme.getID() + "'";
+                cursor = db.query("Detail", null, select, null, null, null, null);
+
+                if (cursor.moveToNext()) {
+                    while (!cursor.isAfterLast()) {
+                        Detail detail = new Detail();
+
+                        detail.setID(cursor.getString(cursor.getColumnIndex("ID")));
+                        detail.setTempID(cursor.getInt(cursor.getColumnIndex("tempID")));
+                        detail.setDetailID(cursor.getString(cursor.getColumnIndex("detailID")));
+                        detail.setDetailName(cursor.getString(cursor.getColumnIndex("detailName")));
+
+                        scheme.getDetails().add(detail);
+                        cursor.moveToNext();
+                    }
+                }
+
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

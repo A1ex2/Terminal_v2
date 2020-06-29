@@ -1,5 +1,7 @@
 package ua.org.algoritm.terminal.ui.acceptance;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,13 +25,16 @@ import org.ksoap2.SoapFault;
 
 import java.lang.ref.WeakReference;
 
+import ua.org.algoritm.terminal.Activity.ActInspectionActivity;
 import ua.org.algoritm.terminal.Activity.DetailReception;
 import ua.org.algoritm.terminal.Adapters.RecyclerReceptionAdapter;
 import ua.org.algoritm.terminal.ConnectTo1c.SOAP_Dispatcher;
 import ua.org.algoritm.terminal.ConnectTo1c.UIManager;
+import ua.org.algoritm.terminal.Constants;
 import ua.org.algoritm.terminal.DataBase.SharedData;
 import ua.org.algoritm.terminal.Objects.Reception;
 import ua.org.algoritm.terminal.R;
+import ua.org.algoritm.terminal.Service.ServicePerformedAct;
 
 public class AcceptanceFragment extends Fragment {
     public static final int ACTION_RECEPTION_LIST = 12;
@@ -80,7 +85,6 @@ public class AcceptanceFragment extends Fragment {
         if (SharedData.isOfflineReception) {
             inflater.inflate(R.menu.menu_search_offline, menu);
             final MenuItem update_data_receptions = menu.findItem(R.id.update_data_receptions);
-
             update_data_receptions.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
@@ -92,6 +96,37 @@ public class AcceptanceFragment extends Fragment {
                 }
             });
 
+            final MenuItem send_act = menu.findItem(R.id.send_act);
+            send_act.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+
+                    String message = getString(R.string.send_act) + "?";
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setMessage(message)
+                            .setCancelable(true)
+                            .setPositiveButton(getString(R.string.butt_Yes), new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    Intent startIntent = new Intent(getContext(), ServicePerformedAct.class);
+                                    startIntent.setAction(Constants.ACTION.STARTFOREGROUND_ACTION_ALL);
+                                    getActivity().startService(startIntent);
+
+
+                                }
+                            })
+                            .setNegativeButton(getString(R.string.butt_Not), new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+
+                                    dialog.cancel();
+                                }
+                            });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+
+                    return false;
+                }
+            });
         }  else {
             inflater.inflate(R.menu.menu_search, menu);
         }

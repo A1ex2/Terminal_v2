@@ -6,10 +6,16 @@
         android:title="@string/search"
         app:actionViewClass="android.widget.SearchView"
         app:showAsAction="ifRoom" />
+
     <item
         android:id="@+id/update_data_receptions"
         android:icon="@android:drawable/stat_sys_download_done"
         android:title="@string/update_data"
         app:showAsAction="always"/>
 
+    <item
+        android:id="@+id/send_act"
+        android:icon="@android:drawable/stat_sys_upload_done"
+        android:title="@string/send_act"
+        app:showAsAction="always" />
 </menu>

@@ -504,8 +504,7 @@ public class SOAP_Dispatcher extends Thread {
 
     private void GetActInspection() {
         if (SharedData.isOfflineReception & !SharedData.updateActInspectionListDB) {
-            ArrayList<ActInspection> mActInspections = SharedData.ACT_INSPECTION;
-            mActInspections.clear();
+            SharedData.ACT_INSPECTION.clear();
 
             soap_Response = new SoapObject();
 
@@ -514,8 +513,8 @@ public class SOAP_Dispatcher extends Thread {
 
             SharedData.checkPhotoAct();
 
-            for (int i = 0; i < mActInspections.size(); i++) {
-                SharedData.setPhotoActInspection(mActInspections.get(i));
+            for (int i = 0; i < SharedData.ACT_INSPECTION.size(); i++) {
+                SharedData.setPhotoActInspection(SharedData.ACT_INSPECTION.get(i));
             }
 
             return;

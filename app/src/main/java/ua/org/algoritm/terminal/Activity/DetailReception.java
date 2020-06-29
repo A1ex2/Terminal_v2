@@ -140,7 +140,10 @@ public class DetailReception extends AppCompatActivity {
                     boolean performedAct = data.getBooleanExtra("performedAct", false);
 
                     if (performedAct) {
-                        SharedData.deleteCarData(carData.getCarID(), reception);
+                        if (SharedData.isOfflineReception) {
+                        } else {
+                            SharedData.deleteCarData(carData.getCarID(), reception);
+                        }
                     }
 
                     updateListsCarData();

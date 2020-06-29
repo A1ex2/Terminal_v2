@@ -121,6 +121,16 @@ public class RecyclerAdapterCarData extends RecyclerView.Adapter<RecyclerAdapter
             if (carData.saveCB) {
                 //mConstraintLayout.setBackgroundColor(Color.parseColor("#BDECB8"));
             }
+
+            if (SharedData.isOfflineReception) {
+                if (SharedData.getActInspectionCar(carData.getCarID()).isPerformed()) {
+                    itemCar.setTextColor(Color.parseColor("#BDECB8"));
+                    itemBarCode.setTextColor(Color.parseColor("#BDECB8"));
+                    itemProductionDate.setTextColor(Color.parseColor("#BDECB8"));
+                    itemSector.setTextColor(Color.parseColor("#BDECB8"));
+                    itemRow.setTextColor(Color.parseColor("#BDECB8"));
+                }
+            }
         }
     }
 }

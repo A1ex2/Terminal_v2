@@ -90,6 +90,30 @@ public class Message1c {
         }
     }
 
+    public void setActInspection() {
+        String method = "setActInspection";
+        String action = NAMESPACE + "#setActInspection:" + method;
+        SoapObject request = new SoapObject(NAMESPACE, method);
+        request.addProperty("ActInspection", string_Inquiry);
+
+        soap_Response = callWebService(request, action);
+
+        if (soap_Response == null) {
+            isMessage = false;
+        } else {
+            Boolean isSuccess = Boolean.parseBoolean(soap_Response.getPropertyAsString("Result"));
+
+            if (isSuccess) {
+                isMessage = true;
+                text = soap_Response.getPropertyAsString("Description");
+            } else {
+                isMessage = true;
+                text = soap_Response.getPropertyAsString("Description");
+            }
+        }
+    }
+
+
     private SoapObject callWebService(SoapObject request, String action) {
 
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
