@@ -571,9 +571,19 @@ public class SharedData {
         helper.insertActInspectionList(ACT_INSPECTION);
     }
 
+    public static void insertActInspection(ActInspection actInspection) {
+        DataBaseHelper helper = new DataBaseHelper(app);
+        helper.insertActInspection(actInspection);
+    }
+
     public static void getActInspectionList() {
         DataBaseHelper helper = new DataBaseHelper(app);
         ACT_INSPECTION = helper.getActInspectionList();
+    }
+
+    public static ArrayList<ActInspection> getReturnActInspectionList() {
+        DataBaseHelper helper = new DataBaseHelper(app);
+        return helper.getActInspectionList();
     }
 
     public static void insertCatalog() {
@@ -605,6 +615,13 @@ public class SharedData {
                 mActInspection.copyActInspection(actInspection);
                 break;
             }
+        }
+    }
+
+    public static void deleteAct(ArrayList<String> id) {
+        DataBaseHelper helper = new DataBaseHelper(app);
+        for (int i = 0; i < id.size(); i++) {
+            helper.deleteAct(id.get(i));
         }
     }
 }

@@ -7,6 +7,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Random;
 
 public class ActInspection {
     @Expose
@@ -72,8 +73,13 @@ public class ActInspection {
     private boolean performed;
 
     public boolean sendPhoto = false;
+    public boolean sendPerformed = false;
+
+    public int NOTIFY_ID = 0;
 
     public ActInspection() {
+        Random random = new Random();
+        NOTIFY_ID = random.nextInt();
     }
 
     public void copyActInspection(ActInspection actInspection) {

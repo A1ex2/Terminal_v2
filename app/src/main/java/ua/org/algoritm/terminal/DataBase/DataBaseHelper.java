@@ -105,6 +105,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 + "_row TEXT NOT NULL,"
                 + "TypeMachineID TEXT NOT NULL,"
                 + "TypeMachine TEXT NOT NULL,"
+                + "sendPerformed INTEGER NOT NULL,"
                 + "performed INTEGER NOT NULL)");
 
         db.execSQL("CREATE TABLE Equipment ("
@@ -253,6 +254,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                     + "_row TEXT NOT NULL,"
                     + "TypeMachineID TEXT NOT NULL,"
                     + "TypeMachine TEXT NOT NULL,"
+                    + "sendPerformed INTEGER NOT NULL,"
                     + "performed INTEGER NOT NULL)");
 
             db.execSQL("CREATE TABLE Equipment ("
@@ -1491,6 +1493,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             values.put("TypeMachineID", actInspection.getTypeMachineID());
             values.put("TypeMachine", actInspection.getTypeMachine());
             values.put("performed", actInspection.isPerformed() ? 1 : 0);
+            values.put("sendPerformed", actInspection.sendPerformed ? 1 : 0);
 
             if (exist) {
                 id = db.update("ActInspection", values, "ReceptionID=? and ID=?", new String[]{actInspection.getReceptionID(), actInspection.getID()});
@@ -1580,6 +1583,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                     actInspection.setTypeMachineID(cursor.getString(cursor.getColumnIndex("TypeMachineID")));
                     actInspection.setTypeMachine(cursor.getString(cursor.getColumnIndex("TypeMachine")));
                     actInspection.setPerformed(cursor.getInt(cursor.getColumnIndex("performed")) == 0 ? false : true);
+                    actInspection.sendPerformed = cursor.getInt(cursor.getColumnIndex("sendPerformed")) == 0 ? false : true;
 
                     actInspection.setEquipments(getEquipmentActInspection(actInspection.getID()));
                     actInspection.setInspections(getInspectionActInspection(actInspection.getID()));
@@ -2293,5 +2297,15 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
 
         return list;
+    }
+
+    public void deleteAct(String id) {
+        SQLiteDatabase db = getWritableDatabase();
+
+        db.delete("ActInspection", "ID=?", new String[]{id});
+        db.delete("Equipment", "ActID=?", new String[]{id});
+        db.delete("Inspection", "ActID=?", new String[]{id});
+        db.delete("TypesPhoto", "ActID=?", new String[]{id});
+        db.delete("Damage", "ActID=?", new String[]{id});
     }
 }

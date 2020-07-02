@@ -88,26 +88,20 @@ public class ServicePerformedAct extends Service {
             for (int i = 0; i < SharedData.ACT_INSPECTION.size(); i++) {
                 ActInspection mActInspection1 = SharedData.ACT_INSPECTION.get(i);
                 if (mActInspection1.isPerformed()) {
-                    boolean add = true;
-                    for (int j = 0; j < mActInspections.size(); j++) {
-                        if (mActInspection1.getID().equals(mActInspections.get(j).getID())) {
-                            add = false;
-                        }
+                    if (mActInspection1.sendPerformed) {
+                        continue;
                     }
 
-                    if (add) {
-                        mActInspections.add(mActInspection1);
-                    }
+                    mActInspections.add(mActInspection1);
+                }
+            }
 
-                    for (int j = 0; j < mActInspections.size(); j++) {
-                        ActInspection mActInspection = mActInspections.get(j);
-                        if (!mActInspection.sendPhoto) {
-                            ArrayList<PhotoActInspection> photoAll = getPhotoAct(mActInspection);
-                            countTo = photoAll.size();
-                            startCount(mActInspection, photoAll);
-                        }
-                    }
-
+            for (int j = 0; j < mActInspections.size(); j++) {
+                ActInspection mActInspection = mActInspections.get(j);
+                if (!mActInspection.sendPhoto) {
+                    ArrayList<PhotoActInspection> photoAll = getPhotoAct(mActInspection);
+                    countTo = photoAll.size();
+                    startCount(mActInspection, photoAll);
                 }
             }
 
@@ -157,7 +151,8 @@ public class ServicePerformedAct extends Service {
             @Override
             public void run() {
                 if (SharedData.isOfflineReception) {
-                    int id = SharedData.NOTIFY_ID;
+//                    int id = SharedData.NOTIFY_ID;
+                    int id = mActInspection.NOTIFY_ID;
 
                     String title = "Отправка Акта " + mActInspection.getDescription();
                     sendMessage(title, "отправка изменений", id);
@@ -173,9 +168,10 @@ public class ServicePerformedAct extends Service {
 
                     if (isMessage) {
                         String text = "" + mActInspection.getDescription() + ". " + textErr;
-                        sendMessageError(title, text);
+                        sendMessageError(title, text, id + 1);
 
                         if (!textErr.equals("Все ОК!")) {
+                            mActInspections.remove(mActInspection);
                             stopForeground(true);
                             stopSelf();
                             return;
@@ -184,8 +180,8 @@ public class ServicePerformedAct extends Service {
                 }
 
                 mActInspection.sendPhoto = true;
-//                SharedData.NOTIFY_ID = SharedData.NOTIFY_ID + 1;
-                int id = SharedData.NOTIFY_ID;
+//                int id = SharedData.NOTIFY_ID;
+                int id = mActInspection.NOTIFY_ID;
                 String title = "Отправка FTP " + mActInspection.getDescription();
                 sendMessage(title, getApplicationContext().getResources().getString(R.string.wait_ftp), id);
 
@@ -217,7 +213,12 @@ public class ServicePerformedAct extends Service {
 
                     if (isMessage) {
                         String text = "" + mActInspection.getDescription() + ". " + textErr;
-                        sendMessageError(title, text);
+                        sendMessageError(title, text, id + 1);
+
+                        if (textErr.equals("Все ОК!") | textErr.contains("принята")) {
+                            mActInspection.sendPerformed = true;
+                            SharedData.insertActInspection(mActInspection);
+                        }
                     }
                 }
 
@@ -237,7 +238,7 @@ public class ServicePerformedAct extends Service {
                     }
                 } else {
                     String text = "" + mActInspection.getDescription() + ". " + getApplicationContext().getResources().getString(R.string.error_ftp);
-                    sendMessageError(title, text);
+                    sendMessageError(title, text, id + 1);
                     stopForeground(true);
                     stopSelf();
                 }
@@ -252,9 +253,9 @@ public class ServicePerformedAct extends Service {
         startForeground(id, notification);
     }
 
-    private void sendMessageError(String title, String text) {
+    private void sendMessageError(String title, String text, int id) {
         NotificationHelper notificationHelper = new NotificationHelper(getApplicationContext());
-        notificationHelper.createNotificationError(title, text);
+        notificationHelper.createNotificationError(title, text, id);
 
 ////        stopForeground(true);
 //        stopSelf();

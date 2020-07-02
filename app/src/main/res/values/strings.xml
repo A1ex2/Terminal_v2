@@ -24,7 +24,7 @@
     <string name="butt_Not">Нет</string>
     <string name="success">Все ОК</string>
     <string name="error">Доступ запрещен!</string>
-    <string name="textNoInternet">Что-то с интернет доступом!</string>
+    <string name="textNoInternet">Пропала связь с сервером!</string>
     <string name="unknownError">Неизвестная ошибка!</string>
     <string name="errorConnection">"Ошибка: "</string>
     <string name="error_login">Не заполнен логин</string>
@@ -135,5 +135,6 @@
 
     <string name="save_act">Акт записан для отправки</string>
     <string name="send_act">Отправить Акты</string>
+    <string name="download_act">Загрузить приемку? Если Акт выполнен в ЦБ, он удалится в мобильном приложении. продолжить?</string>
 
 </resources>
