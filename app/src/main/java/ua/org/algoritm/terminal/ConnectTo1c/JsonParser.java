@@ -394,4 +394,16 @@ public class JsonParser {
 
         return mActInspection;
     }
+
+    public static ArrayList<String> getActInspectionID(String root) throws JSONException {
+        ArrayList<String> id = new ArrayList<>();
+
+        JSONArray rootJSON = new JSONArray(root);
+        for (int i = 0; i < rootJSON.length(); i++) {
+            String idJSON = rootJSON.get(i).toString();
+            id.add(idJSON);
+        }
+
+        return id;
+    }
 }

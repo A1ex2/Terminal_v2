@@ -119,7 +119,7 @@ public class IntentServicePerformedAct extends IntentService {
             stopSelf();
         } else {
             String text = "" + mActInspection.getDescription() + ". " + getApplicationContext().getResources().getString(R.string.error_ftp);
-            sendMessageError(title, text);
+            sendMessageError(title, text, id);
         }
     }
 
@@ -130,9 +130,9 @@ public class IntentServicePerformedAct extends IntentService {
         startForeground(id, notification);
     }
 
-    private void sendMessageError(String title, String text) {
+    private void sendMessageError(String title, String text, int id) {
         NotificationHelper notificationHelper = new NotificationHelper(getApplicationContext());
-        notificationHelper.createNotificationError(title, text);
+        notificationHelper.createNotificationError(title, text, id);
 
 //        stopForeground(true);
         stopSelf();

@@ -2,6 +2,7 @@ package ua.org.algoritm.terminal.Adapters;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -124,11 +125,15 @@ public class RecyclerAdapterCarData extends RecyclerView.Adapter<RecyclerAdapter
 
             if (SharedData.isOfflineReception) {
                 if (SharedData.getActInspectionCar(carData.getCarID()).isPerformed()) {
-                    itemCar.setTextColor(Color.parseColor("#BDECB8"));
-                    itemBarCode.setTextColor(Color.parseColor("#BDECB8"));
-                    itemProductionDate.setTextColor(Color.parseColor("#BDECB8"));
-                    itemSector.setTextColor(Color.parseColor("#BDECB8"));
-                    itemRow.setTextColor(Color.parseColor("#BDECB8"));
+                    itemCar.setTextColor(Color.parseColor("#1d5e16"));
+                    itemBarCode.setTextColor(Color.parseColor("#1d5e16"));
+                    itemProductionDate.setTextColor(Color.parseColor("#1d5e16"));
+                    itemSector.setTextColor(Color.parseColor("#1d5e16"));
+                    itemRow.setTextColor(Color.parseColor("#1d5e16"));
+
+                    if (SharedData.getActInspectionCar(carData.getCarID()).sendPerformed) {
+                        mConstraintLayout.setBackgroundColor(Color.parseColor("#a7e9a0"));
+                    }
                 }
             }
         }

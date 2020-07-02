@@ -68,6 +68,16 @@ public class SOAP_Objects {
         return stringActInspection;
     }
 
+    public static String getActInspectionCheck(ArrayList<ActInspection> mActInspections) {
+        String stringData = "";
+
+        for (int i = 0; i < mActInspections.size(); i++) {
+            stringData = stringData + ";" + mActInspections.get(i).getID();
+        }
+
+        return stringData;
+    }
+
     private static class JSONReception {
         @SerializedName("ID")
         String ID;

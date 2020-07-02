@@ -88,9 +88,28 @@ public class AcceptanceFragment extends Fragment {
             update_data_receptions.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
-                    SharedData.updateReceptionListDB = true;
-                    SharedData.updateActInspectionListDB = true;
-                    getUpdateReceptionList();
+
+                    String message = getString(R.string.download_act);
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setMessage(message)
+                            .setCancelable(true)
+                            .setPositiveButton(getString(R.string.butt_Yes), new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    SharedData.updateReceptionListDB = true;
+                                    SharedData.updateActInspectionListDB = true;
+                                    getUpdateReceptionList();
+
+                                }
+                            })
+                            .setNegativeButton(getString(R.string.butt_Not), new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+
+                                    dialog.cancel();
+                                }
+                            });
+                    AlertDialog alert = builder.create();
+                    alert.show();
 
                     return false;
                 }
@@ -127,7 +146,7 @@ public class AcceptanceFragment extends Fragment {
                     return false;
                 }
             });
-        }  else {
+        } else {
             inflater.inflate(R.menu.menu_search, menu);
         }
 

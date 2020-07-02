@@ -80,7 +80,7 @@ public class NotificationHelper {
         return mBuilder.build();
     }
 
-    public void createNotificationError(String title, String message) {
+    public void createNotificationError(String title, String message, int id) {
         /**Creates an explicit intent for an Activity in your app**/
 //        Intent resultIntent = new Intent(mContext, Password.class);
 //        resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -119,11 +119,13 @@ public class NotificationHelper {
         }
         assert mNotificationManager != null;
 
-        mNotificationManager.notify(NOTIFY_ID, mBuilder.build());
+//        mNotificationManager.notify(NOTIFY_ID, mBuilder.build());
+        mNotificationManager.notify(id, mBuilder.build());
     }
 
-    public void cancelNotification() {
+    public void cancelNotification(int id) {
         mNotificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+//        mNotificationManager.cancel(id);
         mNotificationManager.cancel(NOTIFY_ID);
     }
 }

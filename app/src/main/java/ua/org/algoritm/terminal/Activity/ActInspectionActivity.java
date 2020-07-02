@@ -851,6 +851,7 @@ public class ActInspectionActivity extends AppCompatActivity {
 
         if (SharedData.isOfflineReception) {
             mActInspection.setPerformed(performedAct);
+            mActInspection.sendPerformed = false;
 
             if (!checkPhotoAct()) {
                 if (mDialog != null && mDialog.isShowing()) {

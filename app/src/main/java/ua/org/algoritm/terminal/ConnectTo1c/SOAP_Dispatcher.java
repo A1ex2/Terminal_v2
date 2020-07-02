@@ -520,6 +520,10 @@ public class SOAP_Dispatcher extends Thread {
             return;
         }
 
+        if (SharedData.isOfflineReception & SharedData.updateActInspectionListDB) {
+            checkActs();
+        }
+
         thisGet = true;
 
         String method = "GetActInspection";
@@ -544,7 +548,15 @@ public class SOAP_Dispatcher extends Thread {
             if (SharedData.isOfflineReception & SharedData.updateActInspectionListDB) {
                 SharedData.updateActInspectionListDB = false;
                 SharedData.insertCatalog();
-                SharedData.insertActInspectionList();
+                SharedData.insertActInspectionList(true);
+
+                soap_Response = new SoapObject();
+                SharedData.getCatalog();
+                SharedData.getActInspectionList();
+                SharedData.checkPhotoAct();
+                for (int i = 0; i < SharedData.ACT_INSPECTION.size(); i++) {
+                    SharedData.setPhotoActInspection(SharedData.ACT_INSPECTION.get(i));
+                }
             }
 
         } catch (Exception e) {
@@ -611,6 +623,10 @@ public class SOAP_Dispatcher extends Thread {
             return;
         }
 
+        if (SharedData.isOfflineReception & SharedData.updateActInspectionListDB) {
+            checkActs();
+        }
+
         thisGet = true;
 
         String method = "GetReceptionList";
@@ -670,7 +686,34 @@ public class SOAP_Dispatcher extends Thread {
             if (SharedData.isOfflineReception & SharedData.updateReceptionListDB) {
                 SharedData.updateReceptionListDB = false;
                 SharedData.insertReceptionList();
+
+                soap_Response = new SoapObject();
+                SharedData.getReceptionList();
+                SharedData.updateReceptionsDB();
+
             }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    void checkActs() {
+        ArrayList<ActInspection> mActInspections = SharedData.getReturnActInspectionList();
+        String string = SOAP_Objects.getActInspectionCheck(mActInspections);
+
+        String method = "checkActs";
+        String action = NAMESPACE + "#checkActs:" + method;
+        SoapObject request = new SoapObject(NAMESPACE, method);
+        request.addProperty("ActInspection", string);
+
+        SoapObject soap = callWebService(request, action);
+
+        try {
+            String mString = soap.getPropertyAsString("Description");
+            ArrayList<String> id = JsonParser.getActInspectionID(mString);
+
+            SharedData.deleteAct(id);
 
         } catch (Exception e) {
             e.printStackTrace();
