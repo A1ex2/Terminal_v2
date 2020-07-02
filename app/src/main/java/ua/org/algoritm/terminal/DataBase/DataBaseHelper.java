@@ -1461,6 +1461,18 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    public void insertActInspectionListDownload(ArrayList<ActInspection> actInspections) {
+        for (int i = 0; i < actInspections.size(); i++) {
+            ActInspection actInspection = actInspections.get(i);
+            boolean exist = getActInspectionExist(actInspection.getReceptionID(), actInspection.getID());
+            if (exist) {
+                actInspection = getActInspection(actInspection.getReceptionID(), actInspection.getID());
+            }
+
+            insertActInspection(actInspection);
+        }
+    }
+
     public void insertActInspection(ActInspection actInspection) {
         SQLiteDatabase db = getReadableDatabase();
         long id = 0;
@@ -1545,6 +1557,64 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
 
         return false;
+    }
+
+    public ActInspection getActInspection(String receptionID, String id) {
+        ActInspection actInspection = new ActInspection();
+        SQLiteDatabase db = getWritableDatabase();
+        Cursor cursor = null;
+
+        try {
+            String select = "ReceptionID = '" + receptionID + "' and ID = '" + id + "'";
+            cursor = db.query("ActInspection", null, select, null, null, null, null);
+
+            if (cursor.moveToNext()) {
+                while (!cursor.isAfterLast()) {
+                    actInspection = new ActInspection();
+
+                    actInspection.setReceptionID(cursor.getString(cursor.getColumnIndex("ReceptionID")));
+                    actInspection.setID(cursor.getString(cursor.getColumnIndex("ID")));
+                    actInspection.setDescription(cursor.getString(cursor.getColumnIndex("description")));
+                    actInspection.setStateID(cursor.getString(cursor.getColumnIndex("stateID")));
+                    actInspection.setState(cursor.getString(cursor.getColumnIndex("state")));
+                    actInspection.setFormID(cursor.getString(cursor.getColumnIndex("formID")));
+                    actInspection.setForm(cursor.getString(cursor.getColumnIndex("form")));
+                    actInspection.setTruckPosition(cursor.getInt(cursor.getColumnIndex("truckPosition")));
+                    actInspection.setTruckPositionDirection(cursor.getString(cursor.getColumnIndex("truckPositionDirection")));
+                    actInspection.setRun(cursor.getString(cursor.getColumnIndex("run")));
+                    actInspection.setStorageID(cursor.getString(cursor.getColumnIndex("storageID")));
+                    actInspection.setStorage(cursor.getString(cursor.getColumnIndex("storage")));
+                    actInspection.setInspectionDatePlan(cursor.getString(cursor.getColumnIndex("inspectionDatePlan")));
+                    actInspection.setInspectionDateFact(cursor.getString(cursor.getColumnIndex("inspectionDateFact")));
+                    actInspection.setCarID(cursor.getString(cursor.getColumnIndex("carID")));
+                    actInspection.setCar(cursor.getString(cursor.getColumnIndex("car")));
+                    actInspection.setProductionDate(cursor.getString(cursor.getColumnIndex("productionDate")));
+                    actInspection.setBarCode(cursor.getString(cursor.getColumnIndex("barCode")));
+                    actInspection.setSectorID(cursor.getString(cursor.getColumnIndex("sectorID")));
+                    actInspection.setSector(cursor.getString(cursor.getColumnIndex("sector")));
+                    actInspection.setRow(cursor.getString(cursor.getColumnIndex("_row")));
+                    actInspection.setTypeMachineID(cursor.getString(cursor.getColumnIndex("TypeMachineID")));
+                    actInspection.setTypeMachine(cursor.getString(cursor.getColumnIndex("TypeMachine")));
+                    actInspection.setPerformed(cursor.getInt(cursor.getColumnIndex("performed")) == 0 ? false : true);
+                    actInspection.sendPerformed = cursor.getInt(cursor.getColumnIndex("sendPerformed")) == 0 ? false : true;
+
+                    actInspection.setEquipments(getEquipmentActInspection(actInspection.getID()));
+                    actInspection.setInspections(getInspectionActInspection(actInspection.getID()));
+                    actInspection.setTypesPhotos(getTypesPhotoActInspection(actInspection.getID()));
+                    actInspection.setDamages(getDamageActInspection(actInspection));
+
+                    cursor.moveToNext();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+
+        return actInspection;
     }
 
     public ArrayList<ActInspection> getActInspectionList() {
@@ -2301,6 +2371,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     public void deleteAct(String id) {
         SQLiteDatabase db = getWritableDatabase();
+
+        db.delete("CarData", "carID=?", new String[]{id});
+        db.delete("CarDataReceptions", "carID=?", new String[]{id});
 
         db.delete("ActInspection", "ID=?", new String[]{id});
         db.delete("Equipment", "ActID=?", new String[]{id});

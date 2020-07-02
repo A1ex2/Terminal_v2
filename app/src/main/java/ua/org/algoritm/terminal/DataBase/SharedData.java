@@ -571,6 +571,11 @@ public class SharedData {
         helper.insertActInspectionList(ACT_INSPECTION);
     }
 
+    public static void insertActInspectionList(Boolean download) {
+        DataBaseHelper helper = new DataBaseHelper(app);
+        helper.insertActInspectionListDownload(ACT_INSPECTION);
+    }
+
     public static void insertActInspection(ActInspection actInspection) {
         DataBaseHelper helper = new DataBaseHelper(app);
         helper.insertActInspection(actInspection);
