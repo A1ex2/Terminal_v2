@@ -21,10 +21,15 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.biometric.BiometricManager;
+import androidx.biometric.BiometricPrompt;
 import androidx.core.content.ContextCompat;
 
 import org.ksoap2.SoapFault;
@@ -33,6 +38,7 @@ import org.ksoap2.serialization.SoapObject;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Formatter;
+import java.util.concurrent.Executor;
 
 import ua.org.algoritm.terminal.ConnectTo1c.SOAP_Dispatcher;
 import ua.org.algoritm.terminal.ConnectTo1c.UIManager;
@@ -44,6 +50,9 @@ public class Password extends AppCompatActivity {
     private EditText login;
     private EditText password;
     private Button ok;
+    private ImageButton imBiometric;
+
+    private BiometricManager mBiometricManager;
 
     private ArrayList<String> loginList = new ArrayList<>();
     private SharedPreferences preferences;
@@ -107,6 +116,68 @@ public class Password extends AppCompatActivity {
                 verify();
             }
         });
+
+        imBiometric = findViewById(R.id.imBiometric);
+        imBiometric.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                switch (mBiometricManager.canAuthenticate()) {
+                    case BiometricManager.BIOMETRIC_SUCCESS:
+                        Executor executor = ContextCompat.getMainExecutor(getApplicationContext());
+
+                        BiometricPrompt biometricPrompt = new BiometricPrompt(Password.this, executor, new BiometricPrompt.AuthenticationCallback() {
+                            @Override
+                            public void onAuthenticationError(int errorCode, @NonNull CharSequence errString) {
+                                super.onAuthenticationError(errorCode, errString);
+                            }
+
+                            @Override
+                            public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
+                                super.onAuthenticationSucceeded(result);
+
+                                password.setText(preferences.getString("Password", ""));
+                                verify();
+                            }
+
+                            @Override
+                            public void onAuthenticationFailed() {
+                                super.onAuthenticationFailed();
+                            }
+                        });
+
+                        final BiometricPrompt.PromptInfo mPromptInfo = new BiometricPrompt.PromptInfo.Builder()
+                                .setTitle("Подтвердите свою личность")
+                                .setDescription("Используйте отпечатки пальцев для проверки личности.")
+                                .setNegativeButtonText(getString(R.string.cancel))
+                                .build();
+
+                        biometricPrompt.authenticate(mPromptInfo);
+
+                        break;
+
+                    case BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE:
+                        Toast.makeText(getApplicationContext(), "биометрический датчик в настоящее время недоступен", Toast.LENGTH_LONG).show();
+                        break;
+
+                    case BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED:
+                        Toast.makeText(getApplicationContext(), "на вашем устройстве нет сохраненных отпечатков пальцев, пожалуйста, проверьте настройки безопасности", Toast.LENGTH_LONG).show();
+                        break;
+                }
+            }
+        });
+
+
+        mBiometricManager = BiometricManager.from(this);
+        switch (mBiometricManager.canAuthenticate()) {
+            case BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE:
+                imBiometric.setVisibility(View.INVISIBLE);
+                break;
+        }
+
+        if (preferences.getString("Login", "").equals("") & preferences.getString("Password", "").equals("")) {
+            imBiometric.setVisibility(View.INVISIBLE);
+        }
 
         login.setText(preferences.getString("Login", ""));
 
@@ -290,7 +361,7 @@ public class Password extends AppCompatActivity {
                 passwordFTP = soapParam_Response.getPropertyAsString("password");
 
                 thisDriver = Integer.parseInt(soapParam_Response.getPropertyAsString("thisDriver")) == 1;
-                absolutePathFTP =  soapParam_Response.getPropertyAsString("AbsolutePathFTP");
+                absolutePathFTP = soapParam_Response.getPropertyAsString("AbsolutePathFTP");
 
                 isActInspection = Integer.parseInt(soapParam_Response.getPropertyAsString("isActInspection")) == 1;
                 isOfflineReception = Integer.parseInt(soapParam_Response.getPropertyAsString("isOfflineReception")) == 1;
