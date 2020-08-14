@@ -1275,8 +1275,35 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 //    }
 
     public void insertReceptionList(ArrayList<Reception> receptions) {
+        checkReceptions(receptions);
+
         for (int i = 0; i < receptions.size(); i++) {
             insertReception(receptions.get(i));
+        }
+    }
+
+    private void checkReceptions(ArrayList<Reception> receptions) {
+        ArrayList<Reception> receptionListDB = getReceptionList();
+
+        for (int i = 0; i < receptionListDB.size(); i++) {
+            boolean delete = true;
+
+            for (int j = 0; j < receptions.size(); j++) {
+                if (receptionListDB.get(i).getID().equals(receptions.get(j).getID())) {
+                    delete = false;
+                    break;
+                }
+            }
+            if (delete) {
+                for (int j = 0; j < receptionListDB.get(i).getCarData().size(); j++) {
+                    CarData car = receptionListDB.get(i).getCarData().get(j);
+                    ActInspection act = SharedData.getActInspectionCar(car.getCarID());
+                    deleteAct(act.getID());
+
+                    SQLiteDatabase db = getWritableDatabase();
+                    db.delete("Receptions", "ID=?", new String[]{receptionListDB.get(i).getID()});
+                }
+            }
         }
     }
 
