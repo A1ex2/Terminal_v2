@@ -344,6 +344,8 @@ public class DamageDefectActivity extends AppCompatActivity {
 
             mTypesPhoto.getPhotoActInspections().add(photoActInspection);
 
+            IntentServiceDataBase.startInsertDamage(DamageDefectActivity.this, actInspection, mDamage);
+
             IntentServiceDataBase.startInsertPhotoActInspection(DamageDefectActivity.this,
                     actInspection.getID(), mTypesPhoto.getListObject(), mDamage.getDetail().getDetailID() + "/" + mTypesPhoto.getID(), mCurrentPhotoPath);
 
