@@ -371,10 +371,10 @@ public class SOAP_Dispatcher extends Thread {
 
                 Issuance issuance = new Issuance();
                 issuance.setID(issuanceList.getPropertyAsString("ID"));
-                issuance.setDescription(issuanceList.getPropertyAsString("Description"));
-                issuance.setAutoNumber(issuanceList.getPropertyAsString("AutoNumber"));
-                issuance.setDriver(issuanceList.getPropertyAsString("Driver"));
-                issuance.setDriverPhone(issuanceList.getPropertyAsString("DriverPhone"));
+                issuance.setDescription(issuanceList.getPrimitivePropertyAsString("Description"));
+                issuance.setAutoNumber(issuanceList.getPrimitivePropertyAsString("AutoNumber"));
+                issuance.setDriver(issuanceList.getPrimitivePropertyAsString("Driver"));
+                issuance.setDriverPhone(issuanceList.getPrimitivePropertyAsString("DriverPhone"));
 
                 ArrayList<CarDataIssuance> carDataList = new ArrayList<>();
 
