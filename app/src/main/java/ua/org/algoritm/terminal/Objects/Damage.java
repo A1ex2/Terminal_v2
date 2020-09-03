@@ -31,8 +31,10 @@ public class Damage implements Serializable {
 
     @Expose
     private String commentDamage;
+
     @Expose
     private String widthDamage;
+
     @Expose
     private String heightDamage;
 

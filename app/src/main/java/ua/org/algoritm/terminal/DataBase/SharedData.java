@@ -69,6 +69,7 @@ public class SharedData {
     public static boolean isOfflineReception = false;
     public static boolean updateReceptionListDB = false;
     public static boolean updateActInspectionListDB = false;
+    public static ActInspection mActInspection;
 
     public static void updateReception(CarData carData) {
         boolean mFinish = false;
@@ -302,6 +303,7 @@ public class SharedData {
         }
         return actInspection;
     }
+
     public static void setPhoto(OrderOutfit orderOutfit) {
         DataBaseHelper helper = new DataBaseHelper(app);
         ArrayList<CarDataOutfit> mCarDataOutfits = orderOutfit.getCarDataOutfit();
@@ -627,6 +629,27 @@ public class SharedData {
         DataBaseHelper helper = new DataBaseHelper(app);
         for (int i = 0; i < id.size(); i++) {
             helper.deleteAct(id.get(i));
+        }
+    }
+
+    public static void checkDamage(ActInspection actInspection) {
+        DataBaseHelper helper = new DataBaseHelper(app);
+        ArrayList<Damage> damagesDB = helper.getDamageActInspection(actInspection);
+
+        for (int i = 0; i < damagesDB.size(); i++) {
+            Damage mDamage = damagesDB.get(i);
+
+            boolean add = true;
+
+            for (int j = 0; j < actInspection.getDamages().size(); j++) {
+                if (actInspection.getDamages().get(j).getDetail().getDetailID().equals(mDamage.getDetail().getDetailID())){
+                    add = false;
+                }
+            }
+
+            if (add){
+                actInspection.getDamages().add(mDamage);
+            }
         }
     }
 }

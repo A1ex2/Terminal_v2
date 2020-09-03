@@ -187,6 +187,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 + "_id INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + "ID TEXT NOT NULL,"
                 + "name TEXT NOT NULL)");
+
     }
 
     @Override
@@ -363,6 +364,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        db.close();
     }
 
     public void updateCarData(CarData carData) {
@@ -389,6 +391,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        db.close();
     }
 
     public CarData getCarData(String receptionID, String carID) {
@@ -417,6 +420,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 cursor.close();
             }
         }
+
+        db.close();
 
         return carData;
     }
@@ -455,6 +460,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             }
         }
 
+        db.close();
+
         return carDataArrayList;
     }
 
@@ -465,6 +472,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         String carID = carData.getCarID();
 
         db.delete("CarData", "ReceptionID=? and carID=?", new String[]{receptionID, carID});
+
+        db.close();
     }
 
     public void insertSectors(ArrayList<Sector> sectors) {
@@ -484,6 +493,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        db.close();
     }
 
     public long insertUser(User user) {
@@ -499,7 +509,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        db.close();
         return id;
     }
 
@@ -528,7 +538,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 cursor.close();
             }
         }
-
+        db.close();
         return users;
     }
 
@@ -546,6 +556,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        db.close();
         return id;
     }
 
@@ -584,7 +595,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 cursor.close();
             }
         }
-
+        db.close();
         return mPhotoArrayList;
     }
 
@@ -621,7 +632,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 cursor.close();
             }
         }
-
+        db.close();
         return mPhotoArrayList;
     }
 
@@ -666,6 +677,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 cursor.close();
             }
         }
+        db.close();
         return mPhotos;
     }
 
@@ -685,6 +697,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        db.close();
         return id;
     }
 
@@ -728,7 +741,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 cursor.close();
             }
         }
-
+        db.close();
         return mPhotoArrayList;
     }
 
@@ -774,7 +787,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 cursor.close();
             }
         }
-
+        db.close();
         return mPhotoArrayList;
     }
 
@@ -811,7 +824,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 cursor.close();
             }
         }
-
+        db.close();
         return mPhotoArrayList;
     }
 
@@ -819,6 +832,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
 
         db.delete("ActInspectionPhoto", "currentPhotoPath='" + currentPhotoPath + "'", null);
+
+        db.close();
     }
 
     public ArrayList<PhotoActInspection> getPhotoActInspection(String orderID) {
@@ -856,6 +871,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 cursor.close();
             }
         }
+        db.close();
         return mPhotos;
     }
 
@@ -1302,6 +1318,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
                     SQLiteDatabase db = getWritableDatabase();
                     db.delete("Receptions", "ID=?", new String[]{receptionListDB.get(i).getID()});
+                    db.close();
                 }
             }
         }
@@ -1338,6 +1355,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        db.close();
     }
 
     public boolean getReceptionExist(String receptionID) {
@@ -1358,6 +1376,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 cursor.close();
             }
         }
+        db.close();
         return false;
     }
 
@@ -1393,7 +1412,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 cursor.close();
             }
         }
-
+        db.close();
         return receptions;
     }
 
@@ -1442,6 +1461,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 cursor.close();
             }
         }
+        db.close();
         return false;
     }
 
@@ -1478,7 +1498,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 cursor.close();
             }
         }
-
+        db.close();
         return carDatas;
     }
 
@@ -1562,6 +1582,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        db.close();
     }
 
     public boolean getActInspectionExist(String receptionID, String id) {
@@ -1582,7 +1603,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 cursor.close();
             }
         }
-
+        db.close();
         return false;
     }
 
@@ -1640,7 +1661,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 cursor.close();
             }
         }
-
+        db.close();
         return actInspection;
     }
 
@@ -1698,7 +1719,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 cursor.close();
             }
         }
-
+        db.close();
         return actInspections;
     }
 
@@ -1725,6 +1746,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        db.close();
     }
 
     public void insertInspectionActInspection(String ActID, Inspection inspection) {
@@ -1748,6 +1770,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        db.close();
     }
 
     public void insertTypesPhotoActInspection(String ActID, TypesPhoto typesPhoto) {
@@ -1771,6 +1794,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        db.close();
     }
 
     public void insertDamageActInspection(String ActID, Damage damage) {
@@ -1799,6 +1823,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             values.put("widthDamage", damage.getWidthDamage() == null ? "" : damage.getWidthDamage());
             values.put("heightDamage", damage.getHeightDamage() == null ? "" : damage.getHeightDamage());
 
+            if (!db.isOpen()){
+                db = getReadableDatabase();
+            }
+
             if (exist) {
                 id = db.update("Damage", values, "ActID=? and detailID=?", new String[]{ActID, detailID});
             } else {
@@ -1807,12 +1835,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        db.close();
     }
 
     public void deleteDamageActInspection(String ActID, String detailID) {
         try {
             SQLiteDatabase db = getWritableDatabase();
             db.delete("Damage", "ActID = '" + ActID + "' and detailID = '" + detailID + "'", null);
+            db.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1848,7 +1878,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 cursor.close();
             }
         }
-
+        db.close();
         return list;
     }
 
@@ -1880,7 +1910,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 cursor.close();
             }
         }
-
+        db.close();
         return list;
     }
 
@@ -1912,7 +1942,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 cursor.close();
             }
         }
-
+        db.close();
         return list;
     }
 
@@ -1951,7 +1981,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 cursor.close();
             }
         }
-
+        db.close();
         return list;
     }
 
@@ -1980,6 +2010,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        db.close();
     }
 
     public void insertDetail() {
@@ -2022,6 +2053,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        db.close();
     }
 
     public void insertTypesDamages() {
@@ -2043,6 +2075,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        db.close();
     }
 
     public void insertDegreesDamages() {
@@ -2064,6 +2097,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        db.close();
     }
 
     public void insertClassificationDamages() {
@@ -2085,6 +2119,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        db.close();
     }
 
     public void insertOriginDamages() {
@@ -2106,6 +2141,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        db.close();
     }
 
     public void insertTypeDamagePhotos() {
@@ -2127,11 +2163,13 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        db.close();
     }
 
     public void removeAll(String tableName) {
         SQLiteDatabase db = getWritableDatabase();
         db.delete(tableName, null, null);
+        db.close();
     }
 
     public boolean getExist(String table, String select) {
@@ -2151,6 +2189,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 cursor.close();
             }
         }
+        db.close();
         return false;
     }
 
@@ -2185,7 +2224,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 cursor.close();
             }
         }
-
+        db.close();
         return list;
     }
 
@@ -2242,7 +2281,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 cursor.close();
             }
         }
-
+        db.close();
         return list;
     }
 
@@ -2272,7 +2311,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 cursor.close();
             }
         }
-
+        db.close();
         return list;
     }
 
@@ -2302,7 +2341,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 cursor.close();
             }
         }
-
+        db.close();
         return list;
     }
 
@@ -2332,7 +2371,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 cursor.close();
             }
         }
-
+        db.close();
         return list;
     }
 
@@ -2362,7 +2401,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 cursor.close();
             }
         }
-
+        db.close();
         return list;
     }
 
@@ -2392,7 +2431,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 cursor.close();
             }
         }
-
+        db.close();
         return list;
     }
 
@@ -2407,5 +2446,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.delete("Inspection", "ActID=?", new String[]{id});
         db.delete("TypesPhoto", "ActID=?", new String[]{id});
         db.delete("Damage", "ActID=?", new String[]{id});
+        db.close();
     }
 }

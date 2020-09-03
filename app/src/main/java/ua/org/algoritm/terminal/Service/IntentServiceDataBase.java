@@ -23,6 +23,7 @@ import ua.org.algoritm.terminal.DataBase.DataBaseHelper;
 import ua.org.algoritm.terminal.DataBase.SharedData;
 import ua.org.algoritm.terminal.Objects.ActInspection;
 import ua.org.algoritm.terminal.Objects.CarData;
+import ua.org.algoritm.terminal.Objects.Damage;
 import ua.org.algoritm.terminal.Objects.Photo;
 import ua.org.algoritm.terminal.Objects.PhotoActInspection;
 import ua.org.algoritm.terminal.Objects.TypeDamagePhoto;
@@ -41,6 +42,7 @@ public class IntentServiceDataBase extends IntentService {
     private static final String ACTION_DELETE_PHOTO_ACT_INSPECTION_DAMAGE = "ua.org.algoritm.terminal.Service.action.DELETE_PHOTO_ACT_INSPECTION_DAMAGE";
     private static final String ACTION_GET_PHOTO_ACT_INSPECTION = "ua.org.algoritm.terminal.Service.action.GET_PHOTO_ACT_INSPECTION";
     private static final String ACTION_INSERT_ACT_INSPECTION = "ua.org.algoritm.terminal.Service.action.ACTION_INSERT_ACT_INSPECTION";
+    private static final String ACTION_INSERT_ACT_INSPECTION_DAMAGE = "ua.org.algoritm.terminal.Service.action.INSERT_ACT_INSPECTION_DAMAGE";
 
     private static final String EXTRA_INSERT_CAR_DATA = "ua.org.algoritm.terminal.Service.extra.INSERT_CAR_DATA";
 
@@ -51,6 +53,7 @@ public class IntentServiceDataBase extends IntentService {
     private static final String EXTRA_INSERT_PHOTO_ACT_INSPECTION = "ua.org.algoritm.terminal.Service.extra.INSERT_PHOTO_ACT_INSPECTION";
     private static final String EXTRA_DELETE_PHOTO_ACT_INSPECTION = "ua.org.algoritm.terminal.Service.extra.DELETE_PHOTO_ACT_INSPECTION";
     private static final String EXTRA_DELETE_PHOTO_ACT_INSPECTION_DAMAGE = "ua.org.algoritm.terminal.Service.extra.DELETE_PHOTO_ACT_INSPECTION_DAMAGE";
+    private static final String EXTRA_INSERT_ACT_INSPECTION_DAMAGE = "ua.org.algoritm.terminal.Service.extra.INSERT_ACT_INSPECTION_DAMAGE";
     private static final String EXTRA_GET_PHOTO_ACT_INSPECTION = "ua.org.algoritm.terminal.Service.extra.GET_PHOTO_ACT_INSPECTION";
     private static final String EXTRA_INSERT_ACT_INSPECTION = "ua.org.algoritm.terminal.Service.extra.EXTRA_INSERT_ACT_INSPECTION";
 
@@ -66,6 +69,7 @@ public class IntentServiceDataBase extends IntentService {
     public static final int REQUEST_CODE_DELETE_PHOTO_ACT_INSPECTION = 600;
     public static final int REQUEST_CODE_GET_PHOTO_ACT_INSPECTION = 700;
     public static final int REQUEST_CODE_DELETE_PHOTO_ACT_INSPECTION_DAMAGE = 800;
+    public static final int REQUEST_CODE_INSERT_ACT_INSPECTION_DAMAGE = 1000;
     public static final int REQUEST_CODE_INSERT_ACT_INSPECTION = 900;
 
     public IntentServiceDataBase() {
@@ -80,6 +84,19 @@ public class IntentServiceDataBase extends IntentService {
 
         intent.setAction(ACTION_INSERT_CAR_DATA);
         intent.putExtra(EXTRA_INSERT_CAR_DATA, carData);
+
+        activity.startService(intent);
+    }
+
+    public static void startInsertDamage(AppCompatActivity activity, ActInspection actInspection, Damage damage) {
+
+        Intent intent = new Intent(activity, IntentServiceDataBase.class);
+        PendingIntent pendingIntent = activity.createPendingResult(REQUEST_CODE_INSERT_ACT_INSPECTION_DAMAGE, intent, 0);
+        intent.putExtra(EXTRA_PENDING_INTENT, pendingIntent);
+
+        intent.setAction(ACTION_INSERT_ACT_INSPECTION_DAMAGE);
+        intent.putExtra(EXTRA_INSERT_ACT_INSPECTION_DAMAGE, damage);
+        intent.putExtra(EXTRA_INSERT_ACT_INSPECTION, actInspection.getID());
 
         activity.startService(intent);
     }
@@ -262,6 +279,12 @@ public class IntentServiceDataBase extends IntentService {
 
                 ActInspection actInspection = SharedData.getActInspection(ActID);
                 helper.insertActInspection(actInspection);
+
+            } else if (ACTION_INSERT_ACT_INSPECTION_DAMAGE.equals(action)) {
+                Damage damage = (Damage) intent.getSerializableExtra(EXTRA_INSERT_ACT_INSPECTION_DAMAGE);
+                String actID = intent.getStringExtra(EXTRA_INSERT_ACT_INSPECTION);
+
+                helper.insertDamageActInspection(actID, damage);
             }
 
 //            else if (ACTION_BAZ.equals(action)) {

@@ -1061,6 +1061,7 @@ public class ActInspectionActivity extends AppCompatActivity {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+
         outState.putString("mCurrentPhotoPath", mCurrentPhotoPath);
         outState.putSerializable("mEquipment", mEquipment);
         outState.putSerializable("mTypesPhoto", mTypesPhoto);
@@ -1072,6 +1073,7 @@ public class ActInspectionActivity extends AppCompatActivity {
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
+
         mCurrentPhotoPath = savedInstanceState.getString("mCurrentPhotoPath");
         mEquipment = (Equipment) savedInstanceState.getSerializable("mEquipment");
         mTypesPhoto = (TypesPhoto) savedInstanceState.getSerializable("mTypesPhoto");
