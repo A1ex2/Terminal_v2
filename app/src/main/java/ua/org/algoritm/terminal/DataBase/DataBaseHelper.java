@@ -683,6 +683,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     public long insertPhotoActInspection(String actID, String listObject, String
             objectID, String currentPhotoPath) {
+
+        if (actID == null){
+            return -1;
+        }
+
         SQLiteDatabase db = getReadableDatabase();
         long id = 0;
 
@@ -1725,6 +1730,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     public void insertEquipmentActInspection(String ActID, Equipment equipment) {
         SQLiteDatabase db = getReadableDatabase();
+
+        if (ActID == null){
+            return;
+        }
+
         long id = 0;
 
         try {
@@ -1751,6 +1761,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     public void insertInspectionActInspection(String ActID, Inspection inspection) {
         SQLiteDatabase db = getReadableDatabase();
+
+        if (ActID == null){
+            return;
+        }
+
         long id = 0;
 
         try {
@@ -1775,6 +1790,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     public void insertTypesPhotoActInspection(String ActID, TypesPhoto typesPhoto) {
         SQLiteDatabase db = getReadableDatabase();
+
+        if (ActID == null){
+            return;
+        }
+
         long id = 0;
 
         try {
@@ -1799,6 +1819,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     public void insertDamageActInspection(String ActID, Damage damage) {
         SQLiteDatabase db = getReadableDatabase();
+
+        if (ActID == null){
+            return;
+        }
+
         long id = 0;
 
         try {
