@@ -125,32 +125,33 @@ public class DetailReception extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_PUT_CB) {
             if (resultCode == Activity.RESULT_OK) {
-                CarData carData = data.getParcelableExtra("CarData");
+                if (data != null) {
+                    CarData carData = data.getParcelableExtra("CarData");
 
-                for (int i = 0; i < reception.getCarData().size(); i++) {
-                    if (carData.getCarID().equals(reception.getCarData().get(i).getCarID())) {
-                        reception.getCarData().get(i).setBarCode(carData.getBarCode());
-                        reception.getCarData().get(i).setProductionDate(carData.getProductionDate());
-                        break;
-                    }
-                }
-
-                if (SharedData.isActInspection) {
-
-                    boolean performedAct = data.getBooleanExtra("performedAct", false);
-
-                    if (performedAct) {
-                        if (SharedData.isOfflineReception) {
-                        } else {
-                            SharedData.deleteCarData(carData.getCarID(), reception);
+                    for (int i = 0; i < reception.getCarData().size(); i++) {
+                        if (carData.getCarID().equals(reception.getCarData().get(i).getCarID())) {
+                            reception.getCarData().get(i).setBarCode(carData.getBarCode());
+                            reception.getCarData().get(i).setProductionDate(carData.getProductionDate());
+                            break;
                         }
                     }
 
-                    updateListsCarData();
+                    if (SharedData.isActInspection) {
+                        if (data != null) {
+                            boolean performedAct = data.getBooleanExtra("performedAct", false);
 
-                } else {
-                    setCB(carData);
+                            if (performedAct) {
+                                if (SharedData.isOfflineReception) {
+                                } else {
+                                    SharedData.deleteCarData(carData.getCarID(), reception);
+                                }
+                            }
+                            updateListsCarData();
+                        }
+                    } else {
+                        setCB(carData);
 //                    updateLists();
+                    }
                 }
             }
         }

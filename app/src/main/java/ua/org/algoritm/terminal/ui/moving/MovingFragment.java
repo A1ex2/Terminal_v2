@@ -63,11 +63,13 @@ public class MovingFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == REQUEST_CODE_SELECT_CAR) {
-            if (resultCode == Activity.RESULT_OK){
-                CarData carData = data.getParcelableExtra("CarData");
-                Intent intent = new Intent(getActivity(), CarActivityMoving.class);
-                intent.putExtra("CarData", carData);
-                startActivityForResult(intent, REQUEST_CODE_MOVING_CAR);
+            if (resultCode == Activity.RESULT_OK) {
+                if (data != null) {
+                    CarData carData = data.getParcelableExtra("CarData");
+                    Intent intent = new Intent(getActivity(), CarActivityMoving.class);
+                    intent.putExtra("CarData", carData);
+                    startActivityForResult(intent, REQUEST_CODE_MOVING_CAR);
+                }
             }
         }
         //super.onActivityResult(requestCode, resultCode, data);

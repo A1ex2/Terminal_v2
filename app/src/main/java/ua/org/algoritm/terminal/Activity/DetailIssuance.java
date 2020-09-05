@@ -117,13 +117,15 @@ public class DetailIssuance extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_PUT_CB) {
             if (resultCode == Activity.RESULT_OK) {
-                String carID = data.getStringExtra("CarID");
-                if (!carID.equals("")) {
-                    SharedData.deleteCarDataIssuance(carID, issuance);
-                    updateListsCarData();
-                }
+                if (data != null) {
+                    String carID = data.getStringExtra("CarID");
+                    if (!carID.equals("")) {
+                        SharedData.deleteCarDataIssuance(carID, issuance);
+                        updateListsCarData();
+                    }
 
-                updateLists();
+                    updateLists();
+                }
             }
         }
     }

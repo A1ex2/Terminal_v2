@@ -129,7 +129,7 @@ public class DamageDetailActivity extends AppCompatActivity {
             }
         }
 
-        if (newDamage){
+        if (newDamage) {
             actInspection.getDamages().add(mDamage);
         }
 
@@ -268,7 +268,7 @@ public class DamageDetailActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        if (newDamage){
+        if (newDamage) {
             actInspection.getDamages().remove(mDamage);
         }
     }
@@ -328,7 +328,7 @@ public class DamageDetailActivity extends AppCompatActivity {
 
             case R.id.butt_Cancel:
 
-                if (newDamage){
+                if (newDamage) {
                     actInspection.getDamages().remove(mDamage);
                 }
 
@@ -513,17 +513,17 @@ public class DamageDetailActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == REQUEST_SET_DETAIL && resultCode == RESULT_OK) {
-            String detailID = data.getStringExtra("detailID");
+            if (data != null) {
+                String detailID = data.getStringExtra("detailID");
 
-            for (int i = 0; i < details.size(); i++) {
-                Detail mDetail = details.get(i);
-                if (mDetail.getDetailID().equals(detailID)) {
-                    itemPart.setText(mDetail.toString());
-                    mDamage.setDetail(mDetail);
-                    break;
+                for (int i = 0; i < details.size(); i++) {
+                    Detail mDetail = details.get(i);
+                    if (mDetail.getDetailID().equals(detailID)) {
+                        itemPart.setText(mDetail.toString());
+                        mDamage.setDetail(mDetail);
+                        break;
+                    }
                 }
             }
 
@@ -557,6 +557,10 @@ public class DamageDetailActivity extends AppCompatActivity {
         } else if (requestCode == REQUEST_UPDATE_PHOTO_TypesPhoto) {
             updateListTypesPhoto();
 
+        } else {
+//            if (data != null) {
+                super.onActivityResult(requestCode, resultCode, data);
+//            }
         }
     }
 }

@@ -272,9 +272,11 @@ public class DetailOrderOutfit extends AppCompatActivity {
         } else if (requestCode == 1) {
             updateLists();
         } else if (requestCode == IntentServiceDataBase.REQUEST_CODE_GET_PHOTO_OUTFIT && resultCode == RESULT_OK) {
-            ArrayList<Photo> mPhotos = data.getParcelableArrayListExtra("photos");
-            mTaskPhotoFTP = new SaveTaskPhotoFTP(DetailOrderOutfit.this, orderOutfit.getID());
-            mTaskPhotoFTP.execute(mPhotos);
+            if (data != null) {
+                ArrayList<Photo> mPhotos = data.getParcelableArrayListExtra("photos");
+                mTaskPhotoFTP = new SaveTaskPhotoFTP(DetailOrderOutfit.this, orderOutfit.getID());
+                mTaskPhotoFTP.execute(mPhotos);
+            }
         }
     }
 

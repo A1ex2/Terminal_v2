@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -1084,8 +1085,6 @@ public class ActInspectionActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == REQUEST_TAKE_PHOTO_Equipment && resultCode == RESULT_OK) {
 
             if (!mEquipment.getPhotoActInspection().getCurrentPhotoPath().equals("")) {
@@ -1192,9 +1191,8 @@ public class ActInspectionActivity extends AppCompatActivity {
                     tBarCode = SharedData.clearBarcode(tBarCode);
                     barCode.setText(tBarCode);
                 }
-            } else {
-                super.onActivityResult(requestCode, resultCode, data);
             }
+
         } else if (requestCode == IntentServiceDataBase.REQUEST_CODE_INSERT_ACT_INSPECTION) {
             if (mDialog != null && mDialog.isShowing()) {
                 mDialog.dismiss();
@@ -1205,6 +1203,9 @@ public class ActInspectionActivity extends AppCompatActivity {
             if (performedAct) {
                 finishActivity();
             }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+
         }
     }
 
