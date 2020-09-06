@@ -29,7 +29,8 @@
         android:usesCleartextTraffic="true">
         <service
             android:name=".Service.IntentServicePerformedAct"
-            android:exported="false"></service>
+            android:enabled="true"
+            android:exported="false"/>
         <service
             android:name=".Service.ServicePerformedAct"
             android:enabled="true"
@@ -73,7 +74,8 @@
 
         <service
             android:name=".Service.IntentServiceDataBase"
-            android:exported="false" />
+            android:exported="false"
+            android:enabled="true"/>
 
         <activity android:name=".Activity.ScannerActivity" />
         <activity
