@@ -1283,6 +1283,7 @@ public class ActInspectionActivity extends AppCompatActivity {
                 photoURI = FileProvider.getUriForFile(this,
                         "com.example.android.provider",
                         photoFile);
+
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
 
                 startActivityForResult(takePictureIntent, REQUEST);
