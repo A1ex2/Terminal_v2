@@ -329,8 +329,6 @@ public class DamageDefectActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == REQUEST_TAKE_PHOTO_TypesPhoto && resultCode == RESULT_OK) {
 
             String fileName = new File(mCurrentPhotoPath).getName();
@@ -360,6 +358,9 @@ public class DamageDefectActivity extends AppCompatActivity {
 
         } else if (requestCode == REQUEST_UPDATE_PHOTO_TypesPhoto) {
             updateListTypesPhoto();
+
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
 
         }
     }
