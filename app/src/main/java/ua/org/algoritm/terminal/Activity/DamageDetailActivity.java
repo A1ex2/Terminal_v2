@@ -389,7 +389,7 @@ public class DamageDetailActivity extends AppCompatActivity {
                     }
 
                     mTypesPhoto = typesPhoto;
-                    dispatchTakePictureIntent(REQUEST_TAKE_PHOTO_TypesPhoto);
+                    dispatchTakePictureIntent(REQUEST_TAKE_PHOTO_TypesPhoto, mTypesPhoto.getName());
                 }
             });
         } else {
@@ -413,29 +413,43 @@ public class DamageDetailActivity extends AppCompatActivity {
         return image;
     }
 
-    private void dispatchTakePictureIntent(int REQUEST) {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Ensure that there's a camera activity to handle the intent
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            // Create the File where the photo should go
-            File photoFile = null;
-            try {
-                photoFile = createImageFile();
-            } catch (IOException ex) {
-                // Error occurred while creating the File
-                Toast.makeText(this, "Error!", Toast.LENGTH_SHORT).show();
-            }
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
-                Uri photoURI;
-                photoURI = FileProvider.getUriForFile(this,
-                        "com.example.android.provider",
-                        photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+    private void dispatchTakePictureIntent(int REQUEST, String description) {
+        Intent takePictureIntent = new Intent(this, MainActivityCamera.class);
 
-                startActivityForResult(takePictureIntent, REQUEST);
-            }
+        File photoFile = null;
+        try {
+            photoFile = createImageFile();
+        } catch (IOException ex) {
+            Toast.makeText(this, "Error!", Toast.LENGTH_SHORT).show();
         }
+        if (photoFile != null) {
+            takePictureIntent.putExtra("mCurrentPhotoPath", mCurrentPhotoPath);
+            takePictureIntent.putExtra("description", description);
+            startActivityForResult(takePictureIntent, REQUEST);
+        }
+
+//        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//        // Ensure that there's a camera activity to handle the intent
+//        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+//            // Create the File where the photo should go
+//            File photoFile = null;
+//            try {
+//                photoFile = createImageFile();
+//            } catch (IOException ex) {
+//                // Error occurred while creating the File
+//                Toast.makeText(this, "Error!", Toast.LENGTH_SHORT).show();
+//            }
+//            // Continue only if the File was successfully created
+//            if (photoFile != null) {
+//                Uri photoURI;
+//                photoURI = FileProvider.getUriForFile(this,
+//                        "com.example.android.provider",
+//                        photoFile);
+//                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+//
+//                startActivityForResult(takePictureIntent, REQUEST);
+//            }
+//        }
     }
 
     private void decodeFile() {

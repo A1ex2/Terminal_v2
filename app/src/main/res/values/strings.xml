@@ -124,7 +124,7 @@
     <string name="performed">Выполнено</string>
     <string name="run">Пробег</string>
     <string name="send_performed">Выполнить Акт осмотра?</string>
-<!--    <string name="add_photo">делаем следующую фото или вторую фото той же части?</string>-->
+    <!--    <string name="add_photo">делаем следующую фото или вторую фото той же части?</string>-->
     <string name="add_photo">новое фото</string>
     <string name="all_photos_added">Все фото добавлены. если нужно, можно начать сначала</string>
     <string name="butt_next">дальше</string>
