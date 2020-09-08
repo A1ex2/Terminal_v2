@@ -49,10 +49,10 @@ public class MainActivityCamera extends AppCompatActivity {
 
         description.setText(intent.getStringExtra("description"));
 
-        mCamera = Camera.open();
-
-        mShowCamera = new ShowCamera(this, mCamera);
-        mFrameLayout.addView(mShowCamera);
+//        mCamera = Camera.open();
+//
+//        mShowCamera = new ShowCamera(this, mCamera);
+//        mFrameLayout.addView(mShowCamera);
 
         photo = findViewById(R.id.photo);
         photo.setOnClickListener(new OnClickListener() {
@@ -132,6 +132,27 @@ public class MainActivityCamera extends AppCompatActivity {
             }
         }
     };
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mCamera = Camera.open();
+
+        mShowCamera = new ShowCamera(this, mCamera);
+        mFrameLayout.addView(mShowCamera);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+//        if(mCamera != null) {
+//            mCamera.stopPreview();
+//            mCamera.setPreviewCallback(null);
+//            mCamera.release();
+//            mCamera = null;
+//        }
+    }
 }
 
 
