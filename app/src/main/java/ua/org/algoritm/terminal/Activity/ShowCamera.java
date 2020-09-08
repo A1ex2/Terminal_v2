@@ -40,6 +40,8 @@ class ShowCamera extends SurfaceView implements SurfaceHolder.Callback{
         List<Camera.Size> size = parameters.getSupportedPreviewSizes();
         parameters.setPreviewSize(size.get(0).width, size.get(0).height);
 
+        parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+
         mCamera.setParameters(parameters);
         try {
             mCamera.setPreviewDisplay(holder);
@@ -56,7 +58,11 @@ class ShowCamera extends SurfaceView implements SurfaceHolder.Callback{
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        mCamera.stopPreview();
-        mCamera.release();
+        if(mCamera != null) {
+            mCamera.stopPreview();
+            mCamera.setPreviewCallback(null);
+            mCamera.release();
+            mCamera = null;
+        }
     }
 }
