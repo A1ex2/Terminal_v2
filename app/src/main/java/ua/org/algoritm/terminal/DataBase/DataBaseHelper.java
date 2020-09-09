@@ -358,6 +358,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 values.put("mRow", carData.getRow());
                 values.put("productionDate", carData.getProductionDateString());
 
+                if (!db.isOpen()){
+                    db = getReadableDatabase();
+                }
+
                 id = db.insert("CarData", null, values);
             }
 
@@ -385,6 +389,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 //            String carID = "'" + carData.getCarID() + "'";
             String receptionID = carData.getReceptionID();
             String carID = carData.getCarID();
+
+            if (!db.isOpen()){
+                db = getReadableDatabase();
+            }
 
             id = db.update("CarData", values, "ReceptionID=? and carID=?", new String[]{receptionID, carID});
 
@@ -488,6 +496,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 values.put(Sector.COLUM_NAME, sector.getName());
 //                values.put(Sector.COLUM_GUID, sector.getGuid());
 
+                if (!db.isOpen()){
+                    db = getReadableDatabase();
+                }
+
                 id = db.insert(Sector.TABLE_NAME, null, values);
             }
         } catch (Exception e) {
@@ -504,6 +516,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
             ContentValues values = new ContentValues();
             values.put(User.COLUM_NAME, user.getName());
+
+            if (!db.isOpen()){
+                db = getReadableDatabase();
+            }
 
             id = db.insert(User.TABLE_NAME, null, values);
         } catch (Exception e) {
@@ -551,6 +567,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             values.put("orderID", orderID);
             values.put("carID", carID);
             values.put("currentPhotoPath", currentPhotoPath);
+
+            if (!db.isOpen()){
+                db = getReadableDatabase();
+            }
 
             id = db.insert("CarDataOutfitPhoto", null, values);
         } catch (Exception e) {
@@ -697,6 +717,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             values.put("listObject", listObject);
             values.put("objectID", objectID);
             values.put("currentPhotoPath", currentPhotoPath);
+
+            if (!db.isOpen()){
+                db = getReadableDatabase();
+            }
 
             id = db.insert("ActInspectionPhoto", null, values);
         } catch (Exception e) {
@@ -1344,6 +1368,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             values.put("driverPhone", reception.getDriverPhone());
             values.put("invoiceNumber", reception.getInvoiceNumber());
 
+            if (!db.isOpen()){
+                db = getReadableDatabase();
+            }
+
             if (exist) {
                 id = db.update("Receptions", values, "ID=?", new String[]{reception.getID()});
             } else {
@@ -1437,6 +1465,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             values.put("sector", carData.getSector());
             values.put("_row", carData.getRow());
             values.put("productionDate", carData.getProductionDateString());
+
+            if (!db.isOpen()){
+                db = getReadableDatabase();
+            }
 
             if (exist) {
                 id = db.update("CarDataReceptions", values, "ReceptionID=? and carID=?", new String[]{carData.getReceptionID(), carData.getCarID()});
@@ -1558,6 +1590,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             values.put("TypeMachine", actInspection.getTypeMachine());
             values.put("performed", actInspection.isPerformed() ? 1 : 0);
             values.put("sendPerformed", actInspection.sendPerformed ? 1 : 0);
+
+            if (!db.isOpen()){
+                db = getReadableDatabase();
+            }
 
             if (exist) {
                 id = db.update("ActInspection", values, "ReceptionID=? and ID=?", new String[]{actInspection.getReceptionID(), actInspection.getID()});
@@ -1748,6 +1784,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             values.put("quantityPlan", equipment.getQuantityPlan());
             values.put("quantityFact", equipment.getQuantityFact());
 
+            if (!db.isOpen()){
+                db = getReadableDatabase();
+            }
+
             if (exist) {
                 id = db.update("Equipment", values, "ActID=? and equipmentID=?", new String[]{ActID, equipment.getEquipmentID()});
             } else {
@@ -1777,6 +1817,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             values.put("name", inspection.getName());
             values.put("performed", inspection.isPerformed() ? 1 : 0);
 
+            if (!db.isOpen()){
+                db = getReadableDatabase();
+            }
+
             if (exist) {
                 id = db.update("Inspection", values, "ActID=? and ID=?", new String[]{ActID, inspection.getID()});
             } else {
@@ -1805,6 +1849,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             values.put("typePhotoID", typesPhoto.getTypePhotoID());
             values.put("typePhoto", typesPhoto.getTypePhoto());
             values.put("listObject", typesPhoto.getListObject());
+
+            if (!db.isOpen()){
+                db = getReadableDatabase();
+            }
 
             if (exist) {
                 id = db.update("TypesPhoto", values, "ActID=? and typePhotoID=?", new String[]{ActID, typesPhoto.getTypePhotoID()});
@@ -2030,6 +2078,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 values.put("ViewSchemes", scheme.getViewSchemes());
                 values.put("SVG", scheme.getSVG());
 
+                if (!db.isOpen()){
+                    db = getReadableDatabase();
+                }
+
                 id = db.insert("Scheme", null, values);
             }
         } catch (Exception e) {
@@ -2055,6 +2107,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 values.put("detailID", detail.getDetailID());
                 values.put("detailName", detail.getDetailName());
 
+                if (!db.isOpen()){
+                    db = getReadableDatabase();
+                }
+
                 id = db.insert("Detail", null, values);
             }
 
@@ -2071,6 +2127,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                     values.put("tempID", detail.getTempID());
                     values.put("detailID", detail.getDetailID());
                     values.put("detailName", detail.getDetailName());
+
+                    if (!db.isOpen()){
+                        db = getReadableDatabase();
+                    }
 
                     id = db.insert("Detail", null, values);
                 }
@@ -2095,6 +2155,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 values.put("ID", typeDamage.getID());
                 values.put("name", typeDamage.getName());
 
+                if (!db.isOpen()){
+                    db = getReadableDatabase();
+                }
+
                 id = db.insert("TypesDamages", null, values);
             }
         } catch (Exception e) {
@@ -2116,6 +2180,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
                 values.put("ID", degreesDamage.getID());
                 values.put("name", degreesDamage.getName());
+
+                if (!db.isOpen()){
+                    db = getReadableDatabase();
+                }
 
                 id = db.insert("DegreesDamages", null, values);
             }
@@ -2139,6 +2207,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 values.put("ID", classificationDamage.getID());
                 values.put("name", classificationDamage.getName());
 
+                if (!db.isOpen()){
+                    db = getReadableDatabase();
+                }
+
                 id = db.insert("ClassificationDamages", null, values);
             }
         } catch (Exception e) {
@@ -2161,6 +2233,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 values.put("ID", originDamage.getID());
                 values.put("name", originDamage.getName());
 
+                if (!db.isOpen()){
+                    db = getReadableDatabase();
+                }
+
                 id = db.insert("OriginDamages", null, values);
             }
         } catch (Exception e) {
@@ -2182,6 +2258,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
                 values.put("ID", typeDamagePhoto.getID());
                 values.put("name", typeDamagePhoto.getName());
+
+                if (!db.isOpen()){
+                    db = getReadableDatabase();
+                }
 
                 id = db.insert("TypeDamagePhotos", null, values);
             }
