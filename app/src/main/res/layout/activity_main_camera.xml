@@ -66,6 +66,33 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/layout_zoom_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="20dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="5dip">
+
+        <ImageButton
+            android:id="@+id/zoom_plus"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="20dp"
+            android:src="@drawable/ic_baseline_zoom_in_24" />
+
+        <ImageButton
+            android:id="@+id/zoom_minus"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_baseline_zoom_out_24" />
+
+    </LinearLayout>
+
 </RelativeLayout>
 
 

@@ -32,6 +32,10 @@ public class MainActivityCamera extends AppCompatActivity {
     private TextView description;
 
     private ImageButton switchFlashlightButton;
+
+    private ImageButton zoomPlus;
+    private ImageButton zoomMinus;
+
     private boolean isFlashLightOn = false;
 
     @Override
@@ -59,7 +63,7 @@ public class MainActivityCamera extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (mCamera != null) {
-                   mCamera.autoFocus(mAutoFocusCallback);
+                    mCamera.autoFocus(mAutoFocusCallback);
                 }
             }
         });
@@ -77,6 +81,40 @@ public class MainActivityCamera extends AppCompatActivity {
                 }
             });
         }
+
+        zoomPlus = findViewById(R.id.zoom_plus);
+        zoomPlus.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setZoom(5);
+            }
+        });
+
+        zoomMinus = findViewById(R.id.zoom_minus);
+        zoomMinus.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setZoom(-5);
+            }
+        });
+    }
+
+    private void setZoom(int i) {
+        Camera.Parameters parameters = mCamera.getParameters();
+        int maxZoom = parameters.getMaxZoom();
+        int zoom = parameters.getZoom();
+
+        zoom += i;
+        if (zoom >= maxZoom) {
+            zoom = maxZoom;
+        } else if (zoom < 0) {
+            zoom = 0;
+        }
+
+        parameters.setZoom(zoom);
+
+        mCamera.setParameters(parameters);
+        mCamera.startPreview();
     }
 
     private boolean hasFlash() {
@@ -106,7 +144,7 @@ public class MainActivityCamera extends AppCompatActivity {
         @Override
         public void onPictureTaken(byte[] data, Camera camera) {
             File picture = new File(mCurrentPhotoPath);
-            if (picture == null){
+            if (picture == null) {
                 return;
             } else {
                 try {
@@ -116,7 +154,7 @@ public class MainActivityCamera extends AppCompatActivity {
 
                     setResult(RESULT_OK);
                     finish();
-                } catch (IOException e){
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
@@ -133,13 +171,28 @@ public class MainActivityCamera extends AppCompatActivity {
         }
     };
 
+    Camera.OnZoomChangeListener mOnZoomChangeListener = new Camera.OnZoomChangeListener() {
+        @Override
+        public void onZoomChange(int zoomValue, boolean stopped, Camera camera) {
+
+        }
+    };
+
     @Override
     protected void onResume() {
         super.onResume();
         mCamera = Camera.open();
 
+        mCamera.setZoomChangeListener(mOnZoomChangeListener);
+        mCamera.getParameters().setZoom(1);
+
         mShowCamera = new ShowCamera(this, mCamera);
         mFrameLayout.addView(mShowCamera);
+
+        if (!mCamera.getParameters().isZoomSupported()) {
+            zoomPlus.setVisibility(View.INVISIBLE);
+            zoomMinus.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override
