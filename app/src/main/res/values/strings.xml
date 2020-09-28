@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Terminal</string>
 
-    <string name="nav_header_version">2.9.1</string>
+    <string name="nav_header_version">2.9.2</string>
 
     <string name="nav_header_title">Terminal</string>
     <string name="nav_header_subtitle">v. 1.0.0</string>
