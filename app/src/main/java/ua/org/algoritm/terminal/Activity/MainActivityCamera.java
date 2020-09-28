@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -63,6 +64,10 @@ public class MainActivityCamera extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (mCamera != null) {
+                    photo.setImageResource(R.drawable.ic_menu_camera_pressed);
+                    photo.setEnabled(false);
+
+                    mCamera.cancelAutoFocus();
                     mCamera.autoFocus(mAutoFocusCallback);
                 }
             }
@@ -164,10 +169,10 @@ public class MainActivityCamera extends AppCompatActivity {
     Camera.AutoFocusCallback mAutoFocusCallback = new Camera.AutoFocusCallback() {
         @Override
         public void onAutoFocus(boolean success, Camera camera) {
-            if (success) {
-                // если удалось сфокусироваться, делаем снимок
-                camera.takePicture(null, null, mPictureCallback);
-            }
+            camera.takePicture(null, null, mPictureCallback);
+//            if (!success) {
+//                Toast.makeText(MainActivityCamera.this, "Фото, возможно, не сфокусировано", Toast.LENGTH_SHORT).show();
+//            }
         }
     };
 

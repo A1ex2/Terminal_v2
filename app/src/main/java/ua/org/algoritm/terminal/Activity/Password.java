@@ -85,6 +85,14 @@ public class Password extends AppCompatActivity {
 
         preferences = getSharedPreferences("MyPref", MODE_PRIVATE);
         SharedData.API = preferences.getString("Api", "");
+
+        if (SharedData.API.equals("")){
+            SharedData.API = "http://terminal.blg-vidi.com:83/blg_log";
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putString("Api", SharedData.API);
+            editor.apply();
+        }
+
         SharedData.VERSION = getString(R.string.nav_header_version);
 
         SOAP_Dispatcher dispatcherUpdate = new SOAP_Dispatcher(ACTION_UPDATE, getApplicationContext());
