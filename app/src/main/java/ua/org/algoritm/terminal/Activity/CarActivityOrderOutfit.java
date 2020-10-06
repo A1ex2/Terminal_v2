@@ -688,7 +688,11 @@ public class CarActivityOrderOutfit extends AppCompatActivity {
                     SFTPClient sftpClient = new SFTPClient(host, username, password, port);
                     sftpClient.connect();
                     try {
-                        sftpClient.download("foto/" + remotePath + "/" + photo.getName(), localPath + "/" + photo.getName());
+                        String absolutePathFTP = "foto/";
+                        if (!SharedData.absolutePathFTP.equals("")){
+                            absolutePathFTP = SharedData.absolutePathFTP + "/";
+                        }
+                        sftpClient.download(absolutePathFTP + remotePath + "/" + photo.getName(), localPath + "/" + photo.getName());
                         photo.setCurrentPhotoPath(localPath + "/" + photo.getName());
                         uploadFile = true;
                         IntentServiceDataBase.startInsertPhotoCarDataOutfit(CarActivityOrderOutfit.this, orderID, carID, localPath + "/" + photo.getName());
