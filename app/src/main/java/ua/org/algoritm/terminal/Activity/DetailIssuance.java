@@ -24,6 +24,7 @@ import java.lang.ref.WeakReference;
 import ua.org.algoritm.terminal.Adapters.RecyclerAdapterCarDataIssuanceNew;
 import ua.org.algoritm.terminal.ConnectTo1c.UIManager;
 import ua.org.algoritm.terminal.DataBase.SharedData;
+import ua.org.algoritm.terminal.Objects.ActInspection;
 import ua.org.algoritm.terminal.Objects.CarDataIssuance;
 import ua.org.algoritm.terminal.Objects.Issuance;
 import ua.org.algoritm.terminal.R;
@@ -145,9 +146,28 @@ public class DetailIssuance extends AppCompatActivity {
 //    }
 
     private void viewCarData(CarDataIssuance carData) {
-        Intent intent = new Intent(DetailIssuance.this, CarActivityIssuance.class);
-        intent.putExtra("CarDataIssuance", carData);
-        startActivityForResult(intent, REQUEST_CODE_PUT_CB);
+        if (SharedData.isActInspectionForIssuance) {
+            {
+                ActInspection actInspection = SharedData.getActInspectionReception(issuance.getID(), carData.getCarID());
+
+                if (!actInspection.getReceptionID().equals(issuance.getID())) {
+                    uiManager.showToast("Акт не найден");
+                    return;
+                }
+
+                Intent intent = new Intent(getApplicationContext(), ActInspectionActivity.class);
+                intent.putExtra("actInspection", actInspection.getID());
+                intent.putExtra("CarData", carData);
+                intent.putExtra("isIssuance", true);
+                startActivityForResult(intent, REQUEST_CODE_PUT_CB);
+            }
+        } else {
+            {
+                Intent intent = new Intent(DetailIssuance.this, CarActivityIssuance.class);
+                intent.putExtra("CarDataIssuance", carData);
+                startActivityForResult(intent, REQUEST_CODE_PUT_CB);
+            }
+        }
     }
 
     private void updateLists() {

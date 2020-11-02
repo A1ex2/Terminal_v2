@@ -66,6 +66,7 @@ public class SharedData {
 
     public static int NOTIFY_ID = 1;
     public static boolean isActInspection = false;
+    public static boolean isActInspectionForIssuance = false;
     public static boolean isOfflineReception = false;
     public static boolean updateReceptionListDB = false;
     public static boolean updateActInspectionListDB = false;

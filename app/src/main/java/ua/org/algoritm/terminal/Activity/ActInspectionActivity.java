@@ -35,11 +35,15 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -82,6 +86,7 @@ import ua.org.algoritm.terminal.Objects.Equipment;
 import ua.org.algoritm.terminal.Objects.Inspection;
 import ua.org.algoritm.terminal.Objects.PhotoActInspection;
 import ua.org.algoritm.terminal.Objects.Reception;
+import ua.org.algoritm.terminal.Objects.Sector;
 import ua.org.algoritm.terminal.Objects.TypeDamagePhoto;
 import ua.org.algoritm.terminal.Objects.TypesPhoto;
 import ua.org.algoritm.terminal.R;
@@ -162,6 +167,13 @@ public class ActInspectionActivity extends AppCompatActivity {
     private ImageButton mImageButtonScanBarCode;
     private ImageButton imButCalendar;
 
+    private ArrayList<Sector> mSectors = SharedData.getSectorIssuanceMoving();
+    private Spinner editSectorMoving;
+    private EditText editRowMoving;
+    private Switch aSwitch;
+    private LinearLayout moving;
+
+
     private Button btnEquallyAll;
 
     public static final int ACTION_SET_ACT = 28;
@@ -219,6 +231,14 @@ public class ActInspectionActivity extends AppCompatActivity {
         addDamage = findViewById(R.id.addDamage);
         fabDetail = findViewById(R.id.fabDetail);
         fabOther = findViewById(R.id.fabOther);
+
+        TextView editSector = findViewById(R.id.editSector);
+        TextView editRow = findViewById(R.id.editRow);
+
+        editSectorMoving = findViewById(R.id.editSectorMoving);
+        editRowMoving = findViewById(R.id.editRowMoving);
+        aSwitch = findViewById(R.id.switchMoving);
+        moving = findViewById(R.id.moving);
 
         ViewAnimation.init(fabDetail, textDetail);
         ViewAnimation.init(fabOther, textOther);
@@ -328,45 +348,77 @@ public class ActInspectionActivity extends AppCompatActivity {
         itemTouchHelper.attachToRecyclerView(listDamage);
 
         if (carData != null) {
-            barCode.setText(carData.getBarCode());
-            editDate.setText(carData.getProductionDateString());
+            boolean isIssuance = intent.getBooleanExtra("isIssuance", false);
 
-            Date date = carData.getProductionDate();
-            if (date.getTime() > 0) {
-                dateAndTime.setTime(date);
-            }
+            if (isIssuance) {
+                LinearLayout groupEdit = findViewById(R.id.groupEdit);
+                groupEdit.setVisibility(View.INVISIBLE);
 
-            editDate.addTextChangedListener(getTextWatcher());
-            editDate.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-                @Override
-                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                Sector sector = SharedData.getSector(carData.getSectorID());
+                editSector.setText(sector.getName());
+
+                ArrayAdapter<Sector> adapter = new ArrayAdapter<>(this, R.layout.item_spinner, mSectors);
+                editSectorMoving.setAdapter(adapter);
+
+                aSwitch.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (aSwitch.isChecked()) {
+                            moving.setVisibility(View.VISIBLE);
+                        } else {
+                            moving.setVisibility(View.INVISIBLE);
+                        }
+                    }
+                });
+
+            } else {
+                LinearLayout groupEditIssuance = findViewById(R.id.groupEditIssuance);
+                groupEditIssuance.setVisibility(View.INVISIBLE);
+
+                barCode.setText(carData.getBarCode());
+                editDate.setText(carData.getProductionDateString());
+
+                Date date = carData.getProductionDate();
+                if (date.getTime() > 0) {
+                    dateAndTime.setTime(date);
+                }
+
+                editDate.addTextChangedListener(getTextWatcher());
+                editDate.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                    @Override
+                    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 //                editSector.performClick();
 //                return true;
-                    return false;
-                }
-            });
+                        return false;
+                    }
+                });
 
-            mImageButtonScanBarCode.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    scanBarCode();
-                }
-            });
+                mImageButtonScanBarCode.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        scanBarCode();
+                    }
+                });
 
-            imButCalendar.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    new DatePickerDialog(ActInspectionActivity.this, d,
-                            dateAndTime.get(Calendar.YEAR),
-                            dateAndTime.get(Calendar.MONTH),
-                            dateAndTime.get(Calendar.DAY_OF_MONTH))
-                            .show();
+                imButCalendar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        new DatePickerDialog(ActInspectionActivity.this, d,
+                                dateAndTime.get(Calendar.YEAR),
+                                dateAndTime.get(Calendar.MONTH),
+                                dateAndTime.get(Calendar.DAY_OF_MONTH))
+                                .show();
 
-                }
-            });
+                    }
+                });
+            }
         } else {
             LinearLayout groupEdit = findViewById(R.id.groupEdit);
             groupEdit.setVisibility(View.INVISIBLE);
+
+            LinearLayout groupEditIssuance = findViewById(R.id.groupEditIssuance);
+            groupEditIssuance.setVisibility(View.INVISIBLE);
+
         }
     }
 

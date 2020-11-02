@@ -358,6 +358,7 @@ public class Password extends AppCompatActivity {
             boolean thisSFTP = false;
             boolean thisDriver = false;
             boolean isActInspection = false;
+            boolean isActInspectionForIssuance = false;
             boolean isOfflineReception = false;
             String absolutePathFTP = "foto";
 
@@ -372,6 +373,7 @@ public class Password extends AppCompatActivity {
                 absolutePathFTP = soapParam_Response.getPropertyAsString("AbsolutePathFTP");
 
                 isActInspection = Integer.parseInt(soapParam_Response.getPropertyAsString("isActInspection")) == 1;
+                isActInspectionForIssuance = Integer.parseInt(soapParam_Response.getPropertyAsString("isActInspectionForIssuance")) == 1;
                 isOfflineReception = Integer.parseInt(soapParam_Response.getPropertyAsString("isOfflineReception")) == 1;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -388,6 +390,7 @@ public class Password extends AppCompatActivity {
 
             SharedData.thisDriver = thisDriver;
             SharedData.isActInspection = isActInspection;
+            SharedData.isActInspectionForIssuance = isActInspectionForIssuance;
             SharedData.isOfflineReception = isOfflineReception;
             SharedData.absolutePathFTP = absolutePathFTP;
 

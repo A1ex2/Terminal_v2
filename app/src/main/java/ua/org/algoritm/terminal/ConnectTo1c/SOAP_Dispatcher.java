@@ -162,6 +162,9 @@ public class SOAP_Dispatcher extends Thread {
 
             case IssuanceFragment.ACTION_LIST:
                 getIssuanceList();
+                if (SharedData.isActInspectionForIssuance) {
+                    GetActInspection();
+                }
                 break;
 
             case CarActivityIssuance.ACTION_SET_ISSUANCE_CAR:
