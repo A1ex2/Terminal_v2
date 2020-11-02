@@ -162,6 +162,8 @@ public class ActInspectionActivity extends AppCompatActivity {
     private ImageButton mImageButtonScanBarCode;
     private ImageButton imButCalendar;
 
+    private Button btnEquallyAll;
+
     public static final int ACTION_SET_ACT = 28;
     public static final int ACTION_SET_ACT_Performed = 29;
     public static final int ACTION_SET_ACT_DB = 30;
@@ -180,6 +182,18 @@ public class ActInspectionActivity extends AppCompatActivity {
 
         uiManager = new UIManager(this);
         soapHandler = new incomingHandler(this);
+
+        btnEquallyAll = findViewById(R.id.btnEquallyAll);
+        btnEquallyAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for (int i = 0; i < mActInspection.getEquipments().size(); i++) {
+                    Equipment equipment = mActInspection.getEquipments().get(i);
+                    equipment.setQuantityFact(equipment.getQuantityPlan());
+                }
+                updateListEquipments();
+            }
+        });
 
         Intent intent = getIntent();
         mActInspection = SharedData.getActInspection(intent.getStringExtra("actInspection"));
