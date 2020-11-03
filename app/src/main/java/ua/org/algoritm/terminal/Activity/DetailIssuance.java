@@ -118,14 +118,30 @@ public class DetailIssuance extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_PUT_CB) {
             if (resultCode == Activity.RESULT_OK) {
-                if (data != null) {
-                    String carID = data.getStringExtra("CarID");
-                    if (!carID.equals("")) {
-                        SharedData.deleteCarDataIssuance(carID, issuance);
-                        updateListsCarData();
-                    }
 
-                    updateLists();
+
+                if (SharedData.isActInspectionForIssuance) {
+                    if (data != null) {
+                        boolean performedAct = data.getBooleanExtra("performedAct", false);
+
+                        if (performedAct) {
+                            String carID = data.getStringExtra("CarID");
+                            if (!carID.equals("")) {
+                                SharedData.deleteCarDataIssuance(carID, issuance);
+                                updateLists();
+                            }
+                        }
+                        updateLists();
+                    }
+                } else {
+                    if (data != null) {
+                        String carID = data.getStringExtra("CarID");
+                        if (!carID.equals("")) {
+                            SharedData.deleteCarDataIssuance(carID, issuance);
+                            updateListsCarData();
+                        }
+                        updateLists();
+                    }
                 }
             }
         }

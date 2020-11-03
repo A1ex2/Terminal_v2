@@ -866,24 +866,24 @@ public class ActInspectionActivityIssuance extends AppCompatActivity {
 //                    alert.show();
 //
 //                } else {
-                    String message = getString(R.string.send_performed);
+                String message = getString(R.string.send_performed);
 
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder.setMessage(message)
-                            .setCancelable(true)
-                            .setPositiveButton(getString(R.string.butt_Yes), new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    performedAct = true;
-                                    setCB();
-                                }
-                            })
-                            .setNegativeButton(getString(R.string.butt_Not), new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage(message)
+                        .setCancelable(true)
+                        .setPositiveButton(getString(R.string.butt_Yes), new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                performedAct = true;
+                                setCB();
+                            }
+                        })
+                        .setNegativeButton(getString(R.string.butt_Not), new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
 
-                                }
-                            });
-                    AlertDialog alert = builder.create();
-                    alert.show();
+                            }
+                        });
+                AlertDialog alert = builder.create();
+                alert.show();
 //                }
 
                 return true;
@@ -1445,25 +1445,35 @@ public class ActInspectionActivityIssuance extends AppCompatActivity {
                 alert.show();
 
             } else {
+
+                Intent startIntent = new Intent(ActInspectionActivityIssuance.this, ServicePerformedAct.class);
+                startIntent.setAction(Constants.ACTION.STARTFOREGROUND_ACTION);
+                startIntent.putExtra(ServicePerformedAct.EXTRA_ACT_ID, mActInspection.getID());
                 if (performedAct) {
-                    performedAct = false;
-                    String message = getString(R.string.no_photos);
-
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder.setMessage(message)
-                            .setCancelable(true)
-                            .setPositiveButton(getString(R.string.butt_OK), new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-
-                                }
-                            });
-                    AlertDialog alert = builder.create();
-                    alert.show();
-
-//                    setCBPerformed(true);
-                } else {
-                    finishActivity();
+                    startIntent.putExtra(ServicePerformedAct.EXTRA_performedAct, performedAct);
                 }
+                startService(startIntent);
+                finishActivity();
+
+//                if (performedAct) {
+//                    performedAct = false;
+//                    String message = getString(R.string.no_photos);
+//
+//                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//                    builder.setMessage(message)
+//                            .setCancelable(true)
+//                            .setPositiveButton(getString(R.string.butt_OK), new DialogInterface.OnClickListener() {
+//                                public void onClick(DialogInterface dialog, int id) {
+//
+//                                }
+//                            });
+//                    AlertDialog alert = builder.create();
+//                    alert.show();
+//
+////                    setCBPerformed(true);
+//                } else {
+//                    finishActivity();
+//                }
             }
 
         } else {
@@ -1530,6 +1540,7 @@ public class ActInspectionActivityIssuance extends AppCompatActivity {
 
         if (carData != null) {
             intent.putExtra("CarData", carData);
+            intent.putExtra("CarID", carData.getCarID());
         }
 
         setResult(Activity.RESULT_OK, intent);
