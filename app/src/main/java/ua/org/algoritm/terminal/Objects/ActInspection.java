@@ -77,6 +77,16 @@ public class ActInspection {
 
     public int NOTIFY_ID = 0;
 
+    @Expose
+    private String isMoving;
+    @Expose
+    private String sectorIDMoving;
+    @Expose
+    private String sectorMoving;
+    @Expose
+    private String rowMoving;
+
+
     public ActInspection() {
         Random random = new Random();
         NOTIFY_ID = random.nextInt();
@@ -112,6 +122,11 @@ public class ActInspection {
         this.TypeMachine = actInspection.getTypeMachine();
         this.performed = actInspection.isPerformed();
         this.sendPhoto = actInspection.sendPhoto;
+
+        this.isMoving = actInspection.isMoving;
+        this.sectorIDMoving = actInspection.sectorIDMoving;
+        this.sectorMoving = actInspection.sectorMoving;
+        this.rowMoving = actInspection.rowMoving;
     }
 
     public String getID() {
@@ -394,5 +409,37 @@ public class ActInspection {
 
     public void setReceptionID(String receptionID) {
         ReceptionID = receptionID;
+    }
+
+    public String getIsMoving() {
+        return isMoving;
+    }
+
+    public void setIsMoving(String isMoving) {
+        this.isMoving = isMoving;
+    }
+
+    public String getSectorIDMoving() {
+        return sectorIDMoving;
+    }
+
+    public void setSectorIDMoving(String sectorIDMoving) {
+        this.sectorIDMoving = sectorIDMoving;
+    }
+
+    public String getSectorMoving() {
+        return sectorMoving;
+    }
+
+    public void setSectorMoving(String sectorMoving) {
+        this.sectorMoving = sectorMoving;
+    }
+
+    public String getRowMoving() {
+        return rowMoving;
+    }
+
+    public void setRowMoving(String rowMoving) {
+        this.rowMoving = rowMoving;
     }
 }

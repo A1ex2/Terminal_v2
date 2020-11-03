@@ -892,16 +892,13 @@ public class ActInspectionActivityIssuance extends AppCompatActivity {
     }
 
     private void setCB() {
-        if (carData != null) {
-//            carData.setBarCode(barCode.getText().toString());
-//            if (!editDate.getText().toString().equals("")) {
-//                carData.setProductionDate(dateAndTime.getTime());
-//            }
-//            mActInspection.setBarCode(carData.getBarCode());
-//            mActInspection.setProductionDate(carData.getProductionDateString());
-        }
-
         mActInspection.setRun(run.getText().toString());
+
+        mActInspection.setIsMoving(aSwitch.isChecked() ? "true" : "false");
+        Sector mSectorMoving = mSectors.get(editSectorMoving.getSelectedItemPosition());
+        mActInspection.setSectorMoving(mSectorMoving.getName());
+        mActInspection.setSectorIDMoving(mSectorMoving.getID());
+        mActInspection.setRowMoving(editRowMoving.getText().toString());
 
         mDialog = new ProgressDialog(this);
         mDialog.setMessage(getString(R.string.wait_sending));
@@ -920,14 +917,14 @@ public class ActInspectionActivityIssuance extends AppCompatActivity {
                 return;
             }
 
-            Issuance issuance = SharedData.getIssuance(mActInspection.getReceptionID());
-            for (int i = 0; i < issuance.getCarData().size(); i++) {
-                CarDataIssuance mCarData = issuance.getCarData().get(i);
-                if (carData.getCarID().equals(mCarData.getCarID())) {
-
-                    break;
-                }
-            }
+//            Issuance issuance = SharedData.getIssuance(mActInspection.getReceptionID());
+//            for (int i = 0; i < issuance.getCarData().size(); i++) {
+//                CarDataIssuance mCarData = issuance.getCarData().get(i);
+//                if (carData.getCarID().equals(mCarData.getCarID())) {
+//
+//                    break;
+//                }
+//            }
 
             IntentServiceDataBase.startInsertActInspection(ActInspectionActivityIssuance.this,
                     mActInspection.getID());
