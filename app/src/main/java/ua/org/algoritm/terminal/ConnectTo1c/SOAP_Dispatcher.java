@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ua.org.algoritm.terminal.Activity.ActInspectionActivity;
+import ua.org.algoritm.terminal.Activity.ActInspectionActivityIssuance;
 import ua.org.algoritm.terminal.Activity.CarActivityIssuance;
 import ua.org.algoritm.terminal.Activity.CarActivityMoving;
 import ua.org.algoritm.terminal.Activity.CarActivityOrderOutfit;
@@ -183,12 +184,22 @@ public class SOAP_Dispatcher extends Thread {
                 break;
             case ActInspectionFragment.ACTION_LIST:
                 GetActInspection();
+
                 break;
             case ActInspectionActivity.ACTION_SET_ACT:
                 setActInspection();
+
                 break;
             case ActInspectionActivity.ACTION_SET_ACT_Performed:
                 setStatusActInspection();
+
+                break;
+            case ActInspectionActivityIssuance.ACTION_SET_ACT:
+                setActInspection();
+                break;
+            case ActInspectionActivityIssuance.ACTION_SET_ACT_Performed:
+                setStatusActInspection();
+
                 break;
         }
 
@@ -306,6 +317,20 @@ public class SOAP_Dispatcher extends Thread {
                 ActInspectionActivity.soapHandler.sendEmptyMessage(ACTION);
             } else {
                 ActInspectionActivity.soapHandler.sendEmptyMessage(ActInspectionActivity.ACTION_ConnectionError);
+            }
+        } else if (ACTION == ActInspectionActivityIssuance.ACTION_SET_ACT) {
+            if (soap_Response != null) {
+                ActInspectionActivityIssuance.soapParam_Response = soap_Response;
+                ActInspectionActivityIssuance.soapHandler.sendEmptyMessage(ACTION);
+            } else {
+                ActInspectionActivityIssuance.soapHandler.sendEmptyMessage(ActInspectionActivityIssuance.ACTION_ConnectionError);
+            }
+        } else if (ACTION == ActInspectionActivityIssuance.ACTION_SET_ACT_Performed) {
+            if (soap_Response != null) {
+                ActInspectionActivityIssuance.soapParam_Response = soap_Response;
+                ActInspectionActivityIssuance.soapHandler.sendEmptyMessage(ACTION);
+            } else {
+                ActInspectionActivityIssuance.soapHandler.sendEmptyMessage(ActInspectionActivityIssuance.ACTION_ConnectionError);
             }
         }
     }

@@ -155,7 +155,7 @@ public class DetailIssuance extends AppCompatActivity {
                     return;
                 }
 
-                Intent intent = new Intent(getApplicationContext(), ActInspectionActivity.class);
+                Intent intent = new Intent(getApplicationContext(), ActInspectionActivityIssuance.class);
                 intent.putExtra("actInspection", actInspection.getID());
                 intent.putExtra("CarData", carData);
                 intent.putExtra("isIssuance", true);
