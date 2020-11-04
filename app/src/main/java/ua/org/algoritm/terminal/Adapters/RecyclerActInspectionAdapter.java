@@ -21,14 +21,27 @@ public class RecyclerActInspectionAdapter extends RecyclerView.Adapter<RecyclerA
 
     public RecyclerActInspectionAdapter(Context context, int resourse) {
         mResourse = resourse;
-        mActInspections.addAll(SharedData.ACT_INSPECTION);
+        mActInspections.addAll(getActInspections());
         mInflater = LayoutInflater.from(context);
     }
 
     public void setActInspections() {
         mActInspections.clear();
-        mActInspections.addAll(SharedData.ACT_INSPECTION);
+        mActInspections.addAll(getActInspections());
         notifyDataSetChanged();
+    }
+
+    private ArrayList<ActInspection> getActInspections(){
+        ArrayList<ActInspection> mActs = new ArrayList<>();
+
+        for (int i = 0; i < SharedData.ACT_INSPECTION.size(); i++) {
+            ActInspection act = SharedData.ACT_INSPECTION.get(i);
+            if (act.getFormID().equals("Сервис")){
+                mActs.add(act);
+            }
+        }
+
+        return mActs;
     }
 
     public interface ActionListener {
@@ -72,7 +85,7 @@ public class RecyclerActInspectionAdapter extends RecyclerView.Adapter<RecyclerA
 
         final ArrayList<ActInspection> filterModeList = new ArrayList<>();
 
-        for (ActInspection model : SharedData.ACT_INSPECTION) {
+        for (ActInspection model : getActInspections()) {
 
             final String textDescription = model.getDescription().toLowerCase();
             final String textCar = model.getCar().toLowerCase();

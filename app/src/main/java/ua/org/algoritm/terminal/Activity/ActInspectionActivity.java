@@ -897,7 +897,7 @@ public class ActInspectionActivity extends AppCompatActivity {
                     mActInspection.setBarCode(carData.getBarCode());
                     mActInspection.setProductionDate(carData.getProductionDateString());
                 }
-                if (mActInspection.getBarCode().equals("") || mActInspection.getProductionDate().equals("")) {
+                if ((mActInspection.getBarCode().equals("") || mActInspection.getProductionDate().equals("")) & carData != null) {
                     String message = getString(R.string.not_completed);
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -1496,21 +1496,32 @@ public class ActInspectionActivity extends AppCompatActivity {
 
             } else {
                 if (performedAct) {
-                    performedAct = false;
-                    String message = getString(R.string.no_photos);
+                    if (carData != null) {
+                        performedAct = false;
+                        String message = getString(R.string.no_photos);
 
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder.setMessage(message)
-                            .setCancelable(true)
-                            .setPositiveButton(getString(R.string.butt_OK), new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                        builder.setMessage(message)
+                                .setCancelable(true)
+                                .setPositiveButton(getString(R.string.butt_OK), new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
 
-                                }
-                            });
-                    AlertDialog alert = builder.create();
-                    alert.show();
+                                    }
+                                });
+                        AlertDialog alert = builder.create();
+                        alert.show();
 
 //                    setCBPerformed(true);
+                    } else {
+                        Intent startIntent = new Intent(ActInspectionActivity.this, ServicePerformedAct.class);
+                        startIntent.setAction(Constants.ACTION.STARTFOREGROUND_ACTION);
+                        startIntent.putExtra(ServicePerformedAct.EXTRA_ACT_ID, mActInspection.getID());
+                        if (performedAct) {
+                            startIntent.putExtra(ServicePerformedAct.EXTRA_performedAct, performedAct);
+                        }
+                        startService(startIntent);
+                        finishActivity();
+                    }
                 } else {
                     finishActivity();
                 }
