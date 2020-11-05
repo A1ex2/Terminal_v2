@@ -201,7 +201,7 @@ public class ServicePerformedAct extends Service {
 
                 }
 
-                if (mActInspection.isPerformed()) {
+                if (mActInspection.isPerformed() & send) {
                     Message1c message = new Message1c(SharedData.API, SharedData.LOGIN, SharedData.PASSWORD, getApplicationContext());
 
                     String stringObject = SOAP_Objects.getActInspection(mActInspection);
