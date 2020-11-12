@@ -1,11 +1,14 @@
 package ua.org.algoritm.terminal.Adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -34,9 +37,14 @@ public class RecyclerActInspectionAdapter extends RecyclerView.Adapter<RecyclerA
     private ArrayList<ActInspection> getActInspections(){
         ArrayList<ActInspection> mActs = new ArrayList<>();
 
+        String formID = "Сервис";
+        if (SharedData.thisDriver) {
+            formID = "ОсмотрНаСкладе";
+        }
+
         for (int i = 0; i < SharedData.ACT_INSPECTION.size(); i++) {
             ActInspection act = SharedData.ACT_INSPECTION.get(i);
-            if (act.getFormID().equals("Сервис")){
+            if (act.getFormID().equals(formID)){
                 mActs.add(act);
             }
         }
@@ -117,6 +125,7 @@ public class RecyclerActInspectionAdapter extends RecyclerView.Adapter<RecyclerA
         private TextView itemProductionDate;
         private TextView itemSector;
         private TextView itemRow;
+        private LinearLayout linearLayoutCard;
 
         public ActInspectionViewHolder(View itemView) {
             super(itemView);
@@ -130,6 +139,7 @@ public class RecyclerActInspectionAdapter extends RecyclerView.Adapter<RecyclerA
             itemProductionDate = itemView.findViewById(R.id.itemProductionDate);
             itemSector = itemView.findViewById(R.id.itemSector);
             itemRow = itemView.findViewById(R.id.itemRow);
+            linearLayoutCard = itemView.findViewById(R.id.linearLayoutCard);
         }
 
         public void set(ActInspection act) {
@@ -139,9 +149,31 @@ public class RecyclerActInspectionAdapter extends RecyclerView.Adapter<RecyclerA
             itemState.setText(act.getState());
             itemCar.setText(act.getCar());
             itemBarCode.setText(act.getBarCode());
-            itemProductionDate.setText(act.getProductionDate());
+            itemProductionDate.setText(act.getInspectionDatePlanString());
             itemSector.setText(act.getSector());
             itemRow.setText(act.getRow());
+
+            if (SharedData.isOfflineReception) {
+                if (act.isPerformed()) {
+                    itemState.setText("Выполнен(не отправлен)");
+
+                    itemForm.setTextColor(Color.parseColor("#1d5e16"));
+                    itemDatePlan.setTextColor(Color.parseColor("#1d5e16"));
+                    itemDescription.setTextColor(Color.parseColor("#1d5e16"));
+                    itemState.setTextColor(Color.parseColor("#1d5e16"));
+                    itemCar.setTextColor(Color.parseColor("#1d5e16"));
+                    itemBarCode.setTextColor(Color.parseColor("#1d5e16"));
+                    itemProductionDate.setTextColor(Color.parseColor("#1d5e16"));
+                    itemSector.setTextColor(Color.parseColor("#1d5e16"));
+                    itemRow.setTextColor(Color.parseColor("#1d5e16"));
+
+                    if (act.sendPerformed) {
+                        linearLayoutCard.setBackgroundColor(Color.parseColor("#a7e9a0"));
+                        itemState.setText("Выполнен(отправлен)");
+                    }
+                }
+            }
+
         }
     }
 }

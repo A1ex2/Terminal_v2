@@ -1,6 +1,8 @@
 package ua.org.algoritm.terminal.ui.act;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -30,9 +32,11 @@ import ua.org.algoritm.terminal.Activity.DetailOrderOutfit;
 import ua.org.algoritm.terminal.Adapters.RecyclerActInspectionAdapter;
 import ua.org.algoritm.terminal.ConnectTo1c.SOAP_Dispatcher;
 import ua.org.algoritm.terminal.ConnectTo1c.UIManager;
+import ua.org.algoritm.terminal.Constants;
 import ua.org.algoritm.terminal.DataBase.SharedData;
 import ua.org.algoritm.terminal.Objects.ActInspection;
 import ua.org.algoritm.terminal.R;
+import ua.org.algoritm.terminal.Service.ServicePerformedAct;
 
 public class ActInspectionFragment extends Fragment {
     public static final int REQUEST_CODE_UPDATE = 20;
@@ -71,7 +75,82 @@ public class ActInspectionFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_search, menu);
+        if (SharedData.isOfflineReception) {
+            inflater.inflate(R.menu.menu_search_offline, menu);
+            final MenuItem update_data_receptions = menu.findItem(R.id.update_data_receptions);
+            update_data_receptions.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+
+                    if (!SharedData.isOnline(getContext())) {
+                        uiManager.showToast(getString(R.string.no_internet));
+                        return false;
+                    }
+
+                    String message = getString(R.string.download_act_2);
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setMessage(message)
+                            .setCancelable(true)
+                            .setPositiveButton(getString(R.string.butt_Yes), new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    SharedData.updateReceptionListDB = true;
+                                    SharedData.updateActInspectionListDB = true;
+                                    getUpdateList();
+
+                                }
+                            })
+                            .setNegativeButton(getString(R.string.butt_Not), new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+
+                                    dialog.cancel();
+                                }
+                            });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+
+                    return false;
+                }
+            });
+
+            final MenuItem send_act = menu.findItem(R.id.send_act);
+            send_act.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    if (!SharedData.isOnline(getContext())) {
+                        uiManager.showToast(getString(R.string.no_internet));
+                        return false;
+                    }
+
+                    String message = getString(R.string.send_act) + "?";
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setMessage(message)
+                            .setCancelable(true)
+                            .setPositiveButton(getString(R.string.butt_Yes), new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    Intent startIntent = new Intent(getContext(), ServicePerformedAct.class);
+                                    startIntent.setAction(Constants.ACTION.STARTFOREGROUND_ACTION_ALL);
+                                    getActivity().startService(startIntent);
+
+
+                                }
+                            })
+                            .setNegativeButton(getString(R.string.butt_Not), new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+
+                                    dialog.cancel();
+                                }
+                            });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+
+                    return false;
+                }
+            });
+        } else {
+            inflater.inflate(R.menu.menu_search, menu);
+        }
 
         final MenuItem searchItem = menu.findItem(R.id.menu_item_search);
         final SearchView searchView = (SearchView) searchItem.getActionView();

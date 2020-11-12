@@ -223,8 +223,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private static void getUpdateSectorsList(Context context) {
-        SOAP_Dispatcher dispatcher = new SOAP_Dispatcher(ACTION_SECTORS_LIST, context);
-        dispatcher.start();
+        if (SharedData.thisDriver & SharedData.isOfflineReception & !SharedData.isOnline(context)) {
+        } else {
+            SOAP_Dispatcher dispatcher = new SOAP_Dispatcher(ACTION_SECTORS_LIST, context);
+            dispatcher.start();
+        }
     }
 
     @Override

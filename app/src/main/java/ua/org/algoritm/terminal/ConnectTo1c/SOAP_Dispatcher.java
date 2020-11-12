@@ -545,6 +545,7 @@ public class SOAP_Dispatcher extends Thread {
                 SharedData.setPhotoActInspection(SharedData.ACT_INSPECTION.get(i));
             }
 
+            soap_ResponseString = "true";
             return;
         }
 

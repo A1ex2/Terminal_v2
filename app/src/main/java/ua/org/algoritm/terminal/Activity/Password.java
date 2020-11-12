@@ -86,7 +86,7 @@ public class Password extends AppCompatActivity {
         preferences = getSharedPreferences("MyPref", MODE_PRIVATE);
         SharedData.API = preferences.getString("Api", "");
 
-        if (SharedData.API.equals("")){
+        if (SharedData.API.equals("")) {
             SharedData.API = "http://terminal.blg-vidi.com:83/blg_log";
             SharedPreferences.Editor editor = preferences.edit();
             editor.putString("Api", SharedData.API);
@@ -94,9 +94,17 @@ public class Password extends AppCompatActivity {
         }
 
         SharedData.VERSION = getString(R.string.nav_header_version);
+        SharedData.thisDriver = preferences.getBoolean("thisDriver", false);
+        SharedData.isActInspection = preferences.getBoolean("isActInspection", false);
+        SharedData.isActInspectionForIssuance = preferences.getBoolean("isActInspectionForIssuance", false);
+        SharedData.isOfflineReception = preferences.getBoolean("isOfflineReception", false);
+        SharedData.absolutePathFTP = preferences.getString("absolutePathFTP", "foto");
 
-        SOAP_Dispatcher dispatcherUpdate = new SOAP_Dispatcher(ACTION_UPDATE, getApplicationContext());
-        dispatcherUpdate.start();
+        if (SharedData.thisDriver & SharedData.isOfflineReception & !SharedData.isOnline(getApplicationContext())) {
+        } else {
+            SOAP_Dispatcher dispatcherUpdate = new SOAP_Dispatcher(ACTION_UPDATE, getApplicationContext());
+            dispatcherUpdate.start();
+        }
 
         uiManager = new UIManager(this);
         soapHandler = new incomingHandler(this);
@@ -189,8 +197,11 @@ public class Password extends AppCompatActivity {
 
         login.setText(preferences.getString("Login", ""));
 
-        SOAP_Dispatcher dispatcher = new SOAP_Dispatcher(ACTION_LOGIN_LIST, getApplicationContext());
-        dispatcher.start();
+        if (SharedData.thisDriver & SharedData.isOfflineReception & !SharedData.isOnline(getApplicationContext())) {
+        } else {
+            SOAP_Dispatcher dispatcher = new SOAP_Dispatcher(ACTION_LOGIN_LIST, getApplicationContext());
+            dispatcher.start();
+        }
 
         if (hasPermission(Manifest.permission.GET_ACCOUNTS)) {
         } else {
@@ -259,10 +270,51 @@ public class Password extends AppCompatActivity {
         password.setEnabled(false);
         ok.setEnabled(false);
 
+        SharedData.thisDriver = preferences.getBoolean("thisDriver", false);
+        SharedData.isOfflineReception = preferences.getBoolean("isOfflineReception", false);
 
-        SOAP_Dispatcher dispatcher = new SOAP_Dispatcher(ACTION_VERIFY, getApplicationContext());
-        dispatcher.start();
+        if (SharedData.thisDriver & SharedData.isOfflineReception & !SharedData.isOnline(getApplicationContext())) {
+            login.setEnabled(true);
+            password.setEnabled(true);
+            ok.setEnabled(true);
 
+            Boolean isLoginSuccess = false;
+
+            if (preferences.getString("Login", "").equals(mLogin)
+                    & preferences.getString("Password", "").equals(mPassword)) {
+                isLoginSuccess = true;
+            }
+
+            if (isLoginSuccess) {
+                SharedData.LOGIN = preferences.getString("Login", "");
+                SharedData.PASSWORD = preferences.getString("Password", "");
+
+                SharedData.hostFTP = preferences.getString("hostFTP", "");
+                SharedData.thisSFTP = preferences.getBoolean("thisSFTP", true);
+                SharedData.portFTP = preferences.getInt("portFTP", 21);
+                SharedData.usernameFTP = preferences.getString("usernameFTP", "");
+                SharedData.passwordFTP = preferences.getString("passwordFTP", "");
+
+                SharedData.thisDriver = preferences.getBoolean("thisDriver", false);
+                SharedData.isActInspection = preferences.getBoolean("isActInspection", false);
+                SharedData.isActInspectionForIssuance = preferences.getBoolean("isActInspectionForIssuance", false);
+                SharedData.isOfflineReception = preferences.getBoolean("isOfflineReception", false);
+                SharedData.absolutePathFTP = preferences.getString("absolutePathFTP", "foto");
+
+                uiManager.showToast(getString(R.string.passwordIncorrect) + SharedData.LOGIN);
+
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                finish();
+
+            } else {
+                uiManager.showToast(getString(R.string.passwordNotIncorrect));
+            }
+
+        } else {
+            SOAP_Dispatcher dispatcher = new SOAP_Dispatcher(ACTION_VERIFY, getApplicationContext());
+            dispatcher.start();
+        }
     }
 
     private boolean hasPermission(String permission) {
@@ -403,6 +455,13 @@ public class Password extends AppCompatActivity {
             editor.putInt("portFTP", portFTP);
             editor.putString("usernameFTP", usernameFTP);
             editor.putString("passwordFTP", passwordFTP);
+
+            editor.putBoolean("thisDriver", thisDriver);
+            editor.putBoolean("isActInspection", isActInspection);
+            editor.putBoolean("isActInspectionForIssuance", isActInspectionForIssuance);
+            editor.putBoolean("isOfflineReception", isOfflineReception);
+            editor.putString("absolutePathFTP", absolutePathFTP);
+
             editor.apply();
 
             uiManager.showToast(getString(R.string.passwordIncorrect) + soapParam_Response.getPropertyAsString("Name"));
