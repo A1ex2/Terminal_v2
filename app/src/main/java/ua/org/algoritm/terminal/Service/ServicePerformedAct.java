@@ -215,7 +215,8 @@ public class ServicePerformedAct extends Service {
                         String text = "" + mActInspection.getDescription() + ". " + textErr;
                         sendMessageError(title, text, id + 1);
 
-                        if (textErr.equals("Все ОК!") | textErr.contains("принята")) {
+                        if (textErr.equals("Все ОК!") | textErr.contains("принята")
+                                | textErr.contains("выполнен осмотр") | textErr.contains("выдана")) {
                             mActInspection.sendPerformed = true;
                             SharedData.insertActInspection(mActInspection);
                         }
