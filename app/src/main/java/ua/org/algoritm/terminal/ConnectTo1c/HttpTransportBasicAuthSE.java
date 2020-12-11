@@ -41,7 +41,8 @@ public class HttpTransportBasicAuthSE extends HttpTransportSE {
             byte[] raw = buf.toString().getBytes();
             buf.setLength(0);
             buf.append("Basic ");
-            org.kobjects.base64.Base64.encode(raw, 0, raw.length, buf);
+//            org.kobjects.base64.Base64.encode(raw, 0, raw.length, buf);
+            Base64.encode(raw, 0, raw.length, buf);
             midpConnection.setRequestProperty("Authorization", buf.toString());
         }
     }
