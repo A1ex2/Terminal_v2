@@ -1432,11 +1432,11 @@ public class ActInspectionActivity extends AppCompatActivity {
         if (isSaveSuccess) {
             final ArrayList<PhotoActInspection> photoAll = new ArrayList<>();
 
-            for (int i = 0; i < mActInspection.getEquipments().size(); i++) {
-                if (!mActInspection.getEquipments().get(i).getPhotoActInspection().getCurrentPhotoPath().equals("")) {
-                    photoAll.add(mActInspection.getEquipments().get(i).getPhotoActInspection());
-                }
-            }
+//            for (int i = 0; i < mActInspection.getEquipments().size(); i++) {
+//                if (!mActInspection.getEquipments().get(i).getPhotoActInspection().getCurrentPhotoPath().equals("")) {
+//                    photoAll.add(mActInspection.getEquipments().get(i).getPhotoActInspection());
+//                }
+//            }
 
             for (int i = 0; i < mActInspection.getTypesPhotos().size(); i++) {
                 TypesPhoto typesPhoto = mActInspection.getTypesPhotos().get(i);
@@ -1447,17 +1447,17 @@ public class ActInspectionActivity extends AppCompatActivity {
                 }
             }
 
-            for (int i = 0; i < mActInspection.getDamages().size(); i++) {
-                for (int j = 0; j < mActInspection.getDamages().get(i).getTypeDamagePhoto().size(); j++) {
-                    TypeDamagePhoto typesPhoto = mActInspection.getDamages().get(i).getTypeDamagePhoto().get(j);
-
-                    for (int k = 0; k < typesPhoto.getPhotoActInspections().size(); k++) {
-                        if (!typesPhoto.getPhotoActInspections().get(k).getCurrentPhotoPath().equals("")) {
-                            photoAll.add(typesPhoto.getPhotoActInspections().get(k));
-                        }
-                    }
-                }
-            }
+//            for (int i = 0; i < mActInspection.getDamages().size(); i++) {
+//                for (int j = 0; j < mActInspection.getDamages().get(i).getTypeDamagePhoto().size(); j++) {
+//                    TypeDamagePhoto typesPhoto = mActInspection.getDamages().get(i).getTypeDamagePhoto().get(j);
+//
+//                    for (int k = 0; k < typesPhoto.getPhotoActInspections().size(); k++) {
+//                        if (!typesPhoto.getPhotoActInspections().get(k).getCurrentPhotoPath().equals("")) {
+//                            photoAll.add(typesPhoto.getPhotoActInspections().get(k));
+//                        }
+//                    }
+//                }
+//            }
 
             if (photoAll.size() != 0) {
                 uiManager.showToast(getString(R.string.success));
@@ -1535,11 +1535,11 @@ public class ActInspectionActivity extends AppCompatActivity {
     private boolean checkPhotoAct() {
         ArrayList<PhotoActInspection> photoAll = new ArrayList<>();
 
-        for (int i = 0; i < mActInspection.getEquipments().size(); i++) {
-            if (!mActInspection.getEquipments().get(i).getPhotoActInspection().getCurrentPhotoPath().equals("")) {
-                photoAll.add(mActInspection.getEquipments().get(i).getPhotoActInspection());
-            }
-        }
+//        for (int i = 0; i < mActInspection.getEquipments().size(); i++) {
+//            if (!mActInspection.getEquipments().get(i).getPhotoActInspection().getCurrentPhotoPath().equals("")) {
+//                photoAll.add(mActInspection.getEquipments().get(i).getPhotoActInspection());
+//            }
+//        }
 
         for (int i = 0; i < mActInspection.getTypesPhotos().size(); i++) {
             TypesPhoto typesPhoto = mActInspection.getTypesPhotos().get(i);
@@ -1550,17 +1550,17 @@ public class ActInspectionActivity extends AppCompatActivity {
             }
         }
 
-        for (int i = 0; i < mActInspection.getDamages().size(); i++) {
-            for (int j = 0; j < mActInspection.getDamages().get(i).getTypeDamagePhoto().size(); j++) {
-                TypeDamagePhoto typesPhoto = mActInspection.getDamages().get(i).getTypeDamagePhoto().get(j);
-
-                for (int k = 0; k < typesPhoto.getPhotoActInspections().size(); k++) {
-                    if (!typesPhoto.getPhotoActInspections().get(k).getCurrentPhotoPath().equals("")) {
-                        photoAll.add(typesPhoto.getPhotoActInspections().get(k));
-                    }
-                }
-            }
-        }
+//        for (int i = 0; i < mActInspection.getDamages().size(); i++) {
+//            for (int j = 0; j < mActInspection.getDamages().get(i).getTypeDamagePhoto().size(); j++) {
+//                TypeDamagePhoto typesPhoto = mActInspection.getDamages().get(i).getTypeDamagePhoto().get(j);
+//
+//                for (int k = 0; k < typesPhoto.getPhotoActInspections().size(); k++) {
+//                    if (!typesPhoto.getPhotoActInspections().get(k).getCurrentPhotoPath().equals("")) {
+//                        photoAll.add(typesPhoto.getPhotoActInspections().get(k));
+//                    }
+//                }
+//            }
+//        }
 
         if (photoAll.size() == 0) {
             if (performedAct) {
