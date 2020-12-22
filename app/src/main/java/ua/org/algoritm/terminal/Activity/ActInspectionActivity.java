@@ -1562,6 +1562,10 @@ public class ActInspectionActivity extends AppCompatActivity {
 //            }
 //        }
 
+        if (SharedData.thisDriver) {
+             return true;
+        }
+
         if (photoAll.size() == 0) {
             if (performedAct) {
                 performedAct = false;
