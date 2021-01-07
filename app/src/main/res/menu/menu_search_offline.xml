@@ -7,15 +7,17 @@
         app:actionViewClass="android.widget.SearchView"
         app:showAsAction="always" />
 
+    <!--android:icon="@android:drawable/stat_sys_download_done"-->
     <item
         android:id="@+id/update_data_receptions"
-        android:icon="@android:drawable/stat_sys_download_done"
+        android:icon="@drawable/download"
         android:title="@string/update_data"
-        app:showAsAction="always"/>
+        app:showAsAction="always" />
 
+    <!--    android:icon="@android:drawable/stat_sys_upload_done"-->
     <item
         android:id="@+id/send_act"
-        android:icon="@android:drawable/stat_sys_upload_done"
+        android:icon="@drawable/upload"
         android:title="@string/send_act"
         app:showAsAction="always" />
 </menu>
