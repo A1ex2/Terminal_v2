@@ -174,6 +174,7 @@ public class ServicePerformedAct extends Service {
                             mActInspections.remove(mActInspection);
                             stopForeground(true);
                             stopSelf();
+
                             return;
                         }
                     }
@@ -213,12 +214,24 @@ public class ServicePerformedAct extends Service {
 
                     if (isMessage) {
                         String text = "" + mActInspection.getDescription() + ". " + textErr;
-                        sendMessageError(title, text, id + 1);
 
                         if (textErr.equals("Все ОК!") | textErr.contains("принята")
                                 | textErr.contains("выполнен осмотр") | textErr.contains("выдана")) {
+
+                            title = "Отправлено успешно " + mActInspection.getDescription();
+                            sendMessageError(title, text, id + 1);
+
                             mActInspection.sendPerformed = true;
                             SharedData.insertActInspection(mActInspection);
+
+//                            try {
+//                                SharedData.getActInspection(mActInspection.getID()).sendPerformed = true;
+//                            } catch (Exception e){
+//                            }
+
+                        } else{
+                            title = "Ошибка отправки " + mActInspection.getDescription();
+                            sendMessageError(title, text, id + 1);
                         }
                     }
                 }
