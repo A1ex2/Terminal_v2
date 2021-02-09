@@ -38,13 +38,15 @@ public class RecyclerActInspectionAdapter extends RecyclerView.Adapter<RecyclerA
         ArrayList<ActInspection> mActs = new ArrayList<>();
 
         String formID = "Сервис";
+        String formID2 = "пусто";
         if (SharedData.thisDriver) {
             formID = "ОсмотрНаСкладе";
+            formID2 = "ОсмотрНаВыгрузке";
         }
 
         for (int i = 0; i < SharedData.ACT_INSPECTION.size(); i++) {
             ActInspection act = SharedData.ACT_INSPECTION.get(i);
-            if (act.getFormID().equals(formID)){
+            if (act.getFormID().equals(formID) | act.getFormID().equals(formID2)){
                 mActs.add(act);
             }
         }
