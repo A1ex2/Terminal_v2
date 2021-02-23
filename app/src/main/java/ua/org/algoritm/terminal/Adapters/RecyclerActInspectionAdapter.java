@@ -46,7 +46,7 @@ public class RecyclerActInspectionAdapter extends RecyclerView.Adapter<RecyclerA
 
         for (int i = 0; i < SharedData.ACT_INSPECTION.size(); i++) {
             ActInspection act = SharedData.ACT_INSPECTION.get(i);
-            if (act.getFormID().equals(formID) | act.getFormID().equals(formID2)){
+            if ((act.getFormID().equals(formID) | act.getFormID().equals(formID2)) & !act.sendPerformed){
                 mActs.add(act);
             }
         }

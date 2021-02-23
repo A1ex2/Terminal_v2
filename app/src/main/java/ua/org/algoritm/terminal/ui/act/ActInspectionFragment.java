@@ -20,6 +20,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import org.ksoap2.SoapFault;
 import org.ksoap2.serialization.SoapObject;
@@ -53,10 +54,21 @@ public class ActInspectionFragment extends Fragment {
     private RecyclerActInspectionAdapter adapter;
     private ProgressDialog mDialog;
 
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
         View root = inflater.inflate(R.layout.fragment_act_inspection, container, false);
+
+        mSwipeRefreshLayout = root.findViewById(R.id.refreshLayout);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                updateLists();
+            }
+        });
 
         setHasOptionsMenu(true);
 
@@ -194,6 +206,7 @@ public class ActInspectionFragment extends Fragment {
     }
 
     private void updateLists() {
+
         if (adapter == null) {
 
             LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -214,6 +227,7 @@ public class ActInspectionFragment extends Fragment {
             adapter.setActInspections();
             recyclerView.setAdapter(adapter);
         }
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 
     class incomingHandler extends Handler {
@@ -226,6 +240,7 @@ public class ActInspectionFragment extends Fragment {
         @Override
         public void handleMessage(Message msg) {
             ActInspectionFragment target = mTarget.get();
+            mSwipeRefreshLayout.setRefreshing(false);
 
             if (mDialog != null && mDialog.isShowing()) {
                 mDialog.dismiss();
