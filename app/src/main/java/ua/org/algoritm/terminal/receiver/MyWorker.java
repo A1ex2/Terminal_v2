@@ -18,7 +18,7 @@ import androidx.work.WorkerParameters;
 import ua.org.algoritm.terminal.DataBase.SharedData;
 
 public class MyWorker extends Worker {
-    private static final String TAG = "Worker";
+    private static final String TAG = "MyWorker";
 
     public MyWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);

@@ -32,6 +32,7 @@ public class Message {
 
     public void getNotifications() {
 
+        SharedData.updateReceptionListDB = true;
         SharedData.updateActInspectionListDB = true;
 
         SOAP_Dispatcher soap_dispatcher = new SOAP_Dispatcher(ACTION, user, pass, mContext);

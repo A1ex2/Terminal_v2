@@ -38,7 +38,7 @@ import ua.org.algoritm.terminal.R;
 public class ServicePerformedAct extends Service {
     private ArrayList<ActInspection> mActInspections = new ArrayList<>();
 
-    private static final String TAG = "WeatherService";
+    private static final String TAG = "ServicePerformedAct";
     //    public static final String EXTRA_COUNT_TO = "count_to";
     public static final String EXTRA_ACT_ID = "act_id";
     public static final String EXTRA_performedAct = "performedAct";
