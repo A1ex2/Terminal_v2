@@ -50,4 +50,6 @@ dependencies {
     implementation 'org.kie.modules:org-apache-commons-net:6.5.0.Final'
     implementation 'com.jcraft:jsch:0.1.55'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
+
+    implementation 'android.arch.work:work-runtime:2.2.0'
 }

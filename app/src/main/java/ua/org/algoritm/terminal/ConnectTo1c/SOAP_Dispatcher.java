@@ -530,7 +530,7 @@ public class SOAP_Dispatcher extends Thread {
 
     }
 
-    private void GetActInspection() {
+    public void GetActInspection() {
         if (SharedData.isOfflineReception & !SharedData.updateActInspectionListDB) {
             SharedData.ACT_INSPECTION.clear();
 

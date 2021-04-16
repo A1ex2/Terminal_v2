@@ -71,6 +71,7 @@ public class SharedData {
     public static boolean updateReceptionListDB = false;
     public static boolean updateActInspectionListDB = false;
     public static ActInspection mActInspection;
+    public static boolean newActInspection;
 
     public static void updateReception(CarData carData) {
         boolean mFinish = false;

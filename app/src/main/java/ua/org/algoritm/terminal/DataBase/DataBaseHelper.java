@@ -1354,6 +1354,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
     public void insertReception(Reception reception) {
+
+        if (reception.getID() == null){
+            return;
+        }
+
         SQLiteDatabase db = getReadableDatabase();
         long id = 0;
 
@@ -1599,6 +1604,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 id = db.update("ActInspection", values, "ReceptionID=? and ID=?", new String[]{actInspection.getReceptionID(), actInspection.getID()});
             } else {
                 id = db.insert("ActInspection", null, values);
+                SharedData.newActInspection = true;
             }
 
             if (id != -1) {

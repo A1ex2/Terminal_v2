@@ -12,7 +12,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -45,6 +44,7 @@ import ua.org.algoritm.terminal.ConnectTo1c.UIManager;
 import ua.org.algoritm.terminal.DataBase.SharedData;
 import ua.org.algoritm.terminal.MainActivity;
 import ua.org.algoritm.terminal.R;
+import ua.org.algoritm.terminal.receiver.MyWorker;
 
 public class Password extends AppCompatActivity {
     private EditText login;
@@ -81,6 +81,7 @@ public class Password extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_password);
 
         preferences = getSharedPreferences("MyPref", MODE_PRIVATE);
@@ -314,6 +315,11 @@ public class Password extends AppCompatActivity {
         } else {
             SOAP_Dispatcher dispatcher = new SOAP_Dispatcher(ACTION_VERIFY, getApplicationContext());
             dispatcher.start();
+        }
+
+        if (SharedData.thisDriver) {
+//            MyWorker.periodicWorkRequest();
+            MyWorker.oneOffRequest(getApplicationContext());
         }
     }
 

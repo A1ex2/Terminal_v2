@@ -30,8 +30,7 @@
         android:usesCleartextTraffic="true">
         <activity
             android:name=".Activity.MainActivityCamera"
-            android:theme="@style/AppTheme.NoActionBar"
-            />
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <service
             android:name=".Service.IntentServicePerformedAct"
@@ -40,6 +39,10 @@
         <service
             android:name=".Service.ServicePerformedAct"
             android:enabled="true"
+            android:exported="false" />
+
+        <service
+            android:name=".receiver.PollService"
             android:exported="false" />
 
         <activity
@@ -116,7 +119,7 @@
             <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
             <!-- </intent-filter> -->
         </activity>
-        <activity android:name=".cameraLibrary.CameraClass"></activity>
+        <activity android:name=".cameraLibrary.CameraClass" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
