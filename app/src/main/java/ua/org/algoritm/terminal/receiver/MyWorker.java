@@ -4,6 +4,7 @@ import android.content.Context;
 
 import android.util.Log;
 
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.NonNull;
@@ -33,6 +34,10 @@ public class MyWorker extends Worker {
         String login = SharedData.LOGIN;
         String password = SharedData.PASSWORD;
 
+        // отправка выполненных
+        SendPerformedActs.sendPerformed(getApplicationContext());
+
+        // загрузка новых актов
         Message message = new Message(login, password, getApplicationContext());
         message.getNotifications();
 
@@ -71,7 +76,9 @@ public class MyWorker extends Worker {
 
         WorkManager.getInstance().enqueue(oneTimeWorkRequest);
 
+        Date date = new Date();
         QueryPreferences.setIdWorkRequest(context, String.valueOf(oneTimeWorkRequest.getId()));
+        QueryPreferences.setDateWorkRequest(context, date.getTime());
     }
 
     public static void periodicWorkRequest(){

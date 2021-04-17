@@ -55,4 +55,11 @@ public class QueryPreferences {
         return PreferenceManager.getDefaultSharedPreferences(context)
                 .getString("IdWorkRequest", "");
     }
+
+    public static void setDateWorkRequest(Context context, long date) {
+        PreferenceManager.getDefaultSharedPreferences(context)
+                .edit()
+                .putLong("DateWorkRequest", date)
+                .apply();
+    }
 }
