@@ -62,4 +62,9 @@ public class QueryPreferences {
                 .putLong("DateWorkRequest", date)
                 .apply();
     }
+
+    public static long getDateWorkRequest(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context)
+                .getLong("DateWorkRequest", 0);
+    }
 }

@@ -1,6 +1,7 @@
 package ua.org.algoritm.terminal.receiver;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,15 +26,19 @@ public class SendPerformedActs {
 
             if (mActInspection.isPerformed() & !mActInspection.sendPerformed) {
                 if (!mActInspection.sendPhoto) {
-                    ArrayList<PhotoActInspection> photoAll = getPhotoAct(mActInspection);
-                    int countTo = photoAll.size();
-                    start(mActInspection, photoAll, context);
+                    try {
+                        start(mActInspection, context);
+                    } catch (Exception e) {
+                        Log.d("myLogsTerminal", "" + e.toString());
+                    }
                 }
             }
         }
     }
 
-    private static void start(ActInspection mActInspection, ArrayList<PhotoActInspection> mPhotoAll, Context context) {
+    private static void start(ActInspection mActInspection, Context context) {
+        ArrayList<PhotoActInspection> mPhotoAll = getPhotoAct(mActInspection);
+
         if (SharedData.isOfflineReception) {
             int id = mActInspection.NOTIFY_ID;
 

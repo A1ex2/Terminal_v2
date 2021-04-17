@@ -58,15 +58,18 @@ public class MyWorker extends Worker {
         return Result.success();
     }
 
-    public void createNofication(String text){
+    public void createNofication(String text) {
         NotificationHelperNewAct notificationHelper = new NotificationHelperNewAct(getApplicationContext());
         notificationHelper.createNotification("Есть новые акты", text);
     }
 
     //create work request
-    public static void oneOffRequest(Context context){
-        if (!QueryPreferences.getIdWorkRequest(context).equals("")){
-            return;
+    public static void oneOffRequest(Context context) {
+        if (!QueryPreferences.getIdWorkRequest(context).equals("")) {
+            long dateWorkRequest = QueryPreferences.getDateWorkRequest(context);
+            if (new Date().getTime() - dateWorkRequest < 60000) {
+                return;
+            }
         }
 
         OneTimeWorkRequest oneTimeWorkRequest = new OneTimeWorkRequest.Builder(MyWorker.class)
@@ -81,15 +84,15 @@ public class MyWorker extends Worker {
         QueryPreferences.setDateWorkRequest(context, date.getTime());
     }
 
-    public static void periodicWorkRequest(){
-        PeriodicWorkRequest periodicWorkRequest = new PeriodicWorkRequest.Builder(MyWorker.class,1, TimeUnit.MINUTES)
+    public static void periodicWorkRequest() {
+        PeriodicWorkRequest periodicWorkRequest = new PeriodicWorkRequest.Builder(MyWorker.class, 1, TimeUnit.MINUTES)
                 .setConstraints(setConstraints())
                 .build();
 
         WorkManager.getInstance().enqueueUniquePeriodicWork(TAG, ExistingPeriodicWorkPolicy.KEEP, periodicWorkRequest);
     }
 
-    public static Constraints setConstraints(){
+    public static Constraints setConstraints() {
 
         Constraints constraints = new Constraints.Builder()
                 .setRequiresCharging(true)
