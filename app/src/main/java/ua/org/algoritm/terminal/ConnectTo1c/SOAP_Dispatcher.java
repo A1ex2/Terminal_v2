@@ -104,11 +104,12 @@ public class SOAP_Dispatcher extends Thread {
         try {
             server = SharedData.API;
             if (server.equals("")) {
-                server = "http://terminal.blg-vidi.com:83/blg_log";
-                //server = "http://192.168.1.10/blg_log";
+                //server = "http://terminal.blg-vidi.com:83/blg_log";
+                server = "http://192.168.1.4:8090/blg_log";
             }
         } catch (Exception e) {
-            server = "http://terminal.blg-vidi.com:83/blg_log";
+            //server = "http://terminal.blg-vidi.com:83/blg_log";
+            server = "http://192.168.1.4:8090/blg_log";
         }
 
         soapParam_URL = server + "/ws/terminal.1cws";

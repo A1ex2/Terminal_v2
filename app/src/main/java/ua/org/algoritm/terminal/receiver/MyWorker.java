@@ -28,29 +28,32 @@ public class MyWorker extends Worker {
     @NonNull
     @Override
     public Result doWork() {
-
         Log.i(TAG, "start");
+        try {
 
-        String login = SharedData.LOGIN;
-        String password = SharedData.PASSWORD;
 
-        // отправка выполненных
-        SendPerformedActs.sendPerformed(getApplicationContext());
+            String login = SharedData.LOGIN;
+            String password = SharedData.PASSWORD;
 
-        // загрузка новых актов
-        Message message = new Message(login, password, getApplicationContext());
-        message.getNotifications();
+            // отправка выполненных
+            SendPerformedActs.sendPerformed(getApplicationContext());
 
-        Boolean isMessage = message.isMessage;
-        String text = message.text;
+            // загрузка новых актов
+            Message message = new Message(login, password, getApplicationContext());
+            message.getNotifications();
 
-        if (!isMessage) {
-            Log.i(TAG, "is empty");
-        } else {
-            //our work
-            createNofication(text);
+            Boolean isMessage = message.isMessage;
+            String text = message.text;
+
+            if (!isMessage) {
+                Log.i(TAG, "is empty");
+            } else {
+                //our work
+                createNofication(text);
+            }
+        } catch (Exception e){
+            Log.d("myLogsTerminal", "" + e.toString());
         }
-
         QueryPreferences.setIdWorkRequest(getApplicationContext(), "");
         oneOffRequest(getApplicationContext());
 
