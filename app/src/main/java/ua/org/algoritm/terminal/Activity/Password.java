@@ -45,6 +45,7 @@ import ua.org.algoritm.terminal.DataBase.SharedData;
 import ua.org.algoritm.terminal.MainActivity;
 import ua.org.algoritm.terminal.R;
 import ua.org.algoritm.terminal.receiver.MyWorker;
+import ua.org.algoritm.terminal.receiver.MyWorkerStart;
 import ua.org.algoritm.terminal.receiver.MyWorkerTimeWork;
 
 public class Password extends AppCompatActivity {
@@ -303,6 +304,10 @@ public class Password extends AppCompatActivity {
                 SharedData.isOfflineReception = preferences.getBoolean("isOfflineReception", false);
                 SharedData.absolutePathFTP = preferences.getString("absolutePathFTP", "foto");
 
+                if (SharedData.thisDriver) {
+                    MyWorkerTimeWork.periodicWorkRequest();
+                }
+
                 uiManager.showToast(getString(R.string.passwordIncorrect) + SharedData.LOGIN);
 
                 Intent intent = new Intent(this, MainActivity.class);
@@ -316,10 +321,6 @@ public class Password extends AppCompatActivity {
         } else {
             SOAP_Dispatcher dispatcher = new SOAP_Dispatcher(ACTION_VERIFY, getApplicationContext());
             dispatcher.start();
-        }
-
-        if (SharedData.thisDriver) {
-            MyWorkerTimeWork.periodicWorkRequest();
         }
     }
 
@@ -469,6 +470,10 @@ public class Password extends AppCompatActivity {
             editor.putString("absolutePathFTP", absolutePathFTP);
 
             editor.apply();
+
+            if (SharedData.thisDriver) {
+                MyWorkerTimeWork.periodicWorkRequest();
+            }
 
             uiManager.showToast(getString(R.string.passwordIncorrect) + soapParam_Response.getPropertyAsString("Name"));
 

@@ -30,11 +30,40 @@ public class MyWorkerTimeWork extends Worker {
         Log.i(TAG, "start");
 
         if (SharedData.thisDriver) {
-            MyWorker.oneOffRequest(getApplicationContext(), 3);
-            MyWorker.oneOffRequest(getApplicationContext(), 6);
-            MyWorker.oneOffRequest(getApplicationContext(), 9);
-            MyWorker.oneOffRequest(getApplicationContext(), 12);
-            MyWorker.oneOffRequest(getApplicationContext(), 15);
+
+            String login = SharedData.LOGIN;
+            String password = SharedData.PASSWORD;
+
+            try {
+                // отправка выполненных
+                SendPerformedActs.sendPerformed(getApplicationContext());
+            } catch (Exception e) {
+
+            }
+
+            try {
+                // загрузка новых актов
+                Message message = new Message(login, password, getApplicationContext());
+                message.getNotifications();
+
+                Boolean isMessage = message.isMessage;
+                String text = message.text;
+
+                if (!isMessage) {
+                    Log.i(TAG, "is empty");
+                } else {
+                    //our work
+                    createNofication(text);
+                }
+            } catch (Exception e) {
+
+            }
+
+//            MyWorker.oneOffRequest(getApplicationContext(), 3);
+//            MyWorker.oneOffRequest(getApplicationContext(), 6);
+//            MyWorker.oneOffRequest(getApplicationContext(), 9);
+//            MyWorker.oneOffRequest(getApplicationContext(), 12);
+//            MyWorker.oneOffRequest(getApplicationContext(), 15);
         }
 
         //indicate whether work was successful
@@ -56,4 +85,10 @@ public class MyWorkerTimeWork extends Worker {
 
         return constraints;
     }
+
+    public void createNofication(String text) {
+        NotificationHelperNewAct notificationHelper = new NotificationHelperNewAct(getApplicationContext());
+        notificationHelper.createNotification("Есть новые акты", text);
+    }
+
 }

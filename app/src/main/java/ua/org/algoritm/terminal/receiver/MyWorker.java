@@ -30,26 +30,32 @@ public class MyWorker extends Worker {
     public Result doWork() {
         Log.i(TAG, "start");
         try {
-
-
             String login = SharedData.LOGIN;
             String password = SharedData.PASSWORD;
 
-            // отправка выполненных
-            SendPerformedActs.sendPerformed(getApplicationContext());
+            try {
+                // отправка выполненных
+                SendPerformedActs.sendPerformed(getApplicationContext());
+            } catch (Exception e){
 
-            // загрузка новых актов
-            Message message = new Message(login, password, getApplicationContext());
-            message.getNotifications();
+            }
 
-            Boolean isMessage = message.isMessage;
-            String text = message.text;
+            try {
+                // загрузка новых актов
+                Message message = new Message(login, password, getApplicationContext());
+                message.getNotifications();
 
-            if (!isMessage) {
-                Log.i(TAG, "is empty");
-            } else {
-                //our work
-                createNofication(text);
+                Boolean isMessage = message.isMessage;
+                String text = message.text;
+
+                if (!isMessage) {
+                    Log.i(TAG, "is empty");
+                } else {
+                    //our work
+                    createNofication(text);
+                }
+            } catch (Exception e){
+
             }
         } catch (Exception e){
             Log.d("myLogsTerminal", "" + e.toString());
@@ -67,7 +73,7 @@ public class MyWorker extends Worker {
     }
 
     //create work request
-    public static void oneOffRequest(Context context, int timeMinutes) {
+    public static void oneOffRequest(Context context, long timeMinutes) {
 //        if (!QueryPreferences.getIdWorkRequest(context).equals("")) {
 //            long dateWorkRequest = QueryPreferences.getDateWorkRequest(context);
 //            if (new Date().getTime() - dateWorkRequest < 60000) {
@@ -85,14 +91,6 @@ public class MyWorker extends Worker {
 //        Date date = new Date();
 //        QueryPreferences.setIdWorkRequest(context, String.valueOf(oneTimeWorkRequest.getId()));
 //        QueryPreferences.setDateWorkRequest(context, date.getTime());
-    }
-
-    public static void periodicWorkRequest() {
-        PeriodicWorkRequest periodicWorkRequest = new PeriodicWorkRequest.Builder(MyWorker.class, 1, TimeUnit.MINUTES)
-                .setConstraints(setConstraints())
-                .build();
-
-        WorkManager.getInstance().enqueueUniquePeriodicWork(TAG, ExistingPeriodicWorkPolicy.KEEP, periodicWorkRequest);
     }
 
     public static Constraints setConstraints() {
