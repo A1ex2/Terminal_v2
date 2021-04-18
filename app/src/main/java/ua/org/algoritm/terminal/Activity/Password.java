@@ -45,6 +45,7 @@ import ua.org.algoritm.terminal.DataBase.SharedData;
 import ua.org.algoritm.terminal.MainActivity;
 import ua.org.algoritm.terminal.R;
 import ua.org.algoritm.terminal.receiver.MyWorker;
+import ua.org.algoritm.terminal.receiver.MyWorkerTimeWork;
 
 public class Password extends AppCompatActivity {
     private EditText login;
@@ -318,8 +319,7 @@ public class Password extends AppCompatActivity {
         }
 
         if (SharedData.thisDriver) {
-//            MyWorker.periodicWorkRequest();
-            MyWorker.oneOffRequest(getApplicationContext());
+            MyWorkerTimeWork.periodicWorkRequest();
         }
     }
 

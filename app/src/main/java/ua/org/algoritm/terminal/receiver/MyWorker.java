@@ -54,8 +54,8 @@ public class MyWorker extends Worker {
         } catch (Exception e){
             Log.d("myLogsTerminal", "" + e.toString());
         }
-        QueryPreferences.setIdWorkRequest(getApplicationContext(), "");
-        oneOffRequest(getApplicationContext());
+//        QueryPreferences.setIdWorkRequest(getApplicationContext(), "");
+//        oneOffRequest(getApplicationContext());
 
         //indicate whether work was successful
         return Result.success();
@@ -67,24 +67,24 @@ public class MyWorker extends Worker {
     }
 
     //create work request
-    public static void oneOffRequest(Context context) {
-        if (!QueryPreferences.getIdWorkRequest(context).equals("")) {
-            long dateWorkRequest = QueryPreferences.getDateWorkRequest(context);
-            if (new Date().getTime() - dateWorkRequest < 60000) {
-                return;
-            }
-        }
-
+    public static void oneOffRequest(Context context, int timeMinutes) {
+//        if (!QueryPreferences.getIdWorkRequest(context).equals("")) {
+//            long dateWorkRequest = QueryPreferences.getDateWorkRequest(context);
+//            if (new Date().getTime() - dateWorkRequest < 60000) {
+//                return;
+//            }
+//        }
+//
         OneTimeWorkRequest oneTimeWorkRequest = new OneTimeWorkRequest.Builder(MyWorker.class)
-                .setInitialDelay(1, TimeUnit.MINUTES)
+                .setInitialDelay(timeMinutes, TimeUnit.MINUTES)
                 .setConstraints(setConstraints())
                 .build();
 
         WorkManager.getInstance().enqueue(oneTimeWorkRequest);
 
-        Date date = new Date();
-        QueryPreferences.setIdWorkRequest(context, String.valueOf(oneTimeWorkRequest.getId()));
-        QueryPreferences.setDateWorkRequest(context, date.getTime());
+//        Date date = new Date();
+//        QueryPreferences.setIdWorkRequest(context, String.valueOf(oneTimeWorkRequest.getId()));
+//        QueryPreferences.setDateWorkRequest(context, date.getTime());
     }
 
     public static void periodicWorkRequest() {
