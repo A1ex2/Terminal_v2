@@ -101,7 +101,7 @@ public class ApiSettings extends AppCompatActivity {
         WorkManager.getInstance()
                 .getWorkInfoByIdLiveData(periodicWorkRequest.getId());
 
-        QueryPreferences.setIdWorkRequest(getApplicationContext(), periodicWorkRequest.getStringId());
+        QueryPreferences.setIdWorkRequest(getApplicationContext(), String.valueOf(periodicWorkRequest.getId()));
     }
 
     private void cancelPeriodicTask() {
