@@ -140,5 +140,6 @@
     <string name="download_act_2">Загрузить акты? Если Акт выполнен в ЦБ, он удалится в мобильном приложении. продолжить?</string>
     <string name="password_failed">доступ запрещен</string>
     <string name="message_title">Есть новые акты</string>
+    <string name="background_ex_change_of_acts">фоновый обмен актами</string>
 
 </resources>

@@ -1,6 +1,13 @@
 package ua.org.algoritm.terminal.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.work.Constraints;
+import androidx.work.Data;
+import androidx.work.NetworkType;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkInfo;
+import androidx.work.WorkManager;
+import androidx.work.Worker;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -8,16 +15,27 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Switch;
 import android.widget.TextView;
 
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+
 import ua.org.algoritm.terminal.DataBase.SharedData;
+import ua.org.algoritm.terminal.MainActivity;
 import ua.org.algoritm.terminal.R;
+import ua.org.algoritm.terminal.receiver.MyWorker;
+import ua.org.algoritm.terminal.receiver.MyWorkerTimeWork;
+import ua.org.algoritm.terminal.receiver.QueryPreferences;
 
 public class ApiSettings extends AppCompatActivity {
     private TextView api;
     private Button ok;
     private Button cancel;
     private SharedPreferences preferences;
+
+    private Switch backgroundActs;
+    private String idWorkRequest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,5 +68,44 @@ public class ApiSettings extends AppCompatActivity {
                 finish();
             }
         });
+
+        backgroundActs = findViewById(R.id.backgroundActs);
+        idWorkRequest = QueryPreferences.getIdWorkRequest(getApplicationContext());
+        backgroundActs.setChecked(!idWorkRequest.equals(""));
+        backgroundActs.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (backgroundActs.isChecked()) {
+                    startPeriodicTask();
+                } else {
+                    cancelPeriodicTask();
+                }
+            }
+        });
+
+        if (SharedData.thisDriver){
+            backgroundActs.setVisibility(View.VISIBLE);
+        } else {
+            backgroundActs.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    private void startPeriodicTask() {
+        Constraints constraints = new Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build();
+        PeriodicWorkRequest periodicWorkRequest = new PeriodicWorkRequest.Builder(MyWorkerTimeWork.class, 15, TimeUnit.MINUTES)
+                .setConstraints(constraints)
+                .build();
+        WorkManager.getInstance().enqueue(periodicWorkRequest);
+        WorkManager.getInstance()
+                .getWorkInfoByIdLiveData(periodicWorkRequest.getId());
+
+        QueryPreferences.setIdWorkRequest(getApplicationContext(), periodicWorkRequest.getStringId());
+    }
+
+    private void cancelPeriodicTask() {
+        WorkManager.getInstance().cancelWorkById(UUID.fromString(idWorkRequest));
+        QueryPreferences.setIdWorkRequest(getApplicationContext(), "");
     }
 }

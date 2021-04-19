@@ -52,4 +52,16 @@
         app:layout_constraintHorizontal_bias="0.98"
         app:layout_constraintStart_toEndOf="@+id/buttonOk"
         app:layout_constraintTop_toBottomOf="@+id/editServer" />
+
+    <Switch
+        android:id="@+id/backgroundActs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="72dp"
+        android:text="@string/background_ex_change_of_acts"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonOk" />
 </androidx.constraintlayout.widget.ConstraintLayout>

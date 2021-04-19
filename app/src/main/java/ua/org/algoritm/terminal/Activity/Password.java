@@ -30,6 +30,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.biometric.BiometricManager;
 import androidx.biometric.BiometricPrompt;
 import androidx.core.content.ContextCompat;
+import androidx.work.Constraints;
+import androidx.work.NetworkType;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
 import org.ksoap2.SoapFault;
 import org.ksoap2.serialization.SoapObject;
@@ -38,15 +42,15 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.concurrent.Executor;
+import java.util.concurrent.TimeUnit;
 
 import ua.org.algoritm.terminal.ConnectTo1c.SOAP_Dispatcher;
 import ua.org.algoritm.terminal.ConnectTo1c.UIManager;
 import ua.org.algoritm.terminal.DataBase.SharedData;
 import ua.org.algoritm.terminal.MainActivity;
 import ua.org.algoritm.terminal.R;
-import ua.org.algoritm.terminal.receiver.MyWorker;
-import ua.org.algoritm.terminal.receiver.MyWorkerStart;
 import ua.org.algoritm.terminal.receiver.MyWorkerTimeWork;
+import ua.org.algoritm.terminal.receiver.QueryPreferences;
 
 public class Password extends AppCompatActivity {
     private EditText login;
@@ -305,7 +309,7 @@ public class Password extends AppCompatActivity {
                 SharedData.absolutePathFTP = preferences.getString("absolutePathFTP", "foto");
 
                 if (SharedData.thisDriver) {
-                    MyWorkerTimeWork.periodicWorkRequest();
+                    startPeriodicTask();
                 }
 
                 uiManager.showToast(getString(R.string.passwordIncorrect) + SharedData.LOGIN);
@@ -322,6 +326,29 @@ public class Password extends AppCompatActivity {
             SOAP_Dispatcher dispatcher = new SOAP_Dispatcher(ACTION_VERIFY, getApplicationContext());
             dispatcher.start();
         }
+    }
+
+    private void startPeriodicTask() {
+        if (true){
+            return;
+        }
+
+        String id = QueryPreferences.getIdWorkRequest(getApplicationContext());
+        if (!id.equals("")){
+            return;
+        }
+
+        Constraints constraints = new Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build();
+        PeriodicWorkRequest periodicWorkRequest = new PeriodicWorkRequest.Builder(MyWorkerTimeWork.class, 15, TimeUnit.MINUTES)
+                .setConstraints(constraints)
+                .build();
+        WorkManager.getInstance().enqueue(periodicWorkRequest);
+        WorkManager.getInstance()
+                .getWorkInfoByIdLiveData(periodicWorkRequest.getId());
+
+        QueryPreferences.setIdWorkRequest(getApplicationContext(), periodicWorkRequest.getStringId());
     }
 
     private boolean hasPermission(String permission) {
@@ -472,7 +499,7 @@ public class Password extends AppCompatActivity {
             editor.apply();
 
             if (SharedData.thisDriver) {
-                MyWorkerTimeWork.periodicWorkRequest();
+                startPeriodicTask();
             }
 
             uiManager.showToast(getString(R.string.passwordIncorrect) + soapParam_Response.getPropertyAsString("Name"));
