@@ -76,9 +76,9 @@ public class ApiSettings extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (backgroundActs.isChecked()) {
-                    startPeriodicTask();
+                    MyWorkerTimeWork.startPeriodicTask(getApplicationContext());
                 } else {
-                    cancelPeriodicTask();
+                    MyWorkerTimeWork.cancelPeriodicTask(getApplicationContext());
                 }
             }
         });
@@ -88,24 +88,5 @@ public class ApiSettings extends AppCompatActivity {
         } else {
             backgroundActs.setVisibility(View.INVISIBLE);
         }
-    }
-
-    private void startPeriodicTask() {
-        Constraints constraints = new Constraints.Builder()
-                .setRequiredNetworkType(NetworkType.CONNECTED)
-                .build();
-        PeriodicWorkRequest periodicWorkRequest = new PeriodicWorkRequest.Builder(MyWorkerTimeWork.class, 15, TimeUnit.MINUTES)
-                .setConstraints(constraints)
-                .build();
-        WorkManager.getInstance().enqueue(periodicWorkRequest);
-        WorkManager.getInstance()
-                .getWorkInfoByIdLiveData(periodicWorkRequest.getId());
-
-        QueryPreferences.setIdWorkRequest(getApplicationContext(), String.valueOf(periodicWorkRequest.getId()));
-    }
-
-    private void cancelPeriodicTask() {
-        WorkManager.getInstance().cancelWorkById(UUID.fromString(idWorkRequest));
-        QueryPreferences.setIdWorkRequest(getApplicationContext(), "");
     }
 }

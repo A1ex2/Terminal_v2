@@ -6,6 +6,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.work.Constraints;
 import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.NetworkType;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
@@ -13,6 +14,7 @@ import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
 import java.util.Date;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import ua.org.algoritm.terminal.DataBase.SharedData;
@@ -91,4 +93,24 @@ public class MyWorkerTimeWork extends Worker {
         notificationHelper.createNotification("Есть новые акты", text);
     }
 
+
+    public static void startPeriodicTask(Context context) {
+        Constraints constraints = new Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build();
+        PeriodicWorkRequest periodicWorkRequest = new PeriodicWorkRequest.Builder(MyWorkerTimeWork.class, 15, TimeUnit.MINUTES)
+                .setConstraints(constraints)
+                .build();
+        WorkManager.getInstance().enqueue(periodicWorkRequest);
+        WorkManager.getInstance()
+                .getWorkInfoByIdLiveData(periodicWorkRequest.getId());
+
+        QueryPreferences.setIdWorkRequest(context, String.valueOf(periodicWorkRequest.getId()));
+    }
+
+    public static void cancelPeriodicTask(Context context) {
+        String idWorkRequest = QueryPreferences.getIdWorkRequest(context);
+        WorkManager.getInstance().cancelWorkById(UUID.fromString(idWorkRequest));
+        QueryPreferences.setIdWorkRequest(context, "");
+    }
 }

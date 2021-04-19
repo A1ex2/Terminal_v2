@@ -308,10 +308,6 @@ public class Password extends AppCompatActivity {
                 SharedData.isOfflineReception = preferences.getBoolean("isOfflineReception", false);
                 SharedData.absolutePathFTP = preferences.getString("absolutePathFTP", "foto");
 
-                if (SharedData.thisDriver) {
-                    startPeriodicTask();
-                }
-
                 uiManager.showToast(getString(R.string.passwordIncorrect) + SharedData.LOGIN);
 
                 Intent intent = new Intent(this, MainActivity.class);
@@ -326,29 +322,6 @@ public class Password extends AppCompatActivity {
             SOAP_Dispatcher dispatcher = new SOAP_Dispatcher(ACTION_VERIFY, getApplicationContext());
             dispatcher.start();
         }
-    }
-
-    private void startPeriodicTask() {
-        if (true){
-            return;
-        }
-
-        String id = QueryPreferences.getIdWorkRequest(getApplicationContext());
-        if (!id.equals("")){
-            return;
-        }
-
-        Constraints constraints = new Constraints.Builder()
-                .setRequiredNetworkType(NetworkType.CONNECTED)
-                .build();
-        PeriodicWorkRequest periodicWorkRequest = new PeriodicWorkRequest.Builder(MyWorkerTimeWork.class, 15, TimeUnit.MINUTES)
-                .setConstraints(constraints)
-                .build();
-        WorkManager.getInstance().enqueue(periodicWorkRequest);
-        WorkManager.getInstance()
-                .getWorkInfoByIdLiveData(periodicWorkRequest.getId());
-
-        QueryPreferences.setIdWorkRequest(getApplicationContext(), String.valueOf(periodicWorkRequest.getId()));
     }
 
     private boolean hasPermission(String permission) {
@@ -497,10 +470,6 @@ public class Password extends AppCompatActivity {
             editor.putString("absolutePathFTP", absolutePathFTP);
 
             editor.apply();
-
-            if (SharedData.thisDriver) {
-                startPeriodicTask();
-            }
 
             uiManager.showToast(getString(R.string.passwordIncorrect) + soapParam_Response.getPropertyAsString("Name"));
 
