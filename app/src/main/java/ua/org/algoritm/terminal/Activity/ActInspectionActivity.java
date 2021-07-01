@@ -1562,8 +1562,32 @@ public class ActInspectionActivity extends AppCompatActivity {
 //            }
 //        }
 
-        if (SharedData.thisDriver) {
-             return true;
+        if (!SharedData.RequiredPhotoView.equals("")) {
+            for (int i = 0; i < mActInspection.getTypesPhotos().size(); i++) {
+                TypesPhoto typesPhoto = mActInspection.getTypesPhotos().get(i);
+                if (SharedData.RequiredPhotoView.contains(typesPhoto.getTypePhotoID())) {
+                    if (typesPhoto.getPhotoActInspections().size() == 0) {
+
+                        performedAct = false;
+                        String message = getString(R.string.no_photos) + " - " + typesPhoto.getTypePhoto();
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                        builder.setMessage(message)
+                                .setCancelable(true)
+                                .setPositiveButton(getString(R.string.butt_OK), new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+
+                                    }
+                                });
+                        AlertDialog alert = builder.create();
+                        alert.show();
+                        return false;
+                    }
+                }
+            }
+
+        } else if (SharedData.thisDriver) {
+            return true;
         }
 
         if (photoAll.size() == 0) {

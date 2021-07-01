@@ -63,6 +63,7 @@ public class SharedData {
     public static boolean thisSFTP;
     public static boolean thisDriver;
     public static String absolutePathFTP;
+    public static String RequiredPhotoView;
 
     public static int NOTIFY_ID = 1;
     public static boolean isActInspection = false;

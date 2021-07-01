@@ -45,12 +45,20 @@ public class QueryPreferences {
                 .getBoolean("thisDriver", false);
     }
 
+    public static void setDriver(Context context, Boolean thisDriver) {
+        PreferenceManager.getDefaultSharedPreferences(context)
+                .edit()
+                .putBoolean("thisDriver", thisDriver)
+                .apply();
+    }
+
     public static void setIdWorkRequest(Context context, String id) {
         PreferenceManager.getDefaultSharedPreferences(context)
                 .edit()
                 .putString("IdWorkRequest", id)
                 .apply();
     }
+
     public static String getIdWorkRequest(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context)
                 .getString("IdWorkRequest", "");

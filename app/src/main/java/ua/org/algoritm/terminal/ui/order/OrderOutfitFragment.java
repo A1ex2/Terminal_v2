@@ -169,11 +169,11 @@ public class OrderOutfitFragment extends Fragment {
                     break;
 
                 case ACTION_Connection:
-                    uiManager.showToast(getString(R.string.connection_for_internet));
+                    //uiManager.showToast(getString(R.string.connection_for_internet));
                     target.getUpdateList();
                     break;
                 case ACTION_Connection_Lost:
-                    uiManager.showToast(getString(R.string.lost_for_internet));
+                    //uiManager.showToast(getString(R.string.lost_for_internet));
                     break;
             }
         }

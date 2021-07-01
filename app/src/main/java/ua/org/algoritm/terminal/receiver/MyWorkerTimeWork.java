@@ -31,10 +31,10 @@ public class MyWorkerTimeWork extends Worker {
     public Result doWork() {
         Log.i(TAG, "start");
 
-        if (SharedData.thisDriver) {
+        if (QueryPreferences.isDriver(getApplicationContext())) {
 
-            String login = SharedData.LOGIN;
-            String password = SharedData.PASSWORD;
+            String login = QueryPreferences.getLogin(getApplicationContext());
+            String password = QueryPreferences.getPassword(getApplicationContext());
 
             try {
                 // отправка выполненных

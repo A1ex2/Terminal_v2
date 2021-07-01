@@ -106,6 +106,7 @@ public class Password extends AppCompatActivity {
         SharedData.isActInspectionForIssuance = preferences.getBoolean("isActInspectionForIssuance", false);
         SharedData.isOfflineReception = preferences.getBoolean("isOfflineReception", false);
         SharedData.absolutePathFTP = preferences.getString("absolutePathFTP", "foto");
+        SharedData.RequiredPhotoView = preferences.getString("RequiredPhotoView", "");
 
         if (SharedData.thisDriver & SharedData.isOfflineReception & !SharedData.isOnline(getApplicationContext())) {
         } else {
@@ -307,8 +308,13 @@ public class Password extends AppCompatActivity {
                 SharedData.isActInspectionForIssuance = preferences.getBoolean("isActInspectionForIssuance", false);
                 SharedData.isOfflineReception = preferences.getBoolean("isOfflineReception", false);
                 SharedData.absolutePathFTP = preferences.getString("absolutePathFTP", "foto");
+                SharedData.RequiredPhotoView = preferences.getString("RequiredPhotoView", "");
 
                 uiManager.showToast(getString(R.string.passwordIncorrect) + SharedData.LOGIN);
+
+                QueryPreferences.setDriver(getApplicationContext(), SharedData.thisDriver);
+                QueryPreferences.setLogin(getApplicationContext(), SharedData.LOGIN);
+                QueryPreferences.setPassword(getApplicationContext(), SharedData.PASSWORD);
 
                 Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
@@ -420,6 +426,7 @@ public class Password extends AppCompatActivity {
             boolean isActInspectionForIssuance = false;
             boolean isOfflineReception = false;
             String absolutePathFTP = "foto";
+            String RequiredPhotoView = "";
 
             try {
                 hostFTP = soapParam_Response.getPropertyAsString("host");
@@ -430,6 +437,7 @@ public class Password extends AppCompatActivity {
 
                 thisDriver = Integer.parseInt(soapParam_Response.getPropertyAsString("thisDriver")) == 1;
                 absolutePathFTP = soapParam_Response.getPropertyAsString("AbsolutePathFTP");
+                RequiredPhotoView = soapParam_Response.getPropertyAsString("RequiredPhotoView");
 
                 isActInspection = Integer.parseInt(soapParam_Response.getPropertyAsString("isActInspection")) == 1;
                 isActInspectionForIssuance = Integer.parseInt(soapParam_Response.getPropertyAsString("isActInspectionForIssuance")) == 1;
@@ -452,6 +460,7 @@ public class Password extends AppCompatActivity {
             SharedData.isActInspectionForIssuance = isActInspectionForIssuance;
             SharedData.isOfflineReception = isOfflineReception;
             SharedData.absolutePathFTP = absolutePathFTP;
+            SharedData.RequiredPhotoView = RequiredPhotoView;
 
             SharedPreferences.Editor editor = preferences.edit();
             editor.putString("Login", mLogin);
@@ -468,10 +477,15 @@ public class Password extends AppCompatActivity {
             editor.putBoolean("isActInspectionForIssuance", isActInspectionForIssuance);
             editor.putBoolean("isOfflineReception", isOfflineReception);
             editor.putString("absolutePathFTP", absolutePathFTP);
+            editor.putString("RequiredPhotoView", RequiredPhotoView);
 
             editor.apply();
 
             uiManager.showToast(getString(R.string.passwordIncorrect) + soapParam_Response.getPropertyAsString("Name"));
+
+            QueryPreferences.setDriver(getApplicationContext(), SharedData.thisDriver);
+            QueryPreferences.setLogin(getApplicationContext(), SharedData.LOGIN);
+            QueryPreferences.setPassword(getApplicationContext(), SharedData.PASSWORD);
 
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
