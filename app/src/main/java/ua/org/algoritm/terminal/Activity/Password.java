@@ -438,6 +438,9 @@ public class Password extends AppCompatActivity {
                 thisDriver = Integer.parseInt(soapParam_Response.getPropertyAsString("thisDriver")) == 1;
                 absolutePathFTP = soapParam_Response.getPropertyAsString("AbsolutePathFTP");
                 RequiredPhotoView = soapParam_Response.getPropertyAsString("RequiredPhotoView");
+                if(RequiredPhotoView.equals(" ")){
+                    RequiredPhotoView = "";
+                }
 
                 isActInspection = Integer.parseInt(soapParam_Response.getPropertyAsString("isActInspection")) == 1;
                 isActInspectionForIssuance = Integer.parseInt(soapParam_Response.getPropertyAsString("isActInspectionForIssuance")) == 1;
