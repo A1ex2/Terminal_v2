@@ -47,8 +47,11 @@ import org.ksoap2.serialization.SoapObject;
 
 import java.lang.ref.WeakReference;
 
+import ua.org.algoritm.terminal.Activity.ApiSettings;
 import ua.org.algoritm.terminal.Activity.CarActivityMoving;
 import ua.org.algoritm.terminal.Activity.CarDataList;
+import ua.org.algoritm.terminal.Activity.Password;
+import ua.org.algoritm.terminal.Activity.SettingsOtherActivity;
 import ua.org.algoritm.terminal.ConnectTo1c.NetworkChangeReceiver;
 import ua.org.algoritm.terminal.ConnectTo1c.SOAP_Dispatcher;
 import ua.org.algoritm.terminal.ConnectTo1c.UIManager;
@@ -233,6 +236,18 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
+
+        final MenuItem action_settings = menu.findItem(R.id.action_settings);
+        action_settings.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Intent intent = new Intent(MainActivity.this, SettingsOtherActivity.class);
+                startActivity(intent);
+
+                return false;
+            }
+        });
+
         return true;
     }
 

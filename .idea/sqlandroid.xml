@@ -3,13 +3,13 @@
   <component name="SQLAndroidSettings">
     <option name="databases">
       <map>
-        <entry key="MyBD.db_C:\Users\A1ex\AndroidStudioProjects\Terminal_v2\AndroidSqlEditorDatabases\">
+        <entry key="d.db_C:\Users\A1ex\AndroidStudioProjects\Terminal_v2\AndroidSqlEditorDatabases\">
           <value>
             <list>
-              <option value="127.0.0.1:62001" />
+              <option value="RZ8N20Z8SBF" />
               <option value="/databases/MyBD.db" />
-              <option value="MyBD.db" />
-              <option value="MyBD.db" />
+              <option value="d.db" />
+              <option value="d.db" />
               <option value="false" />
               <option value="ua.org.algoritm.terminal" />
             </list>
