@@ -63,7 +63,7 @@ public class MyManager extends Worker {
         displayNotification(data.getString(String.valueOf(R.string.app_name)), "Отправка базы");
         File fileDB = new File(Environment.getDataDirectory() + "/data/ua.org.algoritm.terminal/databases/MyBD.db");
         if (fileDB.exists()) {
-            String filePath = "" + login + "/db";
+            String filePath = "app_backup/" + login + "/db";
             if (!sendFile(fileDB, filePath, thisSFTP, login, host, username, password, port)){
 //                return;
             };
@@ -79,7 +79,7 @@ public class MyManager extends Worker {
                 i++;
                 displayNotification(data.getString(String.valueOf(R.string.app_name)), "Отправка фото " + i + " из " + storageDir.listFiles().length);
 
-                String filePath = "" + login + "/pictures";
+                String filePath = "app_backup/" + login + "/pictures";
                 uploadFile = sendFile(f, filePath, thisSFTP, login, host, username, password, port);
             }
 
